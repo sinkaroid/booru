@@ -1,7 +1,7 @@
 # Booru
 Python bindings for Booru imageboards
 
-<a href="http://sinkaroid.github.io/booru"><img align="right" src="https://cdn.discordapp.com/attachments/952117487166705747/961124440400351232/mataa.png" width="380"></a>
+<a href="http://sinkaroid.github.io/booru"><img align="right" src="https://cdn.discordapp.com/attachments/952117487166705747/961124440400351232/mataa.png" width="400"></a>
 
 - [Features](#features)
 - [This library vs. the Competition](#this-library-vs-the-competition)
@@ -19,6 +19,7 @@ Python bindings for Booru imageboards
     - ─ [import you want to use](#import-you-want-to-use)
     - ─ [shuffle](#shuffle-the-whole-dictionary)
 - [Documentation](#Documentation)
+- [Changelog](https://github.com/sinkaroid/booru/blob/master/CHANGELOG.md)
 - [Limitations](#limitations)
 - [Security](https://github.com/sinkaroid/booru/blob/master/SECURITY.md)
 - [Acknowledgements](#acknowledgements)
