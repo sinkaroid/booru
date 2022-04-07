@@ -144,7 +144,7 @@ class Paheal(object):
         else:
             self.tags = query
 
-        self.specs["tags"] = str(self.query)
+        self.specs["tags"] = str(self.tags)
         self.specs["limit"] = str(limit)
         self.specs["page"] = str(page)
 
