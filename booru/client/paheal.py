@@ -1,7 +1,7 @@
 import requests
 import json
 import re
-from ..utils.parser import Api, better_object, get_hostname, read_json
+from ..utils.parser import Api, better_object
 from random import shuffle, randint
 from xmltodict import parse
 
