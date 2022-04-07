@@ -26,9 +26,9 @@ Python bindings for Booru imageboards
 
 <div align="center">
 
-<a href="https://github.com/sinkaroid/booru/actions/workflows/docs.yml"><img src="https://github.com/sinkaroid/booru/actions/workflows/build.yml/badge.svg"></a>
+<a href="https://sinkaroid.github.io/booru"><img src="https://github.com/sinkaroid/booru/actions/workflows/docs.yml/badge.svg"></a>
 <a href="https://github.com/sinkaroid/booru/actions/workflows/api.yml"><img src="https://github.com/sinkaroid/booru/actions/workflows/api.yml/badge.svg"></a>
-<a href="https://codeclimate.com/github/sinkaroid/booru/maintainability"><img src="https://api.codeclimate.com/v1/badges/7c53330c7a3c0c2a2006/maintainability"></a>
+<a href="https://codeclimate.com/github/sinkaroid/booru/maintainability"><img src="https://api.codeclimate.com/v1/badges/c334d91994d1d84b8d7d/maintainability" /></a>
 
 Booru is un-official Python bindings for the imageboards.
 It is takes a much more functionalities to interacts with ease, out of the box, JSON friendly, and fully extendable. Handle 19 different booru ([quick-tests](#benchmark-quick-tests))
@@ -113,7 +113,7 @@ Or from this repository!
 ```py
 (method) search: (tags: str, limit: int = 100, page: int = 1, random: bool = True, gacha: bool = False) -> Coroutine
 ```  
-> All the parameters are optional, except for `tags` which is required.
+> All the parameters are optional, except for `query` which is required.
 
 ```py
 import asyncio
