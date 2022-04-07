@@ -122,13 +122,29 @@ def better_object(parser: dict):
     Returns
     -------
     dict
+        The new dictionaries with neat keys.
 
     """
     return json.dumps(parser, sort_keys=True, indent=4, ensure_ascii=False)
 
+def deserialize(data: list):
+    """Deserialize instance containing a JSON document
+
+    Parameters
+    ----------
+    data : list
+        The raw data after fetch request
+
+    Returns
+    -------
+    dict
+        The deserialized with better object
+    """
+    return json.loads(better_object(data), encoding="utf-8")
+
 
 def parse_image(raw_object: dict):
-    """Return a lists instead extended json object.
+    """Extracts the image url from the json object.
 
     Parameters
     ----------
@@ -138,6 +154,7 @@ def parse_image(raw_object: dict):
     Returns
     -------
     list
+        The list of image urls.
     """
     if "post" not in raw_object:
         data = raw_object
@@ -155,7 +172,7 @@ def parse_image(raw_object: dict):
 
 
 def get_hostname(url: str):
-    """Returns the site of the url.
+    """Extract single hostname from the nested url
 
     Parameters
     ----------
@@ -164,16 +181,6 @@ def get_hostname(url: str):
     Returns
     -------
     str
+        The site contains protocol and hostname
     """
     return re.sub(r"(.*://)?([^/?]+).*", "\g<1>\g<2>", url)
-
-
-def read_json(res: str):
-    unsolved = get(res)
-    data_dict = parse(unsolved.text)
-
-    return json.dumps(data_dict)
-
-
-def global_headers():
-    return BASE_URL.headers
