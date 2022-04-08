@@ -1,7 +1,7 @@
 import requests
 import json
 import re
-from ..utils.parser import Api, better_object, parse_image, get_hostname
+from ..utils.parser import Api, better_object, parse_image, get_hostname, deserialize
 from random import shuffle, randint
 
 Booru = Api()
@@ -120,7 +120,7 @@ class E926(object):
         self.specs["page"] = str(page)
 
         self.data = requests.get(Booru.e926, params=self.specs, headers=Booru.headers)
-        self.final = json.loads(better_object(self.data.json()), encoding="utf-8")
+        self.final = self.final = deserialize(self.data.json())
 
         if not self.final["posts"]:
             raise ValueError(Booru.error_handling_null)
@@ -189,7 +189,7 @@ class E926(object):
             self.data = requests.get(
                 Booru.e926, params=self.specs, headers=Booru.headers
             )
-            self.final = json.loads(better_object(self.data.json()), encoding="utf-8")
+            self.final = self.final = deserialize(self.data.json())
 
             self.not_random = parse_image(self.final["posts"])
             shuffle(self.not_random)

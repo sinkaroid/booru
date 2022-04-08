@@ -2,7 +2,7 @@ import requests
 import json
 import re
 from random import shuffle, randint
-from ..utils.parser import Api, better_object, parse_image, get_hostname
+from ..utils.parser import Api, better_object, parse_image, get_hostname, deserialize
 
 Booru = Api()
 
@@ -129,7 +129,7 @@ class Safebooru(object):
         if not self.data.text:
             raise ValueError(Booru.error_handling_null)
 
-        self.final = json.loads(better_object(self.data.json()), encoding="utf-8")
+        self.final = deserialize(self.data.json())
 
         self.not_random = Safebooru.append_obj(self.final)
         shuffle(self.not_random)
@@ -194,7 +194,7 @@ class Safebooru(object):
 
         try:
             self.data = requests.get(Booru.safebooru, params=self.specs)
-            self.final = json.loads(better_object(self.data.json()), encoding="utf-8")
+            self.final = deserialize(self.data.json())
 
             self.not_random = parse_image(Safebooru.append_obj(self.final))
             shuffle(self.not_random)

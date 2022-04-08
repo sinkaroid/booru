@@ -1,7 +1,7 @@
 import requests
 import json
 import re
-from ..utils.parser import Api, better_object, parse_image, get_hostname
+from ..utils.parser import Api, better_object, parse_image, get_hostname, deserialize
 from random import shuffle, randint
 
 Booru = Api()
@@ -92,7 +92,7 @@ class Konachan_Net(object):
         self.specs["page"] = str(page)
 
         self.data = requests.get(Booru.konachan_net, params=self.specs)
-        self.final = json.loads(better_object(self.data.json()), encoding="utf-8")
+        self.final = self.final = deserialize(self.data.json())
 
         if not self.final:
             raise ValueError(Booru.error_handling_null)
@@ -147,7 +147,7 @@ class Konachan_Net(object):
 
         try:
             self.data = requests.get(Booru.konachan_net, params=self.specs)
-            self.final = json.loads(better_object(self.data.json()), encoding="utf-8")
+            self.final = self.final = deserialize(self.data.json())
 
             self.not_random = parse_image(self.final)
             shuffle(self.not_random)

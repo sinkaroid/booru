@@ -1,7 +1,7 @@
 import requests
 import json
 import re
-from ..utils.parser import Api, better_object, parse_image, get_hostname
+from ..utils.parser import Api, better_object, parse_image, get_hostname, deserialize
 from random import shuffle, randint
 
 Booru = Api()
@@ -122,7 +122,7 @@ class Gelbooru(object):
         self.specs["json"] = "1"
 
         self.data = requests.get(Booru.gelbooru, params=self.specs)
-        self.final = json.loads(better_object(self.data.json()), encoding="utf-8")
+        self.final = self.final = deserialize(self.data.json())
 
         if "post" not in self.final or not self.final:
             raise ValueError(Booru.error_handling_null)
@@ -190,7 +190,7 @@ class Gelbooru(object):
 
         try:
             self.data = requests.get(Booru.gelbooru, params=self.specs)
-            self.final = json.loads(better_object(self.data.json()), encoding="utf-8")
+            self.final = self.final = deserialize(self.data.json())
 
             if "post" not in self.final:
                 raise ValueError(Booru.error_handling_null)

@@ -1,7 +1,7 @@
 import requests
 import json
 import re
-from ..utils.parser import Api, better_object, parse_image, get_hostname
+from ..utils.parser import Api, better_object, parse_image, get_hostname, deserialize
 from random import shuffle, randint
 
 Booru = Api()
@@ -108,7 +108,7 @@ class Rule34(object):
         if not self.data.text:
             raise ValueError(Booru.error_handling_null)
 
-        self.final = json.loads(better_object(self.data.json()), encoding="utf-8")
+        self.final = self.final = deserialize(self.data.json())
 
         self.not_random = Rule34.append_obj(self.final)
         shuffle(self.not_random)
@@ -173,7 +173,7 @@ class Rule34(object):
 
         try:
             self.data = requests.get(Booru.rule34, params=self.specs)
-            self.final = json.loads(better_object(self.data.json()), encoding="utf-8")
+            self.final = self.final = deserialize(self.data.json())
 
             self.not_random = parse_image(self.final)
             # print(self.data.elapsed.total_seconds())

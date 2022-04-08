@@ -1,7 +1,7 @@
 import requests
 import json
 import re
-from ..utils.parser import Api, better_object, get_hostname
+from ..utils.parser import Api, better_object, get_hostname, deserialize
 from random import shuffle, randint
 
 Booru = Api()
@@ -106,7 +106,7 @@ class Furbooru(object):
         self.specs["page"] = str(page)
 
         self.data = requests.get(Booru.furbooru, params=self.specs)
-        self.final = json.loads(better_object(self.data.json()), encoding="utf-8")
+        self.final = self.final = deserialize(self.data.json())
 
         if not self.final["images"]:
             raise ValueError(Booru.error_handling_null)
@@ -161,7 +161,7 @@ class Furbooru(object):
 
         try:
             self.data = requests.get(Booru.furbooru, params=self.specs)
-            self.final = json.loads(better_object(self.data.json()), encoding="utf-8")
+            self.final = self.final = deserialize(self.data.json())
 
             self.not_random = [
                 i["representations"]["full"] for i in self.final["images"]
