@@ -2,6 +2,7 @@ import argparse
 import asyncio
 import booru
 import requests
+import os
 
 
 class Wrapper(object):
@@ -78,6 +79,7 @@ parse.add_argument("-derpibooru", action="store", type=str)
 parse.add_argument("-furbooru", action="store", type=str)
 parse.add_argument("-behoimi", action="store", type=str)
 parse.add_argument("-paheal", action="store", type=str)
+parse.add_argument("-changelog", action="store_true")
 
 args = parse.parse_args()
 
@@ -123,6 +125,9 @@ def main():
         Wrapper.fetch(Base.paheal, args.paheal)
     elif args.build:
         print(booru.__version__)
+
+    elif args.changelog:
+        os.system('git-changelog -o CHANGELOG.md -s angular -t angular .')
 
     elif args.api:
         for api in booru.utils.parser.list_api():
