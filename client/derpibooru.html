@@ -29,7 +29,7 @@
 <pre><code class="python">import requests
 import json
 import re
-from ..utils.parser import Api, better_object, parse_image, get_hostname
+from ..utils.parser import Api, better_object, parse_image, get_hostname, deserialize
 from random import shuffle, randint
 
 Booru = Api()
@@ -134,7 +134,7 @@ class Derpibooru(object):
         self.specs[&#34;page&#34;] = str(page)
 
         self.data = requests.get(Booru.derpibooru, params=self.specs)
-        self.final = json.loads(better_object(self.data.json()), encoding=&#34;utf-8&#34;)
+        self.final = self.final = deserialize(self.data.json())
 
         if not self.final[&#34;images&#34;]:
             raise ValueError(Booru.error_handling_null)
@@ -189,7 +189,7 @@ class Derpibooru(object):
 
         try:
             self.data = requests.get(Booru.derpibooru, params=self.specs)
-            self.final = json.loads(better_object(self.data.json()), encoding=&#34;utf-8&#34;)
+            self.final = self.final = deserialize(self.data.json())
 
             self.not_random = [
                 i[&#34;representations&#34;][&#34;full&#34;] for i in self.final[&#34;images&#34;]
@@ -330,7 +330,7 @@ Gets images, image urls only from derpibooru.</p>
         self.specs[&#34;page&#34;] = str(page)
 
         self.data = requests.get(Booru.derpibooru, params=self.specs)
-        self.final = json.loads(better_object(self.data.json()), encoding=&#34;utf-8&#34;)
+        self.final = self.final = deserialize(self.data.json())
 
         if not self.final[&#34;images&#34;]:
             raise ValueError(Booru.error_handling_null)
@@ -385,7 +385,7 @@ Gets images, image urls only from derpibooru.</p>
 
         try:
             self.data = requests.get(Booru.derpibooru, params=self.specs)
-            self.final = json.loads(better_object(self.data.json()), encoding=&#34;utf-8&#34;)
+            self.final = self.final = deserialize(self.data.json())
 
             self.not_random = [
                 i[&#34;representations&#34;][&#34;full&#34;] for i in self.final[&#34;images&#34;]
@@ -500,7 +500,7 @@ def append_obj(raw_object: dict):
 
     try:
         self.data = requests.get(Booru.derpibooru, params=self.specs)
-        self.final = json.loads(better_object(self.data.json()), encoding=&#34;utf-8&#34;)
+        self.final = self.final = deserialize(self.data.json())
 
         self.not_random = [
             i[&#34;representations&#34;][&#34;full&#34;] for i in self.final[&#34;images&#34;]
@@ -587,7 +587,7 @@ def append_obj(raw_object: dict):
     self.specs[&#34;page&#34;] = str(page)
 
     self.data = requests.get(Booru.derpibooru, params=self.specs)
-    self.final = json.loads(better_object(self.data.json()), encoding=&#34;utf-8&#34;)
+    self.final = self.final = deserialize(self.data.json())
 
     if not self.final[&#34;images&#34;]:
         raise ValueError(Booru.error_handling_null)

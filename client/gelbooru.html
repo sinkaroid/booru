@@ -29,7 +29,7 @@
 <pre><code class="python">import requests
 import json
 import re
-from ..utils.parser import Api, better_object, parse_image, get_hostname
+from ..utils.parser import Api, better_object, parse_image, get_hostname, deserialize
 from random import shuffle, randint
 
 Booru = Api()
@@ -150,7 +150,7 @@ class Gelbooru(object):
         self.specs[&#34;json&#34;] = &#34;1&#34;
 
         self.data = requests.get(Booru.gelbooru, params=self.specs)
-        self.final = json.loads(better_object(self.data.json()), encoding=&#34;utf-8&#34;)
+        self.final = self.final = deserialize(self.data.json())
 
         if &#34;post&#34; not in self.final or not self.final:
             raise ValueError(Booru.error_handling_null)
@@ -218,7 +218,7 @@ class Gelbooru(object):
 
         try:
             self.data = requests.get(Booru.gelbooru, params=self.specs)
-            self.final = json.loads(better_object(self.data.json()), encoding=&#34;utf-8&#34;)
+            self.final = self.final = deserialize(self.data.json())
 
             if &#34;post&#34; not in self.final:
                 raise ValueError(Booru.error_handling_null)
@@ -378,7 +378,7 @@ Gets images, meant just image urls from gelbooru.</p>
         self.specs[&#34;json&#34;] = &#34;1&#34;
 
         self.data = requests.get(Booru.gelbooru, params=self.specs)
-        self.final = json.loads(better_object(self.data.json()), encoding=&#34;utf-8&#34;)
+        self.final = self.final = deserialize(self.data.json())
 
         if &#34;post&#34; not in self.final or not self.final:
             raise ValueError(Booru.error_handling_null)
@@ -446,7 +446,7 @@ Gets images, meant just image urls from gelbooru.</p>
 
         try:
             self.data = requests.get(Booru.gelbooru, params=self.specs)
-            self.final = json.loads(better_object(self.data.json()), encoding=&#34;utf-8&#34;)
+            self.final = self.final = deserialize(self.data.json())
 
             if &#34;post&#34; not in self.final:
                 raise ValueError(Booru.error_handling_null)
@@ -578,7 +578,7 @@ e.g: you want to search 'erza_scarlet' but dont want to gets furry, fill in 'fur
 
     try:
         self.data = requests.get(Booru.gelbooru, params=self.specs)
-        self.final = json.loads(better_object(self.data.json()), encoding=&#34;utf-8&#34;)
+        self.final = self.final = deserialize(self.data.json())
 
         if &#34;post&#34; not in self.final:
             raise ValueError(Booru.error_handling_null)
@@ -680,7 +680,7 @@ e.g: you want to search 'erza_scarlet' but dont want to gets furry, fill in 'fur
     self.specs[&#34;json&#34;] = &#34;1&#34;
 
     self.data = requests.get(Booru.gelbooru, params=self.specs)
-    self.final = json.loads(better_object(self.data.json()), encoding=&#34;utf-8&#34;)
+    self.final = self.final = deserialize(self.data.json())
 
     if &#34;post&#34; not in self.final or not self.final:
         raise ValueError(Booru.error_handling_null)

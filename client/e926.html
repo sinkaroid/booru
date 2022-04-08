@@ -29,7 +29,7 @@
 <pre><code class="python">import requests
 import json
 import re
-from ..utils.parser import Api, better_object, parse_image, get_hostname
+from ..utils.parser import Api, better_object, parse_image, get_hostname, deserialize
 from random import shuffle, randint
 
 Booru = Api()
@@ -148,7 +148,7 @@ class E926(object):
         self.specs[&#34;page&#34;] = str(page)
 
         self.data = requests.get(Booru.e926, params=self.specs, headers=Booru.headers)
-        self.final = json.loads(better_object(self.data.json()), encoding=&#34;utf-8&#34;)
+        self.final = self.final = deserialize(self.data.json())
 
         if not self.final[&#34;posts&#34;]:
             raise ValueError(Booru.error_handling_null)
@@ -217,7 +217,7 @@ class E926(object):
             self.data = requests.get(
                 Booru.e926, params=self.specs, headers=Booru.headers
             )
-            self.final = json.loads(better_object(self.data.json()), encoding=&#34;utf-8&#34;)
+            self.final = self.final = deserialize(self.data.json())
 
             self.not_random = parse_image(self.final[&#34;posts&#34;])
             shuffle(self.not_random)
@@ -372,7 +372,7 @@ Gets images, meant just image urls from e926.</p>
         self.specs[&#34;page&#34;] = str(page)
 
         self.data = requests.get(Booru.e926, params=self.specs, headers=Booru.headers)
-        self.final = json.loads(better_object(self.data.json()), encoding=&#34;utf-8&#34;)
+        self.final = self.final = deserialize(self.data.json())
 
         if not self.final[&#34;posts&#34;]:
             raise ValueError(Booru.error_handling_null)
@@ -441,7 +441,7 @@ Gets images, meant just image urls from e926.</p>
             self.data = requests.get(
                 Booru.e926, params=self.specs, headers=Booru.headers
             )
-            self.final = json.loads(better_object(self.data.json()), encoding=&#34;utf-8&#34;)
+            self.final = self.final = deserialize(self.data.json())
 
             self.not_random = parse_image(self.final[&#34;posts&#34;])
             shuffle(self.not_random)
@@ -570,7 +570,7 @@ def append_obj(raw_object: dict):
         self.data = requests.get(
             Booru.e926, params=self.specs, headers=Booru.headers
         )
-        self.final = json.loads(better_object(self.data.json()), encoding=&#34;utf-8&#34;)
+        self.final = self.final = deserialize(self.data.json())
 
         self.not_random = parse_image(self.final[&#34;posts&#34;])
         shuffle(self.not_random)
@@ -666,7 +666,7 @@ def append_obj(raw_object: dict):
     self.specs[&#34;page&#34;] = str(page)
 
     self.data = requests.get(Booru.e926, params=self.specs, headers=Booru.headers)
-    self.final = json.loads(better_object(self.data.json()), encoding=&#34;utf-8&#34;)
+    self.final = self.final = deserialize(self.data.json())
 
     if not self.final[&#34;posts&#34;]:
         raise ValueError(Booru.error_handling_null)

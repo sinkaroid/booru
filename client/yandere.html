@@ -28,7 +28,7 @@
 </summary>
 <pre><code class="python">import requests
 import json
-from ..utils.parser import Api, better_object, parse_image, get_hostname
+from ..utils.parser import Api, better_object, parse_image, get_hostname, deserialize
 from random import shuffle, randint
 
 Booru = Api()
@@ -119,7 +119,7 @@ class Yandere(object):
         self.specs[&#34;page&#34;] = str(page)
 
         self.data = requests.get(Booru.yandere, params=self.specs)
-        self.final = json.loads(better_object(self.data.json()), encoding=&#34;utf-8&#34;)
+        self.final = self.final = deserialize(self.data.json())
 
         if not self.final:
             raise ValueError(Booru.error_handling_null)
@@ -174,7 +174,7 @@ class Yandere(object):
 
         try:
             self.data = requests.get(Booru.yandere, params=self.specs)
-            self.final = json.loads(better_object(self.data.json()), encoding=&#34;utf-8&#34;)
+            self.final = self.final = deserialize(self.data.json())
 
             self.not_random = parse_image(self.final)
             shuffle(self.not_random)
@@ -292,7 +292,7 @@ Gets images, image urls only from yandere.</p></div>
         self.specs[&#34;page&#34;] = str(page)
 
         self.data = requests.get(Booru.yandere, params=self.specs)
-        self.final = json.loads(better_object(self.data.json()), encoding=&#34;utf-8&#34;)
+        self.final = self.final = deserialize(self.data.json())
 
         if not self.final:
             raise ValueError(Booru.error_handling_null)
@@ -347,7 +347,7 @@ Gets images, image urls only from yandere.</p></div>
 
         try:
             self.data = requests.get(Booru.yandere, params=self.specs)
-            self.final = json.loads(better_object(self.data.json()), encoding=&#34;utf-8&#34;)
+            self.final = self.final = deserialize(self.data.json())
 
             self.not_random = parse_image(self.final)
             shuffle(self.not_random)
@@ -460,7 +460,7 @@ def append_obj(raw_object: dict):
 
     try:
         self.data = requests.get(Booru.yandere, params=self.specs)
-        self.final = json.loads(better_object(self.data.json()), encoding=&#34;utf-8&#34;)
+        self.final = self.final = deserialize(self.data.json())
 
         self.not_random = parse_image(self.final)
         shuffle(self.not_random)
@@ -544,7 +544,7 @@ def append_obj(raw_object: dict):
     self.specs[&#34;page&#34;] = str(page)
 
     self.data = requests.get(Booru.yandere, params=self.specs)
-    self.final = json.loads(better_object(self.data.json()), encoding=&#34;utf-8&#34;)
+    self.final = self.final = deserialize(self.data.json())
 
     if not self.final:
         raise ValueError(Booru.error_handling_null)

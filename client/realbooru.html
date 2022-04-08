@@ -30,7 +30,7 @@
 import json
 import re
 from random import shuffle, randint
-from ..utils.parser import Api, better_object, parse_image, get_hostname
+from ..utils.parser import Api, better_object, parse_image, get_hostname, deserialize
 
 Booru = Api()
 
@@ -164,7 +164,7 @@ class Realbooru(object):
         if not self.data.text:
             raise ValueError(Booru.error_handling_null)
 
-        self.final = json.loads(better_object(self.data.json()), encoding=&#34;utf-8&#34;)
+        self.final = self.final = deserialize(self.data.json())
 
         self.not_random = Realbooru.append_obj(self.final)
         shuffle(self.not_random)
@@ -229,7 +229,7 @@ class Realbooru(object):
 
         try:
             self.data = requests.get(Booru.realbooru, params=self.specs)
-            self.final = json.loads(better_object(self.data.json()), encoding=&#34;utf-8&#34;)
+            self.final = self.final = deserialize(self.data.json())
 
             self.not_random = parse_image(Realbooru.append_obj(self.final))
             self.bad_array = [
@@ -403,7 +403,7 @@ Gets images, image urls only from realbooru.</p>
         if not self.data.text:
             raise ValueError(Booru.error_handling_null)
 
-        self.final = json.loads(better_object(self.data.json()), encoding=&#34;utf-8&#34;)
+        self.final = self.final = deserialize(self.data.json())
 
         self.not_random = Realbooru.append_obj(self.final)
         shuffle(self.not_random)
@@ -468,7 +468,7 @@ Gets images, image urls only from realbooru.</p>
 
         try:
             self.data = requests.get(Booru.realbooru, params=self.specs)
-            self.final = json.loads(better_object(self.data.json()), encoding=&#34;utf-8&#34;)
+            self.final = self.final = deserialize(self.data.json())
 
             self.not_random = parse_image(Realbooru.append_obj(self.final))
             self.bad_array = [
@@ -609,7 +609,7 @@ e.g: you want to search 'erza_scarlet' but dont want to gets furry, fill in 'fur
 
     try:
         self.data = requests.get(Booru.realbooru, params=self.specs)
-        self.final = json.loads(better_object(self.data.json()), encoding=&#34;utf-8&#34;)
+        self.final = self.final = deserialize(self.data.json())
 
         self.not_random = parse_image(Realbooru.append_obj(self.final))
         self.bad_array = [
@@ -716,7 +716,7 @@ e.g: you want to search 'erza_scarlet' but dont want to gets furry, fill in 'fur
     if not self.data.text:
         raise ValueError(Booru.error_handling_null)
 
-    self.final = json.loads(better_object(self.data.json()), encoding=&#34;utf-8&#34;)
+    self.final = self.final = deserialize(self.data.json())
 
     self.not_random = Realbooru.append_obj(self.final)
     shuffle(self.not_random)

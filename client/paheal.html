@@ -29,7 +29,7 @@
 <pre><code class="python">import requests
 import json
 import re
-from ..utils.parser import Api, better_object, get_hostname, read_json
+from ..utils.parser import Api, better_object
 from random import shuffle, randint
 from xmltodict import parse
 
@@ -172,7 +172,7 @@ class Paheal(object):
         else:
             self.tags = query
 
-        self.specs[&#34;tags&#34;] = str(self.query)
+        self.specs[&#34;tags&#34;] = str(self.tags)
         self.specs[&#34;limit&#34;] = str(limit)
         self.specs[&#34;page&#34;] = str(page)
 
@@ -363,7 +363,7 @@ Gets images, meant just image urls from paheal.</p>
         else:
             self.tags = query
 
-        self.specs[&#34;tags&#34;] = str(self.query)
+        self.specs[&#34;tags&#34;] = str(self.tags)
         self.specs[&#34;limit&#34;] = str(limit)
         self.specs[&#34;page&#34;] = str(page)
 
@@ -438,7 +438,7 @@ Gets images, meant just image urls from paheal.</p>
     else:
         self.tags = query
 
-    self.specs[&#34;tags&#34;] = str(self.query)
+    self.specs[&#34;tags&#34;] = str(self.tags)
     self.specs[&#34;limit&#34;] = str(limit)
     self.specs[&#34;page&#34;] = str(page)
 
