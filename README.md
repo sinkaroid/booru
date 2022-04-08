@@ -19,11 +19,10 @@ Python bindings for Booru imageboards
     - ─ [import you want to use](#import-you-want-to-use)
     - ─ [shuffle](#shuffle-the-whole-dictionary)
 - [Documentation](#Documentation)
-- [Changelog](https://github.com/sinkaroid/booru/blob/master/CHANGELOG.md)
+- [Changelog](https://github.com/sinkaroid/booru/releases)
 - [Limitations](#limitations)
 - [Security](https://github.com/sinkaroid/booru/blob/master/SECURITY.md)
 - [Acknowledgements](#acknowledgements)
-- [Legal](#legal)
 
 <div align="center">
 
@@ -282,9 +281,11 @@ For default, the lib return a random dict, to gets a raw data and disable set 'r
 The documentation can be found https://sinkaroid.github.io/booru
 
 ## Limitations
-- Respect the ratelimit: There is a hard limit of 100 posts per request.
+- Respect the ratelimit, there is a hard limit of 100 posts per request.
 - Curently the object returns is not consistent, every dict is different structure.
 - More than just searching (Comming soon)
+- `'charmap' codec can't encode characters`
+  - It's raised when the dict contains non-ascii characters, then your console can't parse them, use real console don't Git-bash.
 
 ## Acknowledgements
 - This project logo was peeked from [pandas](https://github.com/pandas-dev/pandas) with jokes in mind.
