@@ -3,26 +3,25 @@ Python bindings for Booru imageboards
 
 <a href="http://sinkaroid.github.io/booru"><img align="right" src="https://cdn.discordapp.com/attachments/952117487166705747/961124440400351232/mataa.png" width="400"></a>
 
-- [Features](#features)
-- [This library vs. the Competition](#this-library-vs-the-competition)
-  - ─ [Handle 19 different booru](https://github.com/sinkaroid/booru/blob/master/booru/__init__.py)
-  - ─ [Benchmark quick tests](#benchmark-quick-tests)
-- [Usage](#usage)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-  - [Quick example](#quick-example)
-    - ─ [search](#search)
-    - ─ [extracting images](#get-image)
-  - [Advanced example](#advanced-example)
-    - ─ [armored search](#armored-search)
-    - ─ [gacha like](#gacha-like)
-    - ─ [import you want to use](#import-you-want-to-use)
-    - ─ [shuffle](#shuffle-the-whole-dictionary)
-- [Documentation](#Documentation)
-- [Changelog](https://github.com/sinkaroid/booru/releases)
-- [Limitations](#limitations)
-- [Security](https://github.com/sinkaroid/booru/blob/master/SECURITY.md)
-- [Acknowledgements](#acknowledgements)
+- [Booru](#booru)
+  - [Features](#features)
+  - [This library vs. the Competition](#this-library-vs-the-competition)
+    - [Benchmark quick tests](#benchmark-quick-tests)
+  - [Usage](#usage)
+    - [Prerequisites](#prerequisites)
+    - [Installation](#installation)
+    - [Quick example](#quick-example)
+      - [search](#search)
+      - [get image](#get-image)
+    - [Advanced example](#advanced-example)
+      - [Armored search](#armored-search)
+      - [Gacha-like](#gacha-like)
+      - [Import you want to use](#import-you-want-to-use)
+      - [Shuffle the whole dictionary](#shuffle-the-whole-dictionary)
+  - [Documentation](#documentation)
+  - [Limitations](#limitations)
+  - [Acknowledgements](#acknowledgements)
+  - [Legal](#legal)
 
 <div align="center">
 
@@ -270,7 +269,6 @@ from booru import Rule34
 some_booru = Rule34()
 
 ## do something
-
 ```
 
 #### Shuffle the whole dictionary
@@ -286,6 +284,8 @@ The documentation can be found https://sinkaroid.github.io/booru
 - More than just searching (Comming soon)
 - `'charmap' codec can't encode characters`
   - It's raised when the dict contains non-ascii characters, then your console can't parse them, use real console don't Git-bash.
+- All mocking tests run without api keys
+  -  login properties may not same it all, If you encounter this misleading please open an issue like [#1](https://github.com/sinkaroid/booru/issues/1)
 
 ## Acknowledgements
 - This project logo was peeked from [pandas](https://github.com/pandas-dev/pandas) with jokes in mind.
