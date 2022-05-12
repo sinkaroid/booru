@@ -43,6 +43,19 @@ class Realbooru(object):
                     "post_url"
                 ] = f"{get_hostname(Booru.realbooru)}/index.php?page=post&s=view&id={raw_object[i]['id']}"
 
+        
+            elif not raw_object[i]["directory"]:
+                raw_object[i][
+                    "file_url"
+                ] = f"{get_hostname(Booru.realbooru)}/images/{raw_object[i]['image'][0:2]}/{raw_object[i]['image'][2:4]}/{raw_object[i]['image']}"
+                raw_object[i][
+                    "post_url"
+                ] = f"{get_hostname(Booru.realbooru)}/index.php?page=post&s=view&id={raw_object[i]['id']}"
+                
+                raw_object[i][
+                    "directory"
+                ] = f"{raw_object[i]['image'][0:2]}/{raw_object[i]['image'][2:4]}"
+
             else:
                 raw_object[i]["file_url"] = Booru.error_handling_cantparse
                 raw_object[i][
