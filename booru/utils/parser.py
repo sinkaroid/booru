@@ -35,6 +35,7 @@ class Api:
         e_handling_sameval (str): The error message for the same values.
         e_handling_cantparse (str): The error message for the parsing.
         e_handling_null (str): The error message for the null.
+        e_handling_invalid_auth (str): The error message for the invalid auth.
     """
 
     def __init__(
@@ -73,6 +74,7 @@ class Api:
         self.error_handling_sameval = "block values should not be hit to the query"
         self.error_handling_cantparse = "failed to get data, the api is misleading"
         self.error_handling_null = "no results, make sure you spelled everything right"
+        self.error_handling_invalid_auth = "invalid api key or login"
         self.headers = BASE_headers
         self.behoimi_bypass = BYPASS_headers
 
