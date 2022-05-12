@@ -70,7 +70,7 @@ class Danbooru(object):
 
         return raw_object
 
-    def __init__(self, api_key: str = &#34;&#34;, user_id: str = &#34;&#34;):
+    def __init__(self, api_key: str = &#34;&#34;, login: str = &#34;&#34;):
         &#34;&#34;&#34;Initializes danbooru.
 
         Parameters
@@ -78,18 +78,25 @@ class Danbooru(object):
         api_key : str
             Your API Key which is accessible within your account options page
 
-        user_id : str
+        login : str
             Your user ID, which is accessible on the account options/profile page.
         &#34;&#34;&#34;
 
-        if api_key and user_id == &#34;&#34;:
+        if api_key and login == &#34;&#34;:
             self.api_key = None
-            self.user_id = None
+            self.login = None
         else:
             self.api_key = api_key
-            self.user_id = user_id
+            self.login = login
 
-        self.specs = {&#34;api_key&#34;: self.api_key, &#34;user_id&#34;: self.user_id}
+        self.specs = {&#34;api_key&#34;: self.api_key, &#34;login&#34;: self.login}
+
+        if self.api_key and self.login:
+            self.data = requests.get(f&#34;https://danbooru.donmai.us/profile.json?api_key={self.api_key}&amp;login={self.login}&#34;)
+            
+            if self.data.status_code != 200:
+                raise ValueError(Booru.error_handling_invalid_auth)
+
 
     async def search(
         self,
@@ -239,7 +246,7 @@ class Danbooru(object):
 <dl>
 <dt id="booru.client.danbooru.Danbooru"><code class="flex name class">
 <span>class <span class="ident">Danbooru</span></span>
-<span>(</span><span>api_key: str = '', user_id: str = '')</span>
+<span>(</span><span>api_key: str = '', login: str = '')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Danbooru wrapper</p>
@@ -253,7 +260,7 @@ Gets images, image urls only from danbooru.</p>
 <dl>
 <dt><strong><code>api_key</code></strong> :&ensp;<code>str</code></dt>
 <dd>Your API Key which is accessible within your account options page</dd>
-<dt><strong><code>user_id</code></strong> :&ensp;<code>str</code></dt>
+<dt><strong><code>login</code></strong> :&ensp;<code>str</code></dt>
 <dd>Your user ID, which is accessible on the account options/profile page.</dd>
 </dl></div>
 <details class="source">
@@ -295,7 +302,7 @@ Gets images, image urls only from danbooru.</p>
 
         return raw_object
 
-    def __init__(self, api_key: str = &#34;&#34;, user_id: str = &#34;&#34;):
+    def __init__(self, api_key: str = &#34;&#34;, login: str = &#34;&#34;):
         &#34;&#34;&#34;Initializes danbooru.
 
         Parameters
@@ -303,18 +310,25 @@ Gets images, image urls only from danbooru.</p>
         api_key : str
             Your API Key which is accessible within your account options page
 
-        user_id : str
+        login : str
             Your user ID, which is accessible on the account options/profile page.
         &#34;&#34;&#34;
 
-        if api_key and user_id == &#34;&#34;:
+        if api_key and login == &#34;&#34;:
             self.api_key = None
-            self.user_id = None
+            self.login = None
         else:
             self.api_key = api_key
-            self.user_id = user_id
+            self.login = login
 
-        self.specs = {&#34;api_key&#34;: self.api_key, &#34;user_id&#34;: self.user_id}
+        self.specs = {&#34;api_key&#34;: self.api_key, &#34;login&#34;: self.login}
+
+        if self.api_key and self.login:
+            self.data = requests.get(f&#34;https://danbooru.donmai.us/profile.json?api_key={self.api_key}&amp;login={self.login}&#34;)
+            
+            if self.data.status_code != 200:
+                raise ValueError(Booru.error_handling_invalid_auth)
+
 
     async def search(
         self,

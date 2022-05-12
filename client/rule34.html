@@ -204,7 +204,6 @@ class Rule34(object):
             self.final = self.final = deserialize(self.data.json())
 
             self.not_random = parse_image(self.final)
-            # print(self.data.elapsed.total_seconds())
             shuffle(self.not_random)
             return better_object(self.not_random)
 
@@ -404,7 +403,6 @@ Gets images, image urls only from rule34.</p></div>
             self.final = self.final = deserialize(self.data.json())
 
             self.not_random = parse_image(self.final)
-            # print(self.data.elapsed.total_seconds())
             shuffle(self.not_random)
             return better_object(self.not_random)
 
@@ -534,7 +532,6 @@ e.g: you want to search 'erza_scarlet' but dont want to gets furry, fill in 'fur
         self.final = self.final = deserialize(self.data.json())
 
         self.not_random = parse_image(self.final)
-        # print(self.data.elapsed.total_seconds())
         shuffle(self.not_random)
         return better_object(self.not_random)
 

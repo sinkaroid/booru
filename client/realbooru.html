@@ -71,6 +71,19 @@ class Realbooru(object):
                     &#34;post_url&#34;
                 ] = f&#34;{get_hostname(Booru.realbooru)}/index.php?page=post&amp;s=view&amp;id={raw_object[i][&#39;id&#39;]}&#34;
 
+        
+            elif not raw_object[i][&#34;directory&#34;]:
+                raw_object[i][
+                    &#34;file_url&#34;
+                ] = f&#34;{get_hostname(Booru.realbooru)}/images/{raw_object[i][&#39;image&#39;][0:2]}/{raw_object[i][&#39;image&#39;][2:4]}/{raw_object[i][&#39;image&#39;]}&#34;
+                raw_object[i][
+                    &#34;post_url&#34;
+                ] = f&#34;{get_hostname(Booru.realbooru)}/index.php?page=post&amp;s=view&amp;id={raw_object[i][&#39;id&#39;]}&#34;
+                
+                raw_object[i][
+                    &#34;directory&#34;
+                ] = f&#34;{raw_object[i][&#39;image&#39;][0:2]}/{raw_object[i][&#39;image&#39;][2:4]}&#34;
+
             else:
                 raw_object[i][&#34;file_url&#34;] = Booru.error_handling_cantparse
                 raw_object[i][
@@ -310,6 +323,19 @@ Gets images, image urls only from realbooru.</p>
                     &#34;post_url&#34;
                 ] = f&#34;{get_hostname(Booru.realbooru)}/index.php?page=post&amp;s=view&amp;id={raw_object[i][&#39;id&#39;]}&#34;
 
+        
+            elif not raw_object[i][&#34;directory&#34;]:
+                raw_object[i][
+                    &#34;file_url&#34;
+                ] = f&#34;{get_hostname(Booru.realbooru)}/images/{raw_object[i][&#39;image&#39;][0:2]}/{raw_object[i][&#39;image&#39;][2:4]}/{raw_object[i][&#39;image&#39;]}&#34;
+                raw_object[i][
+                    &#34;post_url&#34;
+                ] = f&#34;{get_hostname(Booru.realbooru)}/index.php?page=post&amp;s=view&amp;id={raw_object[i][&#39;id&#39;]}&#34;
+                
+                raw_object[i][
+                    &#34;directory&#34;
+                ] = f&#34;{raw_object[i][&#39;image&#39;][0:2]}/{raw_object[i][&#39;image&#39;][2:4]}&#34;
+
             else:
                 raw_object[i][&#34;file_url&#34;] = Booru.error_handling_cantparse
                 raw_object[i][
@@ -523,6 +549,19 @@ def append_obj(raw_object: dict):
             raw_object[i][
                 &#34;post_url&#34;
             ] = f&#34;{get_hostname(Booru.realbooru)}/index.php?page=post&amp;s=view&amp;id={raw_object[i][&#39;id&#39;]}&#34;
+
+    
+        elif not raw_object[i][&#34;directory&#34;]:
+            raw_object[i][
+                &#34;file_url&#34;
+            ] = f&#34;{get_hostname(Booru.realbooru)}/images/{raw_object[i][&#39;image&#39;][0:2]}/{raw_object[i][&#39;image&#39;][2:4]}/{raw_object[i][&#39;image&#39;]}&#34;
+            raw_object[i][
+                &#34;post_url&#34;
+            ] = f&#34;{get_hostname(Booru.realbooru)}/index.php?page=post&amp;s=view&amp;id={raw_object[i][&#39;id&#39;]}&#34;
+            
+            raw_object[i][
+                &#34;directory&#34;
+            ] = f&#34;{raw_object[i][&#39;image&#39;][0:2]}/{raw_object[i][&#39;image&#39;][2:4]}&#34;
 
         else:
             raw_object[i][&#34;file_url&#34;] = Booru.error_handling_cantparse
