@@ -63,6 +63,13 @@ class Danbooru(object):
 
         self.specs = {"api_key": self.api_key, "login": self.login}
 
+        if self.api_key and self.login:
+            self.data = requests.get(f"https://danbooru.donmai.us/profile.json?api_key={self.api_key}&login={self.login}")
+            
+            if self.data.status_code != 200:
+                raise ValueError(Booru.error_handling_invalid_auth)
+
+
     async def search(
         self,
         query: str,
