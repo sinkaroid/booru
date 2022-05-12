@@ -42,7 +42,7 @@ class Danbooru(object):
 
         return raw_object
 
-    def __init__(self, api_key: str = "", user_id: str = ""):
+    def __init__(self, api_key: str = "", login: str = ""):
         """Initializes danbooru.
 
         Parameters
@@ -50,18 +50,18 @@ class Danbooru(object):
         api_key : str
             Your API Key which is accessible within your account options page
 
-        user_id : str
+        login : str
             Your user ID, which is accessible on the account options/profile page.
         """
 
-        if api_key and user_id == "":
+        if api_key and login == "":
             self.api_key = None
-            self.user_id = None
+            self.login = None
         else:
             self.api_key = api_key
-            self.user_id = user_id
+            self.login = login
 
-        self.specs = {"api_key": self.api_key, "user_id": self.user_id}
+        self.specs = {"api_key": self.api_key, "login": self.login}
 
     async def search(
         self,
