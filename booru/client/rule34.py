@@ -176,7 +176,6 @@ class Rule34(object):
             self.final = self.final = deserialize(self.data.json())
 
             self.not_random = parse_image(self.final)
-            # print(self.data.elapsed.total_seconds())
             shuffle(self.not_random)
             return better_object(self.not_random)
 
