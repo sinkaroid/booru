@@ -104,7 +104,7 @@ class Gelbooru(object):
         if gacha:
             limit = 100
 
-        if limit > 100:
+        if limit > 1000:
             raise ValueError(Booru.error_handling_limit)
 
         if block and re.findall(block, query):
@@ -171,7 +171,7 @@ class Gelbooru(object):
 
         """
 
-        if limit > 100:
+        if limit > 1000:
             raise ValueError(Booru.error_handling_limit)
 
         if block and re.findall(block, query):

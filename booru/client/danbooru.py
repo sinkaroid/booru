@@ -111,7 +111,7 @@ class Danbooru(object):
         if gacha:
             limit = 100
 
-        if limit > 100:
+        if limit > 1000:
             raise ValueError(Booru.error_handling_limit)
 
         if block and re.findall(block, query):
@@ -178,7 +178,7 @@ class Danbooru(object):
 
         """
 
-        if limit > 100:
+        if limit > 1000:
             raise ValueError(Booru.error_handling_limit)
 
         if block and re.findall(block, query):
