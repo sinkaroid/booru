@@ -104,6 +104,7 @@ venv.bak/
 .mypy_cache/
 
 # garbage stuff
+CHANGELOG.md
 build.sh
 app.py
 setup.cfg
@@ -116,4 +117,3 @@ hey.py
 db.py
 parse_object.py
 asu.py
-CHANGELOG.md
