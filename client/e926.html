@@ -131,7 +131,7 @@ class E926(object):
         if gacha:
             limit = 100
 
-        if limit &gt; 100:
+        if limit &gt; 1000:
             raise ValueError(Booru.error_handling_limit)
 
         if block and re.findall(block, query):
@@ -196,7 +196,7 @@ class E926(object):
 
         &#34;&#34;&#34;
 
-        if limit &gt; 100:
+        if limit &gt; 1000:
             raise ValueError(Booru.error_handling_limit)
 
         if block and re.findall(block, query):
@@ -355,7 +355,7 @@ Gets images, meant just image urls from e926.</p>
         if gacha:
             limit = 100
 
-        if limit &gt; 100:
+        if limit &gt; 1000:
             raise ValueError(Booru.error_handling_limit)
 
         if block and re.findall(block, query):
@@ -420,7 +420,7 @@ Gets images, meant just image urls from e926.</p>
 
         &#34;&#34;&#34;
 
-        if limit &gt; 100:
+        if limit &gt; 1000:
             raise ValueError(Booru.error_handling_limit)
 
         if block and re.findall(block, query):
@@ -549,7 +549,7 @@ def append_obj(raw_object: dict):
 
     &#34;&#34;&#34;
 
-    if limit &gt; 100:
+    if limit &gt; 1000:
         raise ValueError(Booru.error_handling_limit)
 
     if block and re.findall(block, query):
@@ -649,7 +649,7 @@ def append_obj(raw_object: dict):
     if gacha:
         limit = 100
 
-    if limit &gt; 100:
+    if limit &gt; 1000:
         raise ValueError(Booru.error_handling_limit)
 
     if block and re.findall(block, query):

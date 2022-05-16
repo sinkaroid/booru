@@ -98,7 +98,7 @@ class Api:
         self.furbooru = &#34;https://furbooru.com/api/v1/json/search/images&#34;
         self.behoimi = &#34;http://behoimi.org/post/index.json&#34;
         self.paheal = &#34;https://rule34.paheal.net/api/danbooru/find_posts/index.xml&#34;
-        self.error_handling_limit = &#34;there is a hard limit of 100 posts per request.&#34;
+        self.error_handling_limit = &#34;there is a hard limit of 1000 posts per request.&#34;
         self.error_handling_sameval = &#34;block values should not be hit to the query&#34;
         self.error_handling_cantparse = &#34;failed to get data, the api is misleading&#34;
         self.error_handling_null = &#34;no results, make sure you spelled everything right&#34;
@@ -170,7 +170,7 @@ def deserialize(data: list):
     dict
         The deserialized with better object
     &#34;&#34;&#34;
-    return json.loads(better_object(data), encoding=&#34;utf-8&#34;)
+    return json.loads(better_object(data))
 
 
 def parse_image(raw_object: dict):
@@ -213,7 +213,21 @@ def get_hostname(url: str):
     str
         The site contains protocol and hostname
     &#34;&#34;&#34;
-    return re.sub(r&#34;(.*://)?([^/?]+).*&#34;, &#34;\g&lt;1&gt;\g&lt;2&gt;&#34;, url)</code></pre>
+    return re.sub(r&#34;(.*://)?([^/?]+).*&#34;, &#34;\g&lt;1&gt;\g&lt;2&gt;&#34;, url)
+
+def resolve(b_object: dict) -&gt; dict:
+    &#34;&#34;&#34;Resolves the json object meant data with bad formatting, arbitary indent, arbitary sort keys but it is resolved and ready to extends
+
+    Parameters
+    ----------
+    b_object : dict
+
+    Returns
+    -------
+    dict
+        raw json object
+    &#34;&#34;&#34;
+    return json.loads(b_object)</code></pre>
 </details>
 </section>
 <section>
@@ -290,7 +304,7 @@ def get_hostname(url: str):
     dict
         The deserialized with better object
     &#34;&#34;&#34;
-    return json.loads(better_object(data), encoding=&#34;utf-8&#34;)</code></pre>
+    return json.loads(better_object(data))</code></pre>
 </details>
 </dd>
 <dt id="booru.utils.parser.get_hostname"><code class="name flex">
@@ -420,6 +434,40 @@ def get_hostname(url: str):
     return images</code></pre>
 </details>
 </dd>
+<dt id="booru.utils.parser.resolve"><code class="name flex">
+<span>def <span class="ident">resolve</span></span>(<span>b_object: dict) ‑> dict</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Resolves the json object meant data with bad formatting, arbitary indent, arbitary sort keys but it is resolved and ready to extends</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>b_object</code></strong> :&ensp;<code>dict</code></dt>
+<dd>&nbsp;</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>dict</code></dt>
+<dd>raw json object</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def resolve(b_object: dict) -&gt; dict:
+    &#34;&#34;&#34;Resolves the json object meant data with bad formatting, arbitary indent, arbitary sort keys but it is resolved and ready to extends
+
+    Parameters
+    ----------
+    b_object : dict
+
+    Returns
+    -------
+    dict
+        raw json object
+    &#34;&#34;&#34;
+    return json.loads(b_object)</code></pre>
+</details>
+</dd>
 </dl>
 </section>
 <section>
@@ -427,7 +475,7 @@ def get_hostname(url: str):
 <dl>
 <dt id="booru.utils.parser.Api"><code class="flex name class">
 <span>class <span class="ident">Api</span></span>
-<span>(</span><span>BASE_headers={'User-Agent': 'booru/v1.0.13 (https://pypi.org/project/booru);', 'From': 'anakmancasan@gmail.com'}, BYPASS_headers={'User-Agent': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1)', 'Referer': 'http://behoimi.org/data/ff/f3/', 'From': 'anakmancasan@gmail.com'})</span>
+<span>(</span><span>BASE_headers={'User-Agent': 'booru/v1.0.14 (https://pypi.org/project/booru);', 'From': 'anakmancasan@gmail.com'}, BYPASS_headers={'User-Agent': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1)', 'Referer': 'http://behoimi.org/data/ff/f3/', 'From': 'anakmancasan@gmail.com'})</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Api class</p>
@@ -551,7 +599,7 @@ def get_hostname(url: str):
         self.furbooru = &#34;https://furbooru.com/api/v1/json/search/images&#34;
         self.behoimi = &#34;http://behoimi.org/post/index.json&#34;
         self.paheal = &#34;https://rule34.paheal.net/api/danbooru/find_posts/index.xml&#34;
-        self.error_handling_limit = &#34;there is a hard limit of 100 posts per request.&#34;
+        self.error_handling_limit = &#34;there is a hard limit of 1000 posts per request.&#34;
         self.error_handling_sameval = &#34;block values should not be hit to the query&#34;
         self.error_handling_cantparse = &#34;failed to get data, the api is misleading&#34;
         self.error_handling_null = &#34;no results, make sure you spelled everything right&#34;
@@ -575,12 +623,13 @@ def get_hostname(url: str):
 </ul>
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
-<ul class="">
+<ul class="two-column">
 <li><code><a title="booru.utils.parser.better_object" href="#booru.utils.parser.better_object">better_object</a></code></li>
 <li><code><a title="booru.utils.parser.deserialize" href="#booru.utils.parser.deserialize">deserialize</a></code></li>
 <li><code><a title="booru.utils.parser.get_hostname" href="#booru.utils.parser.get_hostname">get_hostname</a></code></li>
 <li><code><a title="booru.utils.parser.list_api" href="#booru.utils.parser.list_api">list_api</a></code></li>
 <li><code><a title="booru.utils.parser.parse_image" href="#booru.utils.parser.parse_image">parse_image</a></code></li>
+<li><code><a title="booru.utils.parser.resolve" href="#booru.utils.parser.resolve">resolve</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-classes">Classes</a></h3>

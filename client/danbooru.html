@@ -139,7 +139,7 @@ class Danbooru(object):
         if gacha:
             limit = 100
 
-        if limit &gt; 100:
+        if limit &gt; 1000:
             raise ValueError(Booru.error_handling_limit)
 
         if block and re.findall(block, query):
@@ -206,7 +206,7 @@ class Danbooru(object):
 
         &#34;&#34;&#34;
 
-        if limit &gt; 100:
+        if limit &gt; 1000:
             raise ValueError(Booru.error_handling_limit)
 
         if block and re.findall(block, query):
@@ -371,7 +371,7 @@ Gets images, image urls only from danbooru.</p>
         if gacha:
             limit = 100
 
-        if limit &gt; 100:
+        if limit &gt; 1000:
             raise ValueError(Booru.error_handling_limit)
 
         if block and re.findall(block, query):
@@ -438,7 +438,7 @@ Gets images, image urls only from danbooru.</p>
 
         &#34;&#34;&#34;
 
-        if limit &gt; 100:
+        if limit &gt; 1000:
             raise ValueError(Booru.error_handling_limit)
 
         if block and re.findall(block, query):
@@ -567,7 +567,7 @@ e.g: you want to search 'erza_scarlet' but dont want to gets furry, fill in 'fur
 
     &#34;&#34;&#34;
 
-    if limit &gt; 100:
+    if limit &gt; 1000:
         raise ValueError(Booru.error_handling_limit)
 
     if block and re.findall(block, query):
@@ -667,7 +667,7 @@ e.g: you want to search 'erza_scarlet' but dont want to gets furry, fill in 'fur
     if gacha:
         limit = 100
 
-    if limit &gt; 100:
+    if limit &gt; 1000:
         raise ValueError(Booru.error_handling_limit)
 
     if block and re.findall(block, query):
