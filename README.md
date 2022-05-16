@@ -10,14 +10,15 @@ Python bindings for Booru imageboards
   - [Usage](#usage)
     - [Prerequisites](#prerequisites)
     - [Installation](#installation)
-    - [Quick example](#quick-example)
+    - [Usage](#quick-example)
       - [search](#search)
       - [get image](#get-image)
-    - [Advanced example](#advanced-example)
+    - [Further usage](#advanced-example)
       - [Armored search](#armored-search)
       - [Gacha-like](#gacha-like)
       - [Import you want to use](#import-you-want-to-use)
       - [Shuffle the whole dictionary](#shuffle-the-whole-dictionary)
+  - [Unresolved JSON](#unresolved-json)
   - [Documentation](#documentation)
   - [Limitations](#limitations)
   - [Acknowledgements](#acknowledgements)
@@ -36,7 +37,6 @@ It is takes a much more functionalities to interacts with ease, out of the box, 
 <a href="https://github.com/sinkaroid/booru/blob/master/CONTRIBUTING.md">Contributing</a> •
 <a href="https://sinkaroid.github.io/booru">Documentation</a> •
 <a href="https://github.com/sinkaroid/booru/issues/new/choose">Report Issues</a> •
-<a href="https://paypal.me/sinkaroid">Support this Project</a>
 </b>
 </div>
 
@@ -57,7 +57,7 @@ It is takes a much more functionalities to interacts with ease, out of the box, 
 This benchmark search 100 items from each booru sites and returns the average response time  
 Speed or perfomace may not accurate because internet connection or server response.
 - **Stable**: fully functional | **Partial**: limited features | **Triage**: has some issues
-  - *either api is broken or with their own cloudflare stuff*
+
 - 🎲 Support random | 🕹️ Support gacha | 🎨 Extract images | 🛡️ Armored-search
 
 
@@ -121,10 +121,12 @@ import booru
 async def main():
     gel = booru.Gelbooru()
     res = await gel.search(query="cat_girl", limit=50)
-    print(res)
+    print(res) ## unresolve
+    print(booru.resolve(res)) ## resolved
 
 asyncio.run(main())
 ```
+The final step you must resolve them to works with data. See [#Unresolved JSON](#unresolved-json)  
 Authorization is always optional! but if you fill it you should define through specific import
 
 ```py
@@ -274,6 +276,22 @@ some_booru = Rule34()
 #### Shuffle the whole dictionary
 For default, the lib return a random dict, to gets a raw data and disable set 'random' param with `False`
 
+## Unresolved JSON
+Instead arbitrary object, This library designed to be neat and clean returns, although it must be reparsed to the string first, that's why [`booru.resolve()`](https://sinkaroid.github.io/booru/utils/parser.html#booru.utils.parser.resolve) exist.  
+
+Let's see an example:
+
+```py
+async def main():
+    gel = booru.Gelbooru()
+    res = await gel.search(query="cat_girl", limit=50)
+    print(res) ## unresolve
+    print(booru.resolve(res)) ## resolved
+
+asyncio.run(main())
+```
+- Unresolve: meant is better and neat dictionaries returns instead arbitrary JSON structure
+- Resolved: bad structure, arbitary indent, unsorting but it is resolved and ready to extends works with JSON
 
 ## Documentation
 The documentation can be found https://sinkaroid.github.io/booru
