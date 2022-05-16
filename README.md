@@ -10,10 +10,10 @@ Python bindings for Booru imageboards
   - [Usage](#usage)
     - [Prerequisites](#prerequisites)
     - [Installation](#installation)
-    - [Usage](#quick-example)
+    - [Quick example](#quick-example)
       - [search](#search)
       - [get image](#get-image)
-    - [Further usage](#advanced-example)
+    - [Advanced example](#advanced-example)
       - [Armored search](#armored-search)
       - [Gacha-like](#gacha-like)
       - [Import you want to use](#import-you-want-to-use)
@@ -36,7 +36,7 @@ It is takes a much more functionalities to interacts with ease, out of the box, 
 <b>
 <a href="https://github.com/sinkaroid/booru/blob/master/CONTRIBUTING.md">Contributing</a> •
 <a href="https://sinkaroid.github.io/booru">Documentation</a> •
-<a href="https://github.com/sinkaroid/booru/issues/new/choose">Report Issues</a> •
+<a href="https://github.com/sinkaroid/booru/issues/new/choose">Report Issues</a>
 </b>
 </div>
 
