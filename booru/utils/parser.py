@@ -70,7 +70,7 @@ class Api:
         self.furbooru = "https://furbooru.com/api/v1/json/search/images"
         self.behoimi = "http://behoimi.org/post/index.json"
         self.paheal = "https://rule34.paheal.net/api/danbooru/find_posts/index.xml"
-        self.error_handling_limit = "there is a hard limit of 100 posts per request."
+        self.error_handling_limit = "there is a hard limit of 1000 posts per request."
         self.error_handling_sameval = "block values should not be hit to the query"
         self.error_handling_cantparse = "failed to get data, the api is misleading"
         self.error_handling_null = "no results, make sure you spelled everything right"
@@ -142,7 +142,7 @@ def deserialize(data: list):
     dict
         The deserialized with better object
     """
-    return json.loads(better_object(data), encoding="utf-8")
+    return json.loads(better_object(data))
 
 
 def parse_image(raw_object: dict):
@@ -186,3 +186,17 @@ def get_hostname(url: str):
         The site contains protocol and hostname
     """
     return re.sub(r"(.*://)?([^/?]+).*", "\g<1>\g<2>", url)
+
+def resolve(b_object: dict) -> dict:
+    """Resolves the json object meant data with bad formatting, arbitary indent, arbitary sort keys but it is resolved and ready to extends
+
+    Parameters
+    ----------
+    b_object : dict
+
+    Returns
+    -------
+    dict
+        raw json object
+    """
+    return json.loads(b_object)
