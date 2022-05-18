@@ -123,7 +123,7 @@ def better_object(parser: dict):
 
     Returns
     -------
-    dict
+    str
         The new dictionaries with neat keys.
 
     """
@@ -139,7 +139,7 @@ def deserialize(data: list):
 
     Returns
     -------
-    dict
+    str
         The deserialized with better object
     """
     return json.loads(better_object(data))
