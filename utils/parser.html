@@ -151,7 +151,7 @@ def better_object(parser: dict):
 
     Returns
     -------
-    dict
+    str
         The new dictionaries with neat keys.
 
     &#34;&#34;&#34;
@@ -167,7 +167,7 @@ def deserialize(data: list):
 
     Returns
     -------
-    dict
+    str
         The deserialized with better object
     &#34;&#34;&#34;
     return json.loads(better_object(data))
@@ -249,7 +249,7 @@ def resolve(b_object: dict) -&gt; dict:
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><code>dict</code></dt>
+<dt><code>str</code></dt>
 <dd>The new dictionaries with neat keys.</dd>
 </dl></div>
 <details class="source">
@@ -265,7 +265,7 @@ def resolve(b_object: dict) -&gt; dict:
 
     Returns
     -------
-    dict
+    str
         The new dictionaries with neat keys.
 
     &#34;&#34;&#34;
@@ -284,7 +284,7 @@ def resolve(b_object: dict) -&gt; dict:
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><code>dict</code></dt>
+<dt><code>str</code></dt>
 <dd>The deserialized with better object</dd>
 </dl></div>
 <details class="source">
@@ -301,7 +301,7 @@ def resolve(b_object: dict) -&gt; dict:
 
     Returns
     -------
-    dict
+    str
         The deserialized with better object
     &#34;&#34;&#34;
     return json.loads(better_object(data))</code></pre>
@@ -475,7 +475,7 @@ def resolve(b_object: dict) -&gt; dict:
 <dl>
 <dt id="booru.utils.parser.Api"><code class="flex name class">
 <span>class <span class="ident">Api</span></span>
-<span>(</span><span>BASE_headers={'User-Agent': 'booru/v1.0.14 (https://pypi.org/project/booru);', 'From': 'anakmancasan@gmail.com'}, BYPASS_headers={'User-Agent': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1)', 'Referer': 'http://behoimi.org/data/ff/f3/', 'From': 'anakmancasan@gmail.com'})</span>
+<span>(</span><span>BASE_headers={'User-Agent': 'booru/v1.0.15 (https://pypi.org/project/booru);', 'From': 'anakmancasan@gmail.com'}, BYPASS_headers={'User-Agent': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1)', 'Referer': 'http://behoimi.org/data/ff/f3/', 'From': 'anakmancasan@gmail.com'})</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Api class</p>
