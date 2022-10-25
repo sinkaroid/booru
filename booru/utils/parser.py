@@ -163,13 +163,14 @@ def parse_image(raw_object: dict):
 
     elif "post" in raw_object:
         data = raw_object["post"]
-
-    try:
-        images = [i["file_url"] for i in data]
-
-    except:
-        images = [i["file"]["url"] for i in data]  # furry stuff sigh
-
+    images = []
+    for i in data:
+        if i["is_banned"] == True: #danbooru takedown requests
+            continue
+        try:
+            images.append(i["file_url"])
+        except:
+            images.append(i["file"]["url"]) #furry stuff again
     return images
 
 
