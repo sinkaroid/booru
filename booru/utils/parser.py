@@ -126,22 +126,6 @@ def better_object(parser: dict):
     """
     return json.dumps(parser, sort_keys=True, indent=4, ensure_ascii=False)
 
-def deserialize(data: list):
-    """Deserialize instance containing a JSON document
-
-    Parameters
-    ----------
-    data : list
-        The raw data after fetch request
-
-    Returns
-    -------
-    str
-        The deserialized with better object
-    """
-    return json.loads(better_object(data))
-
-
 def parse_image(raw_object: dict):
     """Extracts the image url from the json object.
 
