@@ -1,6 +1,6 @@
 import aiohttp
 from typing import Union
-from ..utils.parser import Api, better_object, parse_image, get_hostname, deserialize
+from ..utils.parser import Api, better_object, parse_image, get_hostname
 from random import shuffle, randint
 
 Booru = Api()
@@ -109,7 +109,7 @@ class E926(object):
         async with aiohttp.ClientSession(headers=Booru.headers) as session:
             async with session.get(Booru.e926, params=self.specs) as resp:
                 self.data = await resp.json(content_type=None)
-                self.final = self.final = deserialize(self.data)
+                self.final = self.data
 
                 if not self.final["posts"]:
                     raise ValueError(Booru.error_handling_null)
@@ -166,7 +166,7 @@ class E926(object):
             async with aiohttp.ClientSession(headers=Booru.headers) as session:
                 async with session.get(Booru.e926, params=self.specs) as resp:
                     self.data = await resp.json(content_type=None)
-                    self.final = self.final = deserialize(self.data)
+                    self.final = self.data
 
                     self.not_random = parse_image(self.final["posts"])
                     shuffle(self.not_random)

@@ -1,7 +1,7 @@
 import re
 import aiohttp
 from typing import Union
-from ..utils.parser import Api, better_object, parse_image, get_hostname, deserialize
+from ..utils.parser import Api, better_object, parse_image, get_hostname
 from random import shuffle, randint
 
 Booru = Api()
@@ -111,7 +111,7 @@ class Gelbooru(object):
         async with aiohttp.ClientSession() as session:
             async with session.get(Booru.gelbooru, params=self.specs) as resp:
                 self.data = await resp.json(content_type=None)
-                self.final = self.final = deserialize(self.data)
+                self.final = self.data
 
                 if "post" not in self.final or not self.final:
                     raise ValueError(Booru.error_handling_null)
@@ -175,7 +175,7 @@ class Gelbooru(object):
             async with aiohttp.ClientSession() as session:
                 async with session.get(Booru.gelbooru, params=self.specs) as resp:
                     self.data = await resp.json(content_type=None)
-                    self.final = self.final = deserialize(self.data)
+                    self.final = self.data
 
                     if "post" not in self.final:
                         raise ValueError(Booru.error_handling_null)

@@ -1,7 +1,7 @@
 import re
 import aiohttp
 from typing import Union
-from ..utils.parser import Api, better_object, parse_image_danbooru, get_hostname, deserialize
+from ..utils.parser import Api, better_object, parse_image_danbooru, get_hostname
 from random import shuffle, randint
 
 Booru = Api()
@@ -109,7 +109,7 @@ class Atfbooru(object):
         async with aiohttp.ClientSession() as session:
             async with session.get(Booru.atfbooru, params=self.specs) as resp:
                 self.data = await resp.json(content_type=None)
-                self.final = self.final = deserialize(self.data)
+                self.final = self.data
 
                 for i in range(len(self.final)):
                     self.final[i]["tag_string"] = self.final[i]["tag_string"].split(" ")
@@ -175,7 +175,7 @@ class Atfbooru(object):
                 async with session.get(Booru.atfbooru, params=self.specs) as resp:
                     self.data = await resp.json(content_type=None)
             
-                    self.final = self.final = deserialize(self.data)
+                    self.final = self.data
                     
                     for i in range(len(self.final)):
                         self.final[i]["tag_string"] = self.final[i]["tag_string"].split(" ")

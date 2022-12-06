@@ -1,7 +1,7 @@
 import re
 import aiohttp
 from typing import Union
-from ..utils.parser import Api, better_object, parse_image, get_hostname, deserialize
+from ..utils.parser import Api, better_object, parse_image, get_hostname
 from random import shuffle, randint
 
 Booru = Api()
@@ -105,7 +105,7 @@ class Behoimi(object):
 
         self.data = await Behoimi.mock(Booru.behoimi, params=self.specs)
 
-        self.final = self.final = deserialize(self.data)
+        self.final = self.data
 
         for i in range(len(self.final)):
             self.final[i]["tags"] = self.final[i]["tags"].split(" ")
@@ -169,7 +169,7 @@ class Behoimi(object):
 
         try:
             self.data = await Behoimi.mock(Booru.behoimi, params=self.specs)
-            self.final = self.final = deserialize(self.data)
+            self.final = self.data
 
             for i in range(len(self.final)):
                 self.final[i]["tags"] = self.final[i]["tags"].split(" ")

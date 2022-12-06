@@ -1,7 +1,7 @@
 import re
 import aiohttp
 from typing import Union
-from ..utils.parser import Api, better_object, parse_image, get_hostname, deserialize
+from ..utils.parser import Api, better_object, parse_image, get_hostname
 from random import shuffle, randint
 
 Booru = Api()
@@ -94,7 +94,7 @@ class Konachan_Net(object):
                 if not self.data:
                     raise ValueError(Booru.error_handling_null)
 
-                self.final = self.final = deserialize(self.data)
+                self.final = self.data
                 for i in range(len(self.final)):
                     self.final[i]["tags"] = self.final[i]["tags"].split(" ")
 
@@ -154,7 +154,7 @@ class Konachan_Net(object):
             async with aiohttp.ClientSession() as session:
                 async with session.get(Booru.konachan_net, params=self.specs) as resp:
                     self.data = await resp.json()
-                    self.final = self.final = deserialize(self.data)
+                    self.final = self.data
                     for i in range(len(self.final)):
                         self.final[i]["tags"] = self.final[i]["tags"].split(" ")
 

@@ -1,6 +1,6 @@
 import aiohttp
 from typing import Union
-from ..utils.parser import Api, better_object, parse_image, get_hostname, deserialize
+from ..utils.parser import Api, better_object, parse_image, get_hostname
 from random import shuffle, randint
 
 Booru = Api()
@@ -103,7 +103,7 @@ class Derpibooru(object):
         async with aiohttp.ClientSession() as session:
             async with session.get(Booru.derpibooru, params=self.specs) as resp:
                 self.data = await resp.json(content_type=None)
-                self.final = self.final = deserialize(self.data)
+                self.final = self.data
 
                 if not self.final["images"]:
                     raise ValueError(Booru.error_handling_null)
@@ -156,7 +156,7 @@ class Derpibooru(object):
             async with aiohttp.ClientSession() as session:
                 async with session.get(Booru.derpibooru, params=self.specs) as resp:
                     self.data = await resp.json(content_type=None)
-                    self.final = self.final = deserialize(self.data)
+                    self.final = self.data
 
                     self.not_random = [
                         i["representations"]["full"] for i in self.final["images"]

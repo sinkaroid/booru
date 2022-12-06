@@ -1,7 +1,7 @@
 import re
 import aiohttp
 from typing import Union
-from ..utils.parser import Api, better_object, parse_image, get_hostname, deserialize
+from ..utils.parser import Api, better_object, parse_image, get_hostname
 from random import shuffle, randint
 
 Booru = Api()
@@ -94,7 +94,7 @@ class Yandere(object):
                 if not self.data:
                     raise ValueError(Booru.error_handling_null)
 
-                self.final = self.final = deserialize(self.data)
+                self.final = self.data
                 for i in range(len(self.final)):
                     self.final[i]["tags"] = self.final[i]["tags"].split(" ")
 
@@ -116,7 +116,7 @@ class Yandere(object):
                         return better_object(Yandere.append_object(self.final))
 
                 except Exception as e:
-                    raise ValueError(f"Failed to get data: {e}")
+                    raise Exception(f"Failed to get data: {e}")
                     
     async def search_image(self, query: str, block: str = "", limit: int = 100, page: int = 1):
 
@@ -154,7 +154,7 @@ class Yandere(object):
             async with aiohttp.ClientSession() as session:
                 async with session.get(Booru.yandere, params=self.specs) as resp:
                     self.data = await resp.json()
-                    self.final = self.final = deserialize(self.data)
+                    self.final = self.data
                     for i in range(len(self.final)):
                         self.final[i]["tags"] = self.final[i]["tags"].split(" ")
 
@@ -165,4 +165,4 @@ class Yandere(object):
                     return better_object(self.not_random)
 
         except Exception as e:
-            raise ValueError(f"Failed to get data: {e}")
+            raise Exception(f"Failed to get data: {e}")

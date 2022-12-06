@@ -2,7 +2,7 @@ import re
 import aiohttp
 from typing import Union
 from random import shuffle, randint
-from ..utils.parser import Api, better_object, parse_image, get_hostname, deserialize
+from ..utils.parser import Api, better_object, parse_image, get_hostname
 
 Booru = Api()
 
@@ -116,7 +116,7 @@ class Tbib(object):
                 if not self.data:
                     raise ValueError(Booru.error_handling_null)
 
-                self.final = self.final = deserialize(self.data)
+                self.final = self.data
                 for i in range(len(self.final)):
                     self.final[i]["tags"] = self.final[i]["tags"].split(" ")
 
@@ -181,7 +181,7 @@ class Tbib(object):
                     self.data = await resp.json(content_type=None)
                     if not self.data:
                         raise ValueError(Booru.error_handling_null)
-                    self.final = self.final = deserialize(self.data)
+                    self.final = self.data
 
                     for i in range(len(self.final)):
                         self.final[i]["tags"] = self.final[i]["tags"].split(" ")
