@@ -1,9 +1,6 @@
 import json
 import re
-from random import sample
 from booru import __version__
-from xmltodict import parse
-from requests import get
 
 
 class Api:
@@ -200,3 +197,31 @@ def resolve(b_object: dict) -> dict:
         raw json object
     """
     return json.loads(b_object)
+
+def parse_image_danbooru(raw_object: dict) -> list:
+    """Smh, it's danbooru though
+
+    Parameters
+    ----------
+    raw_object : dict
+        The object to be parsed.
+
+    Returns
+    -------
+    list
+        The list of image urls.
+    """
+
+    image = []
+
+    try:
+        for i in raw_object:
+            image.append(i["file_url"])
+        return image
+    except KeyError:
+        for i in raw_object:
+            try:
+                image.append(i["file_url"])
+            except KeyError:
+                pass
+        return image
