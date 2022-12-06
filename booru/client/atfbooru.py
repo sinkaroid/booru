@@ -1,27 +1,27 @@
-import requests
-import json
 import re
-from ..utils.parser import Api, better_object, parse_image, get_hostname, deserialize
+import aiohttp
+from typing import Union
+from ..utils.parser import Api, better_object, parse_image_danbooru, get_hostname, deserialize
 from random import shuffle, randint
 
 Booru = Api()
 
 
 class Atfbooru(object):
-    """Atfbooru wrapper
+    """AllTheFallen Client
 
     Methods
     -------
     search : function
         Search and gets images from atfbooru.
 
-    get_image : function
+    search_image : function
         Gets images, image urls only from atfbooru.
 
     """
 
     @staticmethod
-    def append_obj(raw_object: dict):
+    def append_object(raw_object: dict):
         """Extends new object to the raw dict
 
         Parameters
@@ -71,104 +71,91 @@ class Atfbooru(object):
         page: int = 1,
         random: bool = True,
         gacha: bool = False,
-    ):
+    ) -> Union[aiohttp.ClientResponse, str]:
 
-        """Search and gets images from atfbooru.
+        """Search method
 
         Parameters
         ----------
         query : str
             The query to search for.
-
         block : str
-            The disgusting query you want to block,
-            e.g: you want to search 'erza_scarlet' but dont want to gets furry, fill in 'furry'
-
+            The tags you want to block, separated by space.
         limit : int
-            The limit of images to return.
-
+            Expected number which is from pages
         page : int
-            The number of desired page
-
+            Expected number of page.
         random : bool
             Shuffle the whole dict, default is True.
-
         gacha : bool
             Get random single object, limit property will be ignored.
 
         Returns
         -------
         dict
-            The json object returned by atfbooru.
+            The json object (as string, you may need booru.resolve())
         """
-        if gacha:
-            limit = 100
-
         if limit > 1000:
             raise ValueError(Booru.error_handling_limit)
 
-        if block and re.findall(block, query):
+        elif block and re.findall(block, query):
             raise ValueError(Booru.error_handling_sameval)
+            
+        self.query = query
+        self.specs["tags"] = self.query
+        self.specs["limit"] = limit
+        self.specs["page"] = page
 
-        else:
-            self.query = query
+        async with aiohttp.ClientSession() as session:
+            async with session.get(Booru.atfbooru, params=self.specs) as resp:
+                self.data = await resp.json(content_type=None)
+                self.final = self.final = deserialize(self.data)
 
-        self.specs["tags"] = str(self.query)
-        self.specs["limit"] = str(limit)
-        self.specs["pid"] = str(page)
-        self.specs["json"] = "1"
+                for i in range(len(self.final)):
+                    self.final[i]["tag_string"] = self.final[i]["tag_string"].split(" ")
 
-        self.data = requests.get(Booru.atfbooru, params=self.specs)
-        self.final = self.final = deserialize(self.data.json())
+                self.final = [i for i in self.final if not any(j in block for j in i["tag_string"])]
 
-        for i in range(len(self.final)):
-            self.final[i]["tag_string"] = self.final[i]["tag_string"].split(" ")
+                if not self.final:
+                    raise ValueError(Booru.error_handling_null)
 
-        self.final = [i for i in self.final if not any(j in block for j in i["tag_string"])]
+                self.not_random = Atfbooru.append_object(self.final)
+                shuffle(self.not_random)
 
-        if not self.final:
-            raise ValueError(Booru.error_handling_null)
+                try:
+                    if gacha:
+                        return better_object(self.not_random[randint(0, len(self.not_random))])
 
-        self.not_random = Atfbooru.append_obj(self.final)
-        shuffle(self.not_random)
+                    elif random:
+                        return better_object(self.not_random)
 
-        try:
-            if gacha:
-                return better_object(self.not_random[randint(0, len(self.not_random))])
+                    else:
+                        return better_object(Atfbooru.append_object(self.final))
 
-            if random:
-                return better_object(self.not_random)
+                except Exception as e:
+                    raise ValueError(f"Failed to get data: {e}")
 
-            else:
-                return better_object(Atfbooru.append_obj(self.final))
-
-        except Exception as e:
-            raise ValueError(f"Failed to get data: {e}")
-
-    async def get_image(
+    async def search_image(
         self, query: str, block: str = "", limit: int = 100, page: int = 1
-    ):
+    ) -> Union[list, dict]:
 
-        """Gets images, meant just image urls from atfbooru.
+        """Parses image only
 
         Parameters
         ----------
         query : str
             The query to search for.
-
         block : str
-            The disgusting query you want to block
-
+            The tags you want to block, separated by space.
         limit : int
-            The limit of images to return.
-
+            Expected number which is from pages
         page : int
-            The number of desired page
+            Expected number of page.
 
         Returns
         -------
         dict
-            The json object returned by atfbooru.
+            The json object (as string, you may need booru.resolve())
 
         """
 
@@ -178,26 +165,26 @@ class Atfbooru(object):
         if block and re.findall(block, query):
             raise ValueError(Booru.error_handling_sameval)
 
-        else:
-            self.query = query
-
+        self.query = query
         self.specs["tags"] = str(self.query)
         self.specs["limit"] = str(limit)
-        self.specs["pid"] = str(page)
-        self.specs["json"] = "1"
+        self.specs["page"] = str(page)
 
         try:
-            self.data = requests.get(Booru.atfbooru, params=self.specs)
-            self.final = self.final = deserialize(self.data.json())
+            async with aiohttp.ClientSession() as session:
+                async with session.get(Booru.atfbooru, params=self.specs) as resp:
+                    self.data = await resp.json(content_type=None)
             
-            for i in range(len(self.final)):
-                self.final[i]["tag_string"] = self.final[i]["tag_string"].split(" ")
+                    self.final = self.final = deserialize(self.data)
+                    
+                    for i in range(len(self.final)):
+                        self.final[i]["tag_string"] = self.final[i]["tag_string"].split(" ")
 
-            self.final = [i for i in self.final if not any(j in block for j in i["tag_string"])]
+                    self.final = [i for i in self.final if not any(j in block for j in i["tag_string"])]
 
-            self.not_random = parse_image(self.final)
-            shuffle(self.not_random)
-            return better_object(self.not_random)
+                    self.not_random = parse_image_danbooru(self.final)
+                    shuffle(self.not_random)
+                    return better_object(self.not_random)
 
-        except:
-            raise ValueError(f"Failed to get data")
+        except Exception as e:
+            raise ValueError(f"Failed to get data: {e}")
