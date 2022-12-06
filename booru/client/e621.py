@@ -66,7 +66,6 @@ class E621(object):
     async def search(
         self,
         query: str,
-        block: str = "",
         limit: int = 100,
         page: int = 1,
         random: bool = True,
@@ -79,9 +78,6 @@ class E621(object):
         ----------
         query : str
             The query to search for.
-
-        block : str
-            The disgusting query you want to block
 
         limit : int
             The limit of images to return.
@@ -105,12 +101,6 @@ class E621(object):
 
         if limit > 1000:
             raise ValueError(Booru.error_handling_limit)
-
-        if block and re.findall(block, query):
-            raise ValueError(Booru.error_handling_sameval)
-
-        if block != "":
-            self.query = f"{query} -{block}*"
 
         else:
             self.query = query
@@ -142,7 +132,7 @@ class E621(object):
             raise ValueError(f"Failed to get data: {e}")
 
     async def get_image(
-        self, query: str, block: str = "", limit: int = 100, page: int = 1
+        self, query: str, limit: int = 100, page: int = 1
     ):
 
         """Gets images, meant just image urls from e621.
@@ -151,9 +141,6 @@ class E621(object):
         ----------
         query : str
             The query to search for.
-
-        block : str
-            The disgusting query you want to block
 
         limit : int
             The limit of images to return.
@@ -170,12 +157,6 @@ class E621(object):
 
         if limit > 1000:
             raise ValueError(Booru.error_handling_limit)
-
-        if block and re.findall(block, query):
-            raise ValueError(Booru.error_handling_sameval)
-
-        if block != "":
-            self.query = f"{query} -{block}*"
 
         else:
             self.query = query

@@ -49,6 +49,7 @@ class Lolibooru(object):
     async def search(
         self,
         query: str,
+        block: str = "",
         limit: int = 100,
         page: int = 1,
         random: bool = True,
@@ -61,6 +62,9 @@ class Lolibooru(object):
         ----------
         query : str
             The query to search for.
+
+        block : str
+            The tags to block.
 
         limit : int
             The limit of images to return.
@@ -85,6 +89,9 @@ class Lolibooru(object):
         if limit > 1000:
             raise ValueError(Booru.error_handling_limit)
 
+        if block and re.findall(block, query):
+            raise ValueError(Booru.error_handling_sameval)
+
         else:
             self.query = query
 
@@ -94,6 +101,11 @@ class Lolibooru(object):
 
         self.data = requests.get(Booru.lolibooru, params=self.specs)
         self.final = self.final = deserialize(self.data.json())
+
+        for i in range(len(self.final)):
+            self.final[i]["tags"] = self.final[i]["tags"].split(" ")
+
+        self.final = [i for i in self.final if not any(j in block for j in i["tags"])]
 
         if not self.final:
             raise ValueError(Booru.error_handling_null)
@@ -114,7 +126,7 @@ class Lolibooru(object):
         except Exception as e:
             raise ValueError(f"Failed to get data: {e}")
 
-    async def get_image(self, query: str, limit: int = 100, page: int = 1):
+    async def get_image(self, query: str, block="", limit: int = 100, page: int = 1):
 
         """Gets images, meant just image urls from lolibooru.
 
@@ -139,6 +151,9 @@ class Lolibooru(object):
         if limit > 1000:
             raise ValueError(Booru.error_handling_limit)
 
+        if block and re.findall(block, query):
+            raise ValueError(Booru.error_handling_sameval)
+
         else:
             self.query = query
 
@@ -149,6 +164,10 @@ class Lolibooru(object):
         try:
             self.data = requests.get(Booru.lolibooru, params=self.specs)
             self.final = self.final = deserialize(self.data.json())
+            for i in range(len(self.final)):
+                self.final[i]["tags"] = self.final[i]["tags"].split(" ")
+
+            self.final = [i for i in self.final if not any(j in block for j in i["tags"])]
 
             self.not_random = parse_image(self.final)
             shuffle(self.not_random)

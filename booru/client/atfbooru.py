@@ -110,9 +110,6 @@ class Atfbooru(object):
         if block and re.findall(block, query):
             raise ValueError(Booru.error_handling_sameval)
 
-        if block != "":
-            self.query = f"{query} -{block}*"
-
         else:
             self.query = query
 
@@ -123,6 +120,11 @@ class Atfbooru(object):
 
         self.data = requests.get(Booru.atfbooru, params=self.specs)
         self.final = self.final = deserialize(self.data.json())
+
+        for i in range(len(self.final)):
+            self.final[i]["tag_string"] = self.final[i]["tag_string"].split(" ")
+
+        self.final = [i for i in self.final if not any(j in block for j in i["tag_string"])]
 
         if not self.final:
             raise ValueError(Booru.error_handling_null)
@@ -176,9 +178,6 @@ class Atfbooru(object):
         if block and re.findall(block, query):
             raise ValueError(Booru.error_handling_sameval)
 
-        if block != "":
-            self.query = f"{query} -{block}*"
-
         else:
             self.query = query
 
@@ -190,6 +189,11 @@ class Atfbooru(object):
         try:
             self.data = requests.get(Booru.atfbooru, params=self.specs)
             self.final = self.final = deserialize(self.data.json())
+            
+            for i in range(len(self.final)):
+                self.final[i]["tag_string"] = self.final[i]["tag_string"].split(" ")
+
+            self.final = [i for i in self.final if not any(j in block for j in i["tag_string"])]
 
             self.not_random = parse_image(self.final)
             shuffle(self.not_random)

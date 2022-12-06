@@ -113,9 +113,6 @@ class Safebooru(object):
         if block and re.findall(block, query):
             raise ValueError(Booru.error_handling_sameval)
 
-        if block != "":
-            self.query = f"{query} -{block}*"
-
         else:
             self.query = query
 
@@ -130,6 +127,10 @@ class Safebooru(object):
             raise ValueError(Booru.error_handling_null)
 
         self.final = deserialize(self.data.json())
+        for i in range(len(self.final)):
+            self.final[i]["tags"] = self.final[i]["tags"].split(" ")
+
+        self.final = [i for i in self.final if not any(j in block for j in i["tags"])]
 
         self.not_random = Safebooru.append_obj(self.final)
         shuffle(self.not_random)
@@ -181,9 +182,6 @@ class Safebooru(object):
         if block and re.findall(block, query):
             raise ValueError(Booru.error_handling_sameval)
 
-        if block != "":
-            self.query = f"{query} -{block}*"
-
         else:
             self.query = query
 
@@ -195,6 +193,10 @@ class Safebooru(object):
         try:
             self.data = requests.get(Booru.safebooru, params=self.specs)
             self.final = deserialize(self.data.json())
+            for i in range(len(self.final)):
+                self.final[i]["tags"] = self.final[i]["tags"].split(" ")
+
+            self.final = [i for i in self.final if not any(j in block for j in i["tags"])]
 
             self.not_random = parse_image(Safebooru.append_obj(self.final))
             shuffle(self.not_random)

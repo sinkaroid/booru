@@ -188,7 +188,7 @@ def get_hostname(url: str):
     return re.sub(r"(.*://)?([^/?]+).*", "\g<1>\g<2>", url)
 
 def resolve(b_object: dict) -> dict:
-    """Resolves the json object meant data with bad formatting, arbitary indent, arbitary sort keys but it is resolved and ready to extends
+    """Resolves the json object.
 
     Parameters
     ----------

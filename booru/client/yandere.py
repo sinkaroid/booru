@@ -1,4 +1,5 @@
 import requests
+import re
 import json
 from ..utils.parser import Api, better_object, parse_image, get_hostname, deserialize
 from random import shuffle, randint
@@ -47,6 +48,7 @@ class Yandere(object):
     async def search(
         self,
         query: str,
+        block: str = "",
         limit: int = 100,
         page: int = 1,
         random: bool = True,
@@ -59,6 +61,10 @@ class Yandere(object):
         ----------
         query : str
             The query to search for.
+
+        block : str
+            The disgusting query you want to block,
+            e.g: you want to search 'erza_scarlet' but dont want to gets furry, fill in 'furry'
 
         limit : int
             The limit of images to return.
@@ -83,6 +89,9 @@ class Yandere(object):
         if limit > 1000:
             raise ValueError(Booru.error_handling_limit)
 
+        if block and re.findall(block, query):
+            raise ValueError(Booru.error_handling_sameval)
+
         else:
             self.query = query
 
@@ -92,6 +101,11 @@ class Yandere(object):
 
         self.data = requests.get(Booru.yandere, params=self.specs)
         self.final = self.final = deserialize(self.data.json())
+
+        for i in range(len(self.final)):
+            self.final[i]["tags"] = self.final[i]["tags"].split(" ")
+
+        self.final = [i for i in self.final if not any(j in block for j in i["tags"])]
 
         if not self.final:
             raise ValueError(Booru.error_handling_null)
@@ -112,7 +126,7 @@ class Yandere(object):
         except Exception as e:
             raise ValueError(f"Failed to get data: {e}")
 
-    async def get_image(self, query: str, limit: int = 100, page: int = 1):
+    async def get_image(self, query: str, block: str = "", limit: int = 100, page: int = 1):
 
         """Gets images, meant just image urls from yandere.
 
@@ -120,6 +134,9 @@ class Yandere(object):
         ----------
         query : str
             The query to search for.
+        
+        block : str
+            The disgusting query you want to block,
 
         limit : int
             The limit of images to return.
@@ -137,6 +154,9 @@ class Yandere(object):
         if limit > 1000:
             raise ValueError(Booru.error_handling_limit)
 
+        if block and re.findall(block, query):
+            raise ValueError(Booru.error_handling_sameval)
+
         else:
             self.query = query
 
@@ -147,6 +167,10 @@ class Yandere(object):
         try:
             self.data = requests.get(Booru.yandere, params=self.specs)
             self.final = self.final = deserialize(self.data.json())
+            for i in range(len(self.final)):
+                self.final[i]["tags"] = self.final[i]["tags"].split(" ")
+
+            self.final = [i for i in self.final if not any(j in block for j in i["tags"])]
 
             self.not_random = parse_image(self.final)
             shuffle(self.not_random)

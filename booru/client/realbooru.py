@@ -133,9 +133,6 @@ class Realbooru(object):
         if block and re.findall(block, query):
             raise ValueError(Booru.error_handling_sameval)
 
-        if block != "":
-            self.query = f"{query} -{block}*"
-
         else:
             self.query = query
 
@@ -150,6 +147,10 @@ class Realbooru(object):
             raise ValueError(Booru.error_handling_null)
 
         self.final = self.final = deserialize(self.data.json())
+        for i in range(len(self.final)):
+            self.final[i]["tags"] = self.final[i]["tags"].split(" ")
+
+        self.final = [i for i in self.final if not any(j in block for j in i["tags"])]
 
         self.not_random = Realbooru.append_obj(self.final)
         shuffle(self.not_random)
@@ -201,9 +202,6 @@ class Realbooru(object):
         if block and re.findall(block, query):
             raise ValueError(Booru.error_handling_sameval)
 
-        if block != "":
-            self.query = f"{query} -{block}*"
-
         else:
             self.query = query
 
@@ -215,6 +213,10 @@ class Realbooru(object):
         try:
             self.data = requests.get(Booru.realbooru, params=self.specs)
             self.final = self.final = deserialize(self.data.json())
+            for i in range(len(self.final)):
+                self.final[i]["tags"] = self.final[i]["tags"].split(" ")
+
+            self.final = [i for i in self.final if not any(j in block for j in i["tags"])]
 
             self.not_random = parse_image(Realbooru.append_obj(self.final))
             self.bad_array = [

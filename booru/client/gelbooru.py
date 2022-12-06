@@ -110,9 +110,6 @@ class Gelbooru(object):
         if block and re.findall(block, query):
             raise ValueError(Booru.error_handling_sameval)
 
-        if block != "":
-            self.query = f"{query} -{block}*"
-
         else:
             self.query = query
 
@@ -127,7 +124,13 @@ class Gelbooru(object):
         if "post" not in self.final or not self.final:
             raise ValueError(Booru.error_handling_null)
 
-        self.not_random = Gelbooru.append_obj(self.final["post"])
+        self.final = self.final["post"]
+        for i in range(len(self.final)):
+            self.final[i]["tags"] = self.final[i]["tags"].split(" ")
+
+        self.final = [i for i in self.final if not any(j in block for j in i["tags"])]
+
+        self.not_random = Gelbooru.append_obj(self.final)
         shuffle(self.not_random)
 
         try:
@@ -138,7 +141,7 @@ class Gelbooru(object):
                 return better_object(self.not_random)
 
             else:
-                return better_object(Gelbooru.append_obj(self.final["post"]))
+                return better_object(Gelbooru.append_obj(self.final))
 
         except Exception as e:
             raise ValueError(f"Failed to get data: {e}")
@@ -176,9 +179,6 @@ class Gelbooru(object):
 
         if block and re.findall(block, query):
             raise ValueError(Booru.error_handling_sameval)
-
-        if block != "":
-            self.query = f"{query} -{block}*"
 
         else:
             self.query = query

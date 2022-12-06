@@ -91,7 +91,7 @@ class Paheal(object):
         self.data = requests.get(Booru.paheal, params=self.specs)
         data_dict = parse(self.data.text)
         unsolved = json.dumps(data_dict)
-        self.final = json.loads(unsolved, encoding="utf-8")
+        self.final = json.loads(unsolved)
 
         if "tag" not in self.final["posts"]:
             raise ValueError(Booru.error_handling_null)
@@ -152,7 +152,7 @@ class Paheal(object):
             self.data = requests.get(Booru.paheal, params=self.specs)
             data_dict = parse(self.data.text)
             unsolved = json.dumps(data_dict)
-            self.final = json.loads(unsolved, encoding="utf-8")
+            self.final = json.loads(unsolved)
 
             abc_kontol = self.final["posts"]["tag"]
             ## extract all image urls
