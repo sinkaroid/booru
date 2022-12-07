@@ -46,15 +46,13 @@ class Wrapper(object):
             The data that represents the search from separate booru
         """
 
-        data = await imgboard.search(query=search, limit=1)
-        print("Data", data)
-        print(len(booru.resolve(data)))
-
+        data = await imgboard.search(query=search)
+        print("Data", data, len(booru.resolve(data)))
 
         image = await imgboard.search_image(query=search)
         print("Image", image)
 
-        gacha = await imgboard.search(query=search, limit=30, gacha=True)
+        gacha = await imgboard.search(query=search, gacha=True)
         print("Gacha", gacha)
 
 
@@ -135,8 +133,8 @@ async def main():
         os.system('git-changelog -o CHANGELOG.md -s angular -t angular .')
 
     elif args.api:
-        for api in booru.utils.parser.list_api():
-            res = booru.utils.parser.get_hostname(api)
+        for api in booru.utils.constant.list_api():
+            res = booru.utils.constant.get_hostname(api)
 
             if res == "http://behoimi.org":
                 Internal.headers = Internal.behoimi_bypass
