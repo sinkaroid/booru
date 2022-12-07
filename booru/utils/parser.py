@@ -128,12 +128,10 @@ def better_object(parser: dict):
 
 def parse_image(raw_object: dict):
     """Extracts the image url from the json object.
-
     Parameters
     ----------
     obj : dict
         The object to be parsed.
-
     Returns
     -------
     list
@@ -208,4 +206,4 @@ def parse_image_danbooru(raw_object: dict) -> list:
                 image.append(i["file_url"])
             except KeyError:
                 pass
-        return image
+        return list(set(image))
