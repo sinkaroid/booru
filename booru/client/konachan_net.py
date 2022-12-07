@@ -90,7 +90,7 @@ class Konachan_Net(object):
 
         async with aiohttp.ClientSession() as session:
             async with session.get(Booru.konachan_net, params=self.specs) as resp:
-                self.data = await resp.json()
+                self.data = await resp.json(content_type=None)
                 if not self.data:
                     raise ValueError(Booru.error_handling_null)
 
@@ -153,7 +153,7 @@ class Konachan_Net(object):
         try:
             async with aiohttp.ClientSession() as session:
                 async with session.get(Booru.konachan_net, params=self.specs) as resp:
-                    self.data = await resp.json()
+                    self.data = await resp.json(content_type=None)
                     self.final = self.data
                     for i in range(len(self.final)):
                         self.final[i]["tags"] = self.final[i]["tags"].split(" ")
