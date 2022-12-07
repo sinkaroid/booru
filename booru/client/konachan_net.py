@@ -1,9 +1,8 @@
 import re
-import aiohttp
 from typing import Union
 from ..utils.fetch import request, roll
 from ..utils.constant import Api, better_object, parse_image, get_hostname
-from random import shuffle, randint
+from random import shuffle
 
 Booru = Api()
 
@@ -17,7 +16,7 @@ class Konachan_Net(object):
         Search and gets images from konachan net.
 
     search_image : function
-        Gets images, image urls only from konachan net.
+        Search and gets images from konachan net, but only returns image.
 
     """
 
@@ -54,7 +53,7 @@ class Konachan_Net(object):
         page: int = 1,
         random: bool = True,
         gacha: bool = False,
-    ) -> Union[aiohttp.ClientResponse, str]:
+    ) -> Union[list, str, None]:
 
         """Search method
 
@@ -89,9 +88,11 @@ class Konachan_Net(object):
         self.specs["limit"] = limit
         self.specs["page"] = page
 
-        raw_data = await request(site=Booru.konachan_net, params_x=self.specs, block=block)
+        raw_data = await request(
+            site=Booru.konachan_net, params_x=self.specs, block=block
+        )
         self.appended = Konachan_Net.append_object(raw_data)
-        
+
         try:
             if gacha:
                 return better_object(roll(self.appended))
@@ -102,8 +103,10 @@ class Konachan_Net(object):
                 return better_object(Konachan_Net.append_object(self.appended))
         except Exception as e:
             raise Exception(f"Failed to get data: {e}")
-                    
-    async def search_image(self, query: str, block: str = "", limit: int = 100, page: int = 1):
+
+    async def search_image(
+        self, query: str, block: str = "", limit: int = 100, page: int = 1
+    ) -> Union[list, str, None]:
 
         """Parses image only
 
@@ -135,7 +138,9 @@ class Konachan_Net(object):
         self.specs["limit"] = limit
         self.specs["page"] = page
 
-        raw_data = await request(site=Booru.konachan_net, params_x=self.specs, block=block)
+        raw_data = await request(
+            site=Booru.konachan_net, params_x=self.specs, block=block
+        )
         self.appended = Konachan_Net.append_object(raw_data)
 
         try:

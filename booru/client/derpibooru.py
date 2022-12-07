@@ -2,7 +2,7 @@ import aiohttp
 from typing import Union
 from ..utils.fetch import request, roll
 from ..utils.constant import Api, better_object, parse_image, get_hostname
-from random import shuffle, randint
+from random import shuffle
 
 Booru = Api()
 
@@ -16,7 +16,7 @@ class Derpibooru(object):
         Search and gets images from derpibooru.
 
     search_image : function
-        Gets images, image urls only from derpibooru.
+        Search and gets images from derpibooru, but only returns image.
 
     """
 
@@ -102,7 +102,7 @@ class Derpibooru(object):
 
         raw_data = await request(site=Booru.derpibooru, params_x=self.specs, block="")
         self.appended = Derpibooru.append_object(raw_data["images"])
-        
+
         try:
             if gacha:
                 return better_object(roll(self.appended))
@@ -114,7 +114,9 @@ class Derpibooru(object):
         except Exception as e:
             raise Exception(f"Failed to get data: {e}")
 
-    async def search_image(self, query: str, limit: int = 100, page: int = 1) -> Union[aiohttp.ClientResponse, str]:
+    async def search_image(
+        self, query: str, limit: int = 100, page: int = 1
+    ) -> Union[aiohttp.ClientResponse, str]:
 
         """Gets images, meant just image urls from derpibooru.
 

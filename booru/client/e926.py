@@ -106,7 +106,7 @@ class E926(object):
 
         raw_data = await request(site=Booru.e926, params_x=self.specs, block="")
         self.appended = E926.append_object(raw_data["posts"])
-        
+
         try:
             if gacha:
                 return better_object(roll(self.appended))
@@ -144,7 +144,6 @@ class E926(object):
 
         if limit > 1000:
             raise ValueError(Booru.error_handling_limit)
-
 
         self.query = query
         self.specs["tags"] = self.query

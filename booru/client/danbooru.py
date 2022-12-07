@@ -1,9 +1,8 @@
 import re
-import aiohttp
 from typing import Union
 from ..utils.fetch import request, roll
 from ..utils.constant import Api, better_object, parse_image_danbooru, get_hostname
-from random import shuffle, randint
+from random import shuffle
 
 Booru = Api()
 
@@ -17,7 +16,7 @@ class Danbooru(object):
         Search and gets images from danbooru.
 
     search_image : function
-        Gets images, image urls only from danbooru.
+        Search and gets images from danbooru, but only returns image.
 
     """
 
@@ -55,7 +54,7 @@ class Danbooru(object):
             Your user ID, which is accessible on the account options/profile page.
         """
 
-        if api_key =="" and login == "":
+        if api_key == "" and login == "":
             self.api_key = None
             self.login = None
             self.specs = {}
@@ -63,8 +62,6 @@ class Danbooru(object):
             self.api_key = api_key
             self.login = login
             self.specs = {"api_key": self.api_key, "login": self.login}
-
-        
 
     async def search(
         self,
@@ -74,7 +71,7 @@ class Danbooru(object):
         page: int = 1,
         random: bool = True,
         gacha: bool = False,
-    ) -> Union[aiohttp.ClientResponse, str]:
+    ) -> Union[list, str, None]:
 
         """Search method
 
@@ -103,7 +100,7 @@ class Danbooru(object):
 
         elif block and re.findall(block, query):
             raise ValueError(Booru.error_handling_sameval)
-            
+
         self.query = query
         self.specs["tags"] = self.query
         self.specs["limit"] = limit
@@ -111,7 +108,7 @@ class Danbooru(object):
 
         raw_data = await request(site=Booru.danbooru, params_x=self.specs, block=block)
         self.appended = Danbooru.append_object(raw_data)
-        
+
         try:
             if gacha:
                 return better_object(roll(self.appended))
@@ -144,7 +141,6 @@ class Danbooru(object):
         -------
         dict
             The json object (as string, you may need booru.resolve())
-
         """
 
         if limit > 1000:

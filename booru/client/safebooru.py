@@ -1,5 +1,4 @@
 import re
-import aiohttp
 from typing import Union
 from random import shuffle
 from ..utils.fetch import request, roll
@@ -14,10 +13,10 @@ class Safebooru(object):
     Methods
     -------
     search : function
-        Search and gets images from safebooru.
+        Search method for safebooru.
 
     search_image : function
-        Gets images, image urls only from safebooru.
+        Search method for safebooru, but only returns image.
 
     """
 
@@ -52,10 +51,10 @@ class Safebooru(object):
         Parameters
         ----------
         api_key : str
-            Your API Key which is accessible within your account options page
+            Your API Key (If possible)
 
         user_id : str
-            Your user ID, which is accessible on the account options/profile page.
+            Your user ID (If possible)
         """
 
         if api_key and user_id == "":
@@ -75,7 +74,7 @@ class Safebooru(object):
         page: int = 1,
         random: bool = True,
         gacha: bool = False,
-    ) -> Union[aiohttp.ClientResponse, str]:
+    ) -> Union[list, str, None]:
 
         """Search method
 
@@ -113,7 +112,7 @@ class Safebooru(object):
 
         raw_data = await request(site=Booru.safebooru, params_x=self.specs, block=block)
         self.appended = Safebooru.append_object(raw_data)
-        
+
         try:
             if gacha:
                 return better_object(roll(self.appended))
@@ -125,10 +124,9 @@ class Safebooru(object):
         except Exception as e:
             raise Exception(f"Failed to get data: {e}")
 
-
     async def search_image(
         self, query: str, block: str = "", limit: int = 100, page: int = 1
-    ) -> Union[aiohttp.ClientResponse, str, None]:
+    ) -> Union[list, str, None]:
 
         """Parses image only
 

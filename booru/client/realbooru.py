@@ -1,5 +1,4 @@
 import re
-import aiohttp
 from typing import Union
 from random import shuffle
 from ..utils.fetch import request, roll
@@ -17,7 +16,7 @@ class Realbooru(object):
         Search and gets images from realbooru.
 
     search_image : function
-        Gets images, image urls only from realbooru.
+        Search and gets images from realbooru, but only returns image.
 
     """
 
@@ -44,7 +43,6 @@ class Realbooru(object):
                     "post_url"
                 ] = f"{get_hostname(Booru.realbooru)}/index.php?page=post&s=view&id={raw_object[i]['id']}"
 
-        
             elif not raw_object[i]["directory"]:
                 raw_object[i][
                     "file_url"
@@ -52,7 +50,7 @@ class Realbooru(object):
                 raw_object[i][
                     "post_url"
                 ] = f"{get_hostname(Booru.realbooru)}/index.php?page=post&s=view&id={raw_object[i]['id']}"
-                
+
                 raw_object[i][
                     "directory"
                 ] = f"{raw_object[i]['image'][0:2]}/{raw_object[i]['image'][2:4]}"
@@ -71,10 +69,10 @@ class Realbooru(object):
         Parameters
         ----------
         api_key : str
-            Your API Key which is accessible within your account options page
+            Your API Key (If possible)
 
         user_id : str
-            Your user ID, which is accessible on the account options/profile page.
+            Your user ID (If possible)
         """
 
         if api_key and user_id == "":
@@ -94,7 +92,7 @@ class Realbooru(object):
         page: int = 1,
         random: bool = True,
         gacha: bool = False,
-    ) -> Union[aiohttp.ClientResponse, str]:
+    ) -> Union[list, str, None]:
 
         """Search method
 
@@ -132,7 +130,7 @@ class Realbooru(object):
 
         raw_data = await request(site=Booru.realbooru, params_x=self.specs, block=block)
         self.appended = Realbooru.append_object(raw_data)
-        
+
         try:
             if gacha:
                 return better_object(roll(self.appended))
@@ -144,10 +142,9 @@ class Realbooru(object):
         except Exception as e:
             raise Exception(f"Failed to get data: {e}")
 
-
     async def search_image(
         self, query: str, block: str = "", limit: int = 100, page: int = 1
-    ) -> Union[aiohttp.ClientResponse, str, None]:
+    ) -> Union[list, str, None]:
 
         """Parses image only
 

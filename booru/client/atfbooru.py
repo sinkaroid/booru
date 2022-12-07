@@ -1,5 +1,4 @@
 import re
-import aiohttp
 from typing import Union
 from ..utils.fetch import request, roll
 from ..utils.constant import Api, better_object, parse_image_danbooru, get_hostname
@@ -17,7 +16,7 @@ class Atfbooru(object):
         Search and gets images from atfbooru.
 
     search_image : function
-        Gets images, image urls only from atfbooru.
+        Search and gets images from atfbooru, but only returns image.
 
     """
 
@@ -50,7 +49,6 @@ class Atfbooru(object):
         ----------
         api_key : str
             Your API Key which is accessible within your account options page
-
         user_id : str
             Your user ID, which is accessible on the account options/profile page.
         """
@@ -72,7 +70,7 @@ class Atfbooru(object):
         page: int = 1,
         random: bool = True,
         gacha: bool = False,
-    ) -> Union[aiohttp.ClientResponse, str]:
+    ) -> Union[list, str, None]:
 
         """Search method
 
@@ -101,7 +99,7 @@ class Atfbooru(object):
 
         elif block and re.findall(block, query):
             raise ValueError(Booru.error_handling_sameval)
-            
+
         self.query = query
         self.specs["tags"] = self.query
         self.specs["limit"] = limit
@@ -109,7 +107,7 @@ class Atfbooru(object):
 
         raw_data = await request(site=Booru.atfbooru, params_x=self.specs, block=block)
         self.appended = Atfbooru.append_object(raw_data)
-        
+
         try:
             if gacha:
                 return better_object(roll(self.appended))

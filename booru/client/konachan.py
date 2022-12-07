@@ -1,5 +1,4 @@
 import re
-import aiohttp
 from typing import Union
 from ..utils.fetch import request, roll
 from ..utils.constant import Api, better_object, parse_image, get_hostname
@@ -17,7 +16,7 @@ class Konachan(object):
         Search and gets images from konachan.
 
     search_image : function
-        Gets images, image urls only from konachan.
+        Search and gets images from konachan, but only returns image.
 
     """
 
@@ -54,7 +53,7 @@ class Konachan(object):
         page: int = 1,
         random: bool = True,
         gacha: bool = False,
-    ) -> Union[aiohttp.ClientResponse, str]:
+    ) -> Union[list, str, None]:
 
         """Search method
 
@@ -91,7 +90,7 @@ class Konachan(object):
 
         raw_data = await request(site=Booru.konachan, params_x=self.specs, block=block)
         self.appended = Konachan.append_object(raw_data)
-        
+
         try:
             if gacha:
                 return better_object(roll(self.appended))
@@ -102,8 +101,10 @@ class Konachan(object):
                 return better_object(Konachan.append_object(self.appended))
         except Exception as e:
             raise Exception(f"Failed to get data: {e}")
-                    
-    async def search_image(self, query: str, block: str = "", limit: int = 100, page: int = 1):
+
+    async def search_image(
+        self, query: str, block: str = "", limit: int = 100, page: int = 1
+    ) -> Union[list, str, None]:
 
         """Parses image only
 

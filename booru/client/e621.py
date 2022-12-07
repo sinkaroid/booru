@@ -106,7 +106,7 @@ class E621(object):
 
         raw_data = await request(site=Booru.e621, params_x=self.specs, block="")
         self.appended = E621.append_object(raw_data["posts"])
-        
+
         try:
             if gacha:
                 return better_object(roll(self.appended))

@@ -18,7 +18,7 @@ class Paheal(object):
         Search and gets images from paheal.
 
     search_image : function
-        Gets images, meant just image urls from paheal.
+        Search and gets images from paheal, but only returns image.
 
     """
 
@@ -79,12 +79,10 @@ class Paheal(object):
         if limit > 1000:
             raise ValueError(Booru.error_handling_limit)
 
-
         self.tags = query
         self.specs["tags"] = self.tags
         self.specs["limit"] = limit
         self.specs["page"] = page
-
 
         async with aiohttp.ClientSession() as session:
             async with session.get(Booru.paheal, params=self.specs) as resp:
@@ -111,10 +109,12 @@ class Paheal(object):
                     else:
                         return better_object(self.not_random)
 
-                except:
-                    raise ValueError(f"Failed to get data")
+                except Exception as e:
+                    raise Exception(f"Failed to get data: {e}")
 
-    async def search_image(self, query: str, limit: int = 100, page: int = 1) -> Union[aiohttp.ClientResponse, str]:
+    async def search_image(
+        self, query: str, limit: int = 100, page: int = 1
+    ) -> Union[aiohttp.ClientResponse, str]:
 
         """Gets images, meant just image urls from paheal.
 
@@ -138,7 +138,6 @@ class Paheal(object):
 
         if limit > 1000:
             raise ValueError(Booru.error_handling_limit)
-
 
         self.tags = query
         self.specs["tags"] = self.tags

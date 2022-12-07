@@ -113,11 +113,15 @@ class Furbooru(object):
 
                 try:
                     if gacha:
-                        return better_object(self.not_random[randint(0, len(self.not_random))])
+                        return better_object(
+                            self.not_random[randint(0, len(self.not_random))]
+                        )
                     elif random:
                         return better_object(self.not_random)
                     else:
-                        return better_object(Furbooru.append_object(self.final["images"]))
+                        return better_object(
+                            Furbooru.append_object(self.final["images"])
+                        )
 
                 except Exception as e:
                     raise Exception(f"Failed to get data: {e}")
@@ -146,7 +150,6 @@ class Furbooru(object):
 
         if limit > 1000:
             raise ValueError(Booru.error_handling_limit)
-
 
         self.query = query
         self.specs["q"] = self.query

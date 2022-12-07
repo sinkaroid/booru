@@ -1,9 +1,8 @@
 import re
-import aiohttp
 from typing import Union
 from ..utils.fetch import request, roll
 from ..utils.constant import Api, better_object, parse_image, get_hostname
-from random import shuffle, randint
+from random import shuffle
 
 Booru = Api()
 
@@ -11,7 +10,7 @@ Booru = Api()
 
 
 class Behoimi(object):
-    """3d booru / Behoimi wrapper
+    """3d booru / Behoimi Client
 
     Methods
     -------
@@ -19,15 +18,9 @@ class Behoimi(object):
         Search and gets images from behoimi.
 
     search_image : function
-        Gets images, image urls only from behoimi.
+        Search and gets images from behoimi, but only returns image.
 
     """
-
-    @staticmethod
-    async def mock(site: str, params: dict):
-        async with aiohttp.ClientSession(headers=Booru.behoimi_bypass) as session:
-            async with session.get(site, params=params) as resp:
-                return await resp.json()
 
     @staticmethod
     def append_object(raw_object: dict):
@@ -62,7 +55,7 @@ class Behoimi(object):
         page: int = 1,
         random: bool = True,
         gacha: bool = False,
-    ) -> Union[aiohttp.ClientResponse, str]:
+    ) -> Union[list, str, None]:
 
         """Search and gets images from behoimi.
 
@@ -70,19 +63,14 @@ class Behoimi(object):
         ----------
         query : str
             The query to search for.
-
         block : str
             The tags to block.
-
         limit : int
             The limit of images to return.
-
         page : int
             The number of desired page
-
         random : bool
             Shuffle the whole dict, default is True.
-
         gacha : bool
             Get random single object, limit property will be ignored.
 
@@ -104,7 +92,7 @@ class Behoimi(object):
 
         raw_data = await request(site=Booru.behoimi, params_x=self.specs, block=block)
         self.appended = Behoimi.append_object(raw_data)
-        
+
         try:
             if gacha:
                 return better_object(roll(self.appended))
@@ -118,7 +106,7 @@ class Behoimi(object):
 
     async def search_image(
         self, query: str, block="", limit: int = 100, page: int = 1
-    ) -> Union[aiohttp.ClientResponse, str]:
+    ) -> Union[list, str, None]:
 
         """Gets images, meant just image urls from behoimi.
 
@@ -126,13 +114,10 @@ class Behoimi(object):
         ----------
         query : str
             The query to search for.
-
         block : str
             The tags to block.
-
         limit : int
             The limit of images to return.
-
         page : int
             The number of desired page
 

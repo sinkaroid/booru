@@ -1,9 +1,8 @@
 import re
-import aiohttp
 from typing import Union
 from ..utils.fetch import request, roll
 from ..utils.constant import Api, better_object, parse_image, get_hostname
-from random import shuffle, randint
+from random import shuffle
 
 Booru = Api()
 
@@ -14,10 +13,10 @@ class Rule34(object):
     Methods
     -------
     search : function
-        Search and gets images from rule34.
+        Search method for rule34.
 
     search_image : function
-        Parses the image url only.
+        Search method for rule34, but only returns image.
 
     """
 
@@ -55,7 +54,7 @@ class Rule34(object):
         page: int = 1,
         random: bool = True,
         gacha: bool = False,
-    ) -> Union[aiohttp.ClientResponse, str]:
+    ) -> Union[list, str, None]:
 
         """Search method
 
@@ -93,7 +92,7 @@ class Rule34(object):
 
         raw_data = await request(site=Booru.rule34, params_x=self.specs, block=block)
         self.appended = Rule34.append_object(raw_data)
-        
+
         try:
             if gacha:
                 return better_object(roll(self.appended))
@@ -105,10 +104,9 @@ class Rule34(object):
         except Exception as e:
             raise Exception(f"Failed to get data: {e}")
 
-
     async def search_image(
         self, query: str, block: str = "", limit: int = 100, page: int = 1
-    ) -> Union[aiohttp.ClientResponse, str, None]:
+    ) -> Union[list, str, None]:
 
         """Parses image only
 
