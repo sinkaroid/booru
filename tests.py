@@ -50,7 +50,7 @@ class Wrapper(object):
         print("Data", data, len(booru.resolve(data)))
 
         image = await imgboard.search_image(query=search)
-        print("Image", image)
+        print("Image", image, len(booru.resolve(image)))
 
         gacha = await imgboard.search(query=search, gacha=True)
         print("Gacha", gacha)
