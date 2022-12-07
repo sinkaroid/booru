@@ -96,9 +96,9 @@ class Furbooru(object):
             raise ValueError(Booru.error_handling_limit)
 
         self.query = query
-        self.specs["q"] = str(self.query)
-        self.specs["per_page"] = str(limit)
-        self.specs["page"] = str(page)
+        self.specs["q"] = self.query
+        self.specs["per_page"] = limit
+        self.specs["page"] = page
 
         async with aiohttp.ClientSession() as session:
             async with session.get(Booru.furbooru, params=self.specs) as resp:
@@ -149,9 +149,9 @@ class Furbooru(object):
 
 
         self.query = query
-        self.specs["q"] = str(self.query)
-        self.specs["per_page"] = str(limit)
-        self.specs["page"] = str(page)
+        self.specs["q"] = self.query
+        self.specs["per_page"] = limit
+        self.specs["page"] = page
 
         try:
 

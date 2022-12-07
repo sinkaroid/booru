@@ -81,9 +81,9 @@ class Paheal(object):
 
 
         self.tags = query
-        self.specs["tags"] = str(self.tags)
-        self.specs["limit"] = str(limit)
-        self.specs["page"] = str(page)
+        self.specs["tags"] = self.tags
+        self.specs["limit"] = limit
+        self.specs["page"] = page
 
 
         async with aiohttp.ClientSession() as session:
@@ -141,9 +141,9 @@ class Paheal(object):
 
 
         self.tags = query
-        self.specs["tags"] = str(self.tags)
-        self.specs["limit"] = str(limit)
-        self.specs["page"] = str(page)
+        self.specs["tags"] = self.tags
+        self.specs["limit"] = limit
+        self.specs["page"] = page
 
         try:
             async with aiohttp.ClientSession() as session:

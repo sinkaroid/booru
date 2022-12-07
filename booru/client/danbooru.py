@@ -168,9 +168,9 @@ class Danbooru(object):
             raise ValueError(Booru.error_handling_sameval)
 
         self.query = query
-        self.specs["tags"] = str(self.query)
-        self.specs["limit"] = str(limit)
-        self.specs["page"] = str(page)
+        self.specs["tags"] = self.query
+        self.specs["limit"] = limit
+        self.specs["page"] = page
 
         try:
             async with aiohttp.ClientSession() as session:

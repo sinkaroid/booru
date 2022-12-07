@@ -102,9 +102,9 @@ class E621(object):
         else:
             self.query = query
 
-        self.specs["tags"] = str(self.query)
-        self.specs["limit"] = str(limit)
-        self.specs["page"] = str(page)
+        self.specs["tags"] = self.query
+        self.specs["limit"] = limit
+        self.specs["page"] = page
 
         async with aiohttp.ClientSession(headers=Booru.headers) as session:
             async with session.get(Booru.e621, params=self.specs) as resp:
@@ -157,9 +157,9 @@ class E621(object):
 
 
         self.query = query
-        self.specs["tags"] = str(self.query)
-        self.specs["limit"] = str(limit)
-        self.specs["pid"] = str(page)
+        self.specs["tags"] = self.query
+        self.specs["limit"] = limit
+        self.specs["pid"] = page
         self.specs["json"] = "1"
 
         try:

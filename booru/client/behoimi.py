@@ -99,9 +99,9 @@ class Behoimi(object):
             raise ValueError(Booru.error_handling_sameval)
 
         self.query = query
-        self.specs["tags"] = str(self.query)
-        self.specs["limit"] = str(limit)
-        self.specs["page"] = str(page)
+        self.specs["tags"] = self.query
+        self.specs["limit"] = limit
+        self.specs["page"] = page
 
         self.data = await Behoimi.mock(Booru.behoimi, params=self.specs)
 
@@ -163,9 +163,9 @@ class Behoimi(object):
             raise ValueError(Booru.error_handling_sameval)
 
         self.query = query
-        self.specs["tags"] = str(self.query)
-        self.specs["limit"] = str(limit)
-        self.specs["page"] = str(page)
+        self.specs["tags"] = self.query
+        self.specs["limit"] = limit
+        self.specs["page"] = page
 
         try:
             self.data = await Behoimi.mock(Booru.behoimi, params=self.specs)

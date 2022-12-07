@@ -124,9 +124,9 @@ class Realbooru(object):
             raise ValueError(Booru.error_handling_sameval)
 
         self.query = query
-        self.specs["tags"] = str(self.query)
-        self.specs["limit"] = str(limit)
-        self.specs["pid"] = str(page)
+        self.specs["tags"] = self.query
+        self.specs["limit"] = limit
+        self.specs["pid"] = page
         self.specs["json"] = "1"
 
         async with aiohttp.ClientSession() as session:
@@ -189,9 +189,9 @@ class Realbooru(object):
             raise ValueError(Booru.error_handling_sameval)
 
         self.query = query
-        self.specs["tags"] = str(self.query)
-        self.specs["limit"] = str(limit)
-        self.specs["pid"] = str(page)
+        self.specs["tags"] = self.query
+        self.specs["limit"] = limit
+        self.specs["pid"] = page
         self.specs["json"] = "1"
 
         try:
@@ -209,7 +209,7 @@ class Realbooru(object):
                         i for i in self.final if not any(j in block for j in i["tags"])
                     ]
 
-                    self.not_random = parse_image(self.final)
+                    self.not_random = parse_image(Realbooru.append_object(self.final))
                     shuffle(self.not_random)
                     return better_object(self.not_random)
 

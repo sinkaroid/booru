@@ -102,9 +102,9 @@ class Hypnohub(object):
             raise ValueError(Booru.error_handling_sameval)
 
         self.query = query
-        self.specs["tags"] = str(self.query)
-        self.specs["limit"] = str(limit)
-        self.specs["pid"] = str(page)
+        self.specs["tags"] = self.query
+        self.specs["limit"] = limit
+        self.specs["pid"] = page
         self.specs["json"] = "1"
 
         async with aiohttp.ClientSession() as session:
@@ -167,9 +167,9 @@ class Hypnohub(object):
             raise ValueError(Booru.error_handling_sameval)
 
         self.query = query
-        self.specs["tags"] = str(self.query)
-        self.specs["limit"] = str(limit)
-        self.specs["pid"] = str(page)
+        self.specs["tags"] = self.query
+        self.specs["limit"] = limit
+        self.specs["pid"] = page
         self.specs["json"] = "1"
 
         try:
