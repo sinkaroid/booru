@@ -1,4 +1,3 @@
-import aiohttp
 from typing import Union
 from ..utils.fetch import request, roll
 from ..utils.constant import Api, better_object, parse_image, get_hostname
@@ -16,7 +15,7 @@ class E621(object):
         Search and gets images from e621.
 
     search_image : function
-        Gets images, meant just image urls from e621.
+        Search and gets images from e621, but only returns image.
 
     """
 
@@ -48,10 +47,10 @@ class E621(object):
         Parameters
         ----------
         api_key : str
-            Your API Key which is accessible within your account options page
+            Your API Key (If possible)
 
         user_id : str
-            Your user ID, which is accessible on the account options/profile page.
+            Your user ID (If possible)
         """
 
         if api_key and user_id == "":
@@ -70,7 +69,7 @@ class E621(object):
         page: int = 1,
         random: bool = True,
         gacha: bool = False,
-    ) -> Union[aiohttp.ClientResponse, str]:
+    ) -> Union[list, str, None]:
 
         """Search and gets images from e621.
 
@@ -96,13 +95,11 @@ class E621(object):
         dict
             The json object returned by e621.
         """
-        if gacha:
-            limit = 100
+
         if limit > 1000:
             raise ValueError(Booru.error_handling_limit)
-        else:
-            self.query = query
 
+        self.query = query
         self.specs["tags"] = self.query
         self.specs["limit"] = limit
         self.specs["page"] = page
@@ -123,7 +120,7 @@ class E621(object):
 
     async def search_image(
         self, query: str, limit: int = 100, page: int = 1
-    ) -> Union[aiohttp.ClientResponse, str]:
+    ) -> Union[list, str, None]:
 
         """Gets images, meant just image urls from e621.
 
@@ -147,7 +144,6 @@ class E621(object):
 
         if limit > 1000:
             raise ValueError(Booru.error_handling_limit)
-
 
         self.query = query
         self.specs["tags"] = self.query
