@@ -1,6 +1,7 @@
 import aiohttp
 from typing import Union
-from ..utils.parser import Api, better_object, parse_image, get_hostname
+from ..utils.fetch import request, roll
+from ..utils.constant import Api, better_object, parse_image, get_hostname
 from random import shuffle, randint
 
 Booru = Api()
@@ -94,33 +95,24 @@ class Derpibooru(object):
         if limit > 1000:
             raise ValueError(Booru.error_handling_limit)
 
-
         self.query = query
         self.specs["q"] = self.query
         self.specs["per_page"] = limit
         self.specs["page"] = page
 
-        async with aiohttp.ClientSession() as session:
-            async with session.get(Booru.derpibooru, params=self.specs) as resp:
-                self.data = await resp.json(content_type=None)
-                self.final = self.data
-
-                if not self.final["images"]:
-                    raise ValueError(Booru.error_handling_null)
-
-                self.not_random = Derpibooru.append_object(self.final["images"])
-                shuffle(self.not_random)
-
-                try:
-                    if gacha:
-                        return better_object(self.not_random[randint(0, len(self.not_random))])
-                    elif random:
-                        return better_object(self.not_random)
-                    else:
-                        return better_object(Derpibooru.append_object(self.final["images"]))
-
-                except Exception as e:
-                    raise Exception(f"Failed to get data: {e}")
+        raw_data = await request(site=Booru.derpibooru, params_x=self.specs, block="")
+        self.appended = Derpibooru.append_object(raw_data["images"])
+        
+        try:
+            if gacha:
+                return better_object(roll(self.appended))
+            elif random:
+                shuffle(self.appended)
+                return better_object(self.appended)
+            else:
+                return better_object(Derpibooru.append_object(self.appended))
+        except Exception as e:
+            raise Exception(f"Failed to get data: {e}")
 
     async def search_image(self, query: str, limit: int = 100, page: int = 1) -> Union[aiohttp.ClientResponse, str]:
 

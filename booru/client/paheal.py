@@ -2,7 +2,7 @@ import json
 import re
 import aiohttp
 from typing import Union
-from ..utils.parser import Api, better_object
+from ..utils.constant import Api, better_object
 from random import shuffle, randint
 from xmltodict import parse
 

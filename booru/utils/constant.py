@@ -1,6 +1,8 @@
+import aiohttp
 import json
 import re
 from booru import __version__
+from random import shuffle, randint
 
 
 class Api:
@@ -33,18 +35,20 @@ class Api:
         e_handling_cantparse (str): The error message for the parsing.
         e_handling_null (str): The error message for the null.
         e_handling_invalid_auth (str): The error message for the invalid auth.
+        headers (dict): The headers request.
+        bypass_headers (dict): The bypass headers request.
     """
 
     def __init__(
         self,
         BASE_headers={
             "User-Agent": f"booru/v{__version__} (https://pypi.org/project/booru);",
-            "From": "anakmancasan@gmail.com",
+            "From": "hey@sinkaroid.org",
         },
         BYPASS_headers={
             "User-Agent": "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1)",
             "Referer": "http://behoimi.org/data/ff/f3/",
-            "From": "anakmancasan@gmail.com",
+            "From": "hey@sinkaroid.org",
         },
     ):
 
@@ -126,6 +130,7 @@ def better_object(parser: dict):
     """
     return json.dumps(parser, sort_keys=True, indent=4, ensure_ascii=False)
 
+
 def parse_image(raw_object: dict):
     """Extracts the image url from the json object.
     Parameters
@@ -149,6 +154,7 @@ def parse_image(raw_object: dict):
     except:
         images = [i["file"]["url"] for i in data]  # furry stuff sigh
 
+    images = list(dict.fromkeys(images))
     return images
 
 
@@ -166,6 +172,7 @@ def get_hostname(url: str):
     """
     return re.sub(r"(.*://)?([^/?]+).*", "\g<1>\g<2>", url)
 
+
 def resolve(b_object: dict) -> dict:
     """Resolves the json object.
 
@@ -179,6 +186,7 @@ def resolve(b_object: dict) -> dict:
         raw json object
     """
     return json.loads(b_object)
+
 
 def parse_image_danbooru(raw_object: dict) -> list:
     """Smh, it's danbooru though
@@ -207,3 +215,4 @@ def parse_image_danbooru(raw_object: dict) -> list:
             except KeyError:
                 pass
         return list(set(image))
+

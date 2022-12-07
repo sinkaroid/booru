@@ -1,6 +1,6 @@
 import aiohttp
 from typing import Union
-from ..utils.parser import Api, better_object, get_hostname
+from ..utils.constant import Api, better_object, get_hostname
 from random import shuffle, randint
 
 Booru = Api()
