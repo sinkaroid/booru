@@ -26,30 +26,33 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">import requests
-import json
-import re
-from ..utils.parser import Api, better_object, parse_image, get_hostname, deserialize
-from random import shuffle, randint
+<pre><code class="python">import re
+from typing import Union
+from ..utils.fetch import request, request_wildcard, roll
+from ..utils.constant import Api, better_object, parse_image, get_hostname
+from random import shuffle
 
 Booru = Api()
 
 
 class Gelbooru(object):
-    &#34;&#34;&#34;Gelbooru wrapper
+    &#34;&#34;&#34;Gelbooru Client
 
     Methods
     -------
     search : function
         Search and gets images from gelbooru.
 
-    get_image : function
-        Gets images, meant just image urls from gelbooru.
+    search_image : function
+        Search and gets images from gelbooru, but only returns image.
+
+    find_tags : function
+        Get the proper tags from gelbooru.
 
     &#34;&#34;&#34;
 
     @staticmethod
-    def append_obj(raw_object: dict):
+    def append_object(raw_object: dict):
         &#34;&#34;&#34;Extends new object to the raw dict
 
         Parameters
@@ -76,10 +79,10 @@ class Gelbooru(object):
         Parameters
         ----------
         api_key : str
-            Your API Key which is accessible within your account options page
+            Your API Key (If possible)
 
         user_id : str
-            Your user ID, which is accessible on the account options/profile page.
+            Your user ID (If possible)
         &#34;&#34;&#34;
 
         if api_key and user_id == &#34;&#34;:
@@ -99,38 +102,30 @@ class Gelbooru(object):
         page: int = 1,
         random: bool = True,
         gacha: bool = False,
-    ):
+    ) -&gt; Union[list, str, None]:
 
-        &#34;&#34;&#34;Search and gets images from gelbooru.
+        &#34;&#34;&#34;Search method
 
         Parameters
         ----------
         query : str
             The query to search for.
-
         block : str
-            The disgusting query you want to block,
-            e.g: you want to search &#39;erza_scarlet&#39; but dont want to gets furry, fill in &#39;furry&#39;
-
+            The tags you want to block, separated by space.
         limit : int
-            The limit of images to return.
-
+            Expected number which is from pages
         page : int
-            The number of desired page
-
+            Expected number of page.
         random : bool
             Shuffle the whole dict, default is True.
-
         gacha : bool
             Get random single object, limit property will be ignored.
 
         Returns
         -------
         dict
-            The json object returned by gelbooru.
+            The json object (as string, you may need booru.resolve())
         &#34;&#34;&#34;
-        if gacha:
-            limit = 100
 
         if limit &gt; 1000:
             raise ValueError(Booru.error_handling_limit)
@@ -138,97 +133,90 @@ class Gelbooru(object):
         if block and re.findall(block, query):
             raise ValueError(Booru.error_handling_sameval)
 
-        if block != &#34;&#34;:
-            self.query = f&#34;{query} -{block}*&#34;
-
-        else:
-            self.query = query
-
-        self.specs[&#34;tags&#34;] = str(self.query)
-        self.specs[&#34;limit&#34;] = str(limit)
-        self.specs[&#34;pid&#34;] = str(page)
+        self.query = query
+        self.specs[&#34;tags&#34;] = self.query
+        self.specs[&#34;limit&#34;] = limit
+        self.specs[&#34;pid&#34;] = page
         self.specs[&#34;json&#34;] = &#34;1&#34;
 
-        self.data = requests.get(Booru.gelbooru, params=self.specs)
-        self.final = self.final = deserialize(self.data.json())
-
-        if &#34;post&#34; not in self.final or not self.final:
-            raise ValueError(Booru.error_handling_null)
-
-        self.not_random = Gelbooru.append_obj(self.final[&#34;post&#34;])
-        shuffle(self.not_random)
+        raw_data = await request(site=Booru.gelbooru, params_x=self.specs, block=block)
+        self.appended = Gelbooru.append_object(raw_data)
 
         try:
             if gacha:
-                return better_object(self.not_random[randint(0, len(self.not_random))])
-
+                return better_object(roll(self.appended))
             elif random:
-                return better_object(self.not_random)
-
+                shuffle(self.appended)
+                return better_object(self.appended)
             else:
-                return better_object(Gelbooru.append_obj(self.final[&#34;post&#34;]))
-
+                return better_object(Gelbooru.append_object(self.appended))
         except Exception as e:
-            raise ValueError(f&#34;Failed to get data: {e}&#34;)
+            raise Exception(f&#34;Failed to get data: {e}&#34;)
 
-    async def get_image(
+    async def search_image(
         self, query: str, block: str = &#34;&#34;, limit: int = 100, page: int = 1
-    ):
+    ) -&gt; Union[list, str, None]:
 
-        &#34;&#34;&#34;Gets images, meant just image urls from gelbooru.
+        &#34;&#34;&#34;Parses image only
 
         Parameters
         ----------
         query : str
             The query to search for.
-
         block : str
-            The disgusting query you want to block,
-            e.g: you want to search &#39;erza_scarlet&#39; but dont want to gets furry, fill in &#39;furry&#39;
-
+            The tags you want to block, separated by space.
         limit : int
-            The limit of images to return.
-
+            Expected number which is from pages
         page : int
-            The number of desired page
+            Expected number of page.
 
         Returns
         -------
-        list
-            The list of image urls.
+        dict
+            The json object (as string, you may need booru.resolve())
 
         &#34;&#34;&#34;
 
         if limit &gt; 1000:
             raise ValueError(Booru.error_handling_limit)
-
-        if block and re.findall(block, query):
+        elif block and re.findall(block, query):
             raise ValueError(Booru.error_handling_sameval)
 
-        if block != &#34;&#34;:
-            self.query = f&#34;{query} -{block}*&#34;
-
-        else:
-            self.query = query
-
-        self.specs[&#34;tags&#34;] = str(self.query)
-        self.specs[&#34;limit&#34;] = str(limit)
-        self.specs[&#34;pid&#34;] = str(page)
+        self.query = query
+        self.specs[&#34;tags&#34;] = self.query
+        self.specs[&#34;limit&#34;] = limit
+        self.specs[&#34;pid&#34;] = page
         self.specs[&#34;json&#34;] = &#34;1&#34;
 
+        raw_data = await request(site=Booru.gelbooru, params_x=self.specs, block=block)
+        self.appended = Gelbooru.append_object(raw_data)
+
         try:
-            self.data = requests.get(Booru.gelbooru, params=self.specs)
-            self.final = self.final = deserialize(self.data.json())
+            return better_object(parse_image(self.appended))
+        except Exception as e:
+            raise Exception(f&#34;Failed to get data: {e}&#34;)
 
-            if &#34;post&#34; not in self.final:
-                raise ValueError(Booru.error_handling_null)
+    async def find_tags(site: str, query: str) -&gt; Union[list, str, None]:
+        &#34;&#34;&#34;Find tags
 
-            self.not_random = parse_image(self.final)
-            shuffle(self.not_random)
-            return better_object(self.not_random)
+        Parameters
+        ----------
+        site : str
+            The site to search for.
+        query : str
+            The tag to search for.
 
-        except:
-            raise ValueError(f&#34;Failed to get data&#34;)</code></pre>
+        Returns
+        -------
+        list
+            The list of tags (as string, you may need booru.resolve())
+        &#34;&#34;&#34;
+        try:
+            data = await request_wildcard(site=Booru.gelbooru_wildcard, query=query)
+            return better_object(data)
+
+        except Exception as e:
+            raise Exception(f&#34;Failed to get data: {e}&#34;)</code></pre>
 </details>
 </section>
 <section>
@@ -245,39 +233,44 @@ class Gelbooru(object):
 <span>(</span><span>api_key: str = '', user_id: str = '')</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Gelbooru wrapper</p>
+<div class="desc"><p>Gelbooru Client</p>
 <h2 id="methods">Methods</h2>
 <p>search : function
 Search and gets images from gelbooru.</p>
-<p>get_image : function
-Gets images, meant just image urls from gelbooru.</p>
+<p>search_image : function
+Search and gets images from gelbooru, but only returns image.</p>
+<p>find_tags : function
+Get the proper tags from gelbooru.</p>
 <p>Initializes gelbooru.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>api_key</code></strong> :&ensp;<code>str</code></dt>
-<dd>Your API Key which is accessible within your account options page</dd>
+<dd>Your API Key (If possible)</dd>
 <dt><strong><code>user_id</code></strong> :&ensp;<code>str</code></dt>
-<dd>Your user ID, which is accessible on the account options/profile page.</dd>
+<dd>Your user ID (If possible)</dd>
 </dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Gelbooru(object):
-    &#34;&#34;&#34;Gelbooru wrapper
+    &#34;&#34;&#34;Gelbooru Client
 
     Methods
     -------
     search : function
         Search and gets images from gelbooru.
 
-    get_image : function
-        Gets images, meant just image urls from gelbooru.
+    search_image : function
+        Search and gets images from gelbooru, but only returns image.
+
+    find_tags : function
+        Get the proper tags from gelbooru.
 
     &#34;&#34;&#34;
 
     @staticmethod
-    def append_obj(raw_object: dict):
+    def append_object(raw_object: dict):
         &#34;&#34;&#34;Extends new object to the raw dict
 
         Parameters
@@ -304,10 +297,10 @@ Gets images, meant just image urls from gelbooru.</p>
         Parameters
         ----------
         api_key : str
-            Your API Key which is accessible within your account options page
+            Your API Key (If possible)
 
         user_id : str
-            Your user ID, which is accessible on the account options/profile page.
+            Your user ID (If possible)
         &#34;&#34;&#34;
 
         if api_key and user_id == &#34;&#34;:
@@ -327,38 +320,30 @@ Gets images, meant just image urls from gelbooru.</p>
         page: int = 1,
         random: bool = True,
         gacha: bool = False,
-    ):
+    ) -&gt; Union[list, str, None]:
 
-        &#34;&#34;&#34;Search and gets images from gelbooru.
+        &#34;&#34;&#34;Search method
 
         Parameters
         ----------
         query : str
             The query to search for.
-
         block : str
-            The disgusting query you want to block,
-            e.g: you want to search &#39;erza_scarlet&#39; but dont want to gets furry, fill in &#39;furry&#39;
-
+            The tags you want to block, separated by space.
         limit : int
-            The limit of images to return.
-
+            Expected number which is from pages
         page : int
-            The number of desired page
-
+            Expected number of page.
         random : bool
             Shuffle the whole dict, default is True.
-
         gacha : bool
             Get random single object, limit property will be ignored.
 
         Returns
         -------
         dict
-            The json object returned by gelbooru.
+            The json object (as string, you may need booru.resolve())
         &#34;&#34;&#34;
-        if gacha:
-            limit = 100
 
         if limit &gt; 1000:
             raise ValueError(Booru.error_handling_limit)
@@ -366,102 +351,95 @@ Gets images, meant just image urls from gelbooru.</p>
         if block and re.findall(block, query):
             raise ValueError(Booru.error_handling_sameval)
 
-        if block != &#34;&#34;:
-            self.query = f&#34;{query} -{block}*&#34;
-
-        else:
-            self.query = query
-
-        self.specs[&#34;tags&#34;] = str(self.query)
-        self.specs[&#34;limit&#34;] = str(limit)
-        self.specs[&#34;pid&#34;] = str(page)
+        self.query = query
+        self.specs[&#34;tags&#34;] = self.query
+        self.specs[&#34;limit&#34;] = limit
+        self.specs[&#34;pid&#34;] = page
         self.specs[&#34;json&#34;] = &#34;1&#34;
 
-        self.data = requests.get(Booru.gelbooru, params=self.specs)
-        self.final = self.final = deserialize(self.data.json())
-
-        if &#34;post&#34; not in self.final or not self.final:
-            raise ValueError(Booru.error_handling_null)
-
-        self.not_random = Gelbooru.append_obj(self.final[&#34;post&#34;])
-        shuffle(self.not_random)
+        raw_data = await request(site=Booru.gelbooru, params_x=self.specs, block=block)
+        self.appended = Gelbooru.append_object(raw_data)
 
         try:
             if gacha:
-                return better_object(self.not_random[randint(0, len(self.not_random))])
-
+                return better_object(roll(self.appended))
             elif random:
-                return better_object(self.not_random)
-
+                shuffle(self.appended)
+                return better_object(self.appended)
             else:
-                return better_object(Gelbooru.append_obj(self.final[&#34;post&#34;]))
-
+                return better_object(Gelbooru.append_object(self.appended))
         except Exception as e:
-            raise ValueError(f&#34;Failed to get data: {e}&#34;)
+            raise Exception(f&#34;Failed to get data: {e}&#34;)
 
-    async def get_image(
+    async def search_image(
         self, query: str, block: str = &#34;&#34;, limit: int = 100, page: int = 1
-    ):
+    ) -&gt; Union[list, str, None]:
 
-        &#34;&#34;&#34;Gets images, meant just image urls from gelbooru.
+        &#34;&#34;&#34;Parses image only
 
         Parameters
         ----------
         query : str
             The query to search for.
-
         block : str
-            The disgusting query you want to block,
-            e.g: you want to search &#39;erza_scarlet&#39; but dont want to gets furry, fill in &#39;furry&#39;
-
+            The tags you want to block, separated by space.
         limit : int
-            The limit of images to return.
-
+            Expected number which is from pages
         page : int
-            The number of desired page
+            Expected number of page.
 
         Returns
         -------
-        list
-            The list of image urls.
+        dict
+            The json object (as string, you may need booru.resolve())
 
         &#34;&#34;&#34;
 
         if limit &gt; 1000:
             raise ValueError(Booru.error_handling_limit)
-
-        if block and re.findall(block, query):
+        elif block and re.findall(block, query):
             raise ValueError(Booru.error_handling_sameval)
 
-        if block != &#34;&#34;:
-            self.query = f&#34;{query} -{block}*&#34;
-
-        else:
-            self.query = query
-
-        self.specs[&#34;tags&#34;] = str(self.query)
-        self.specs[&#34;limit&#34;] = str(limit)
-        self.specs[&#34;pid&#34;] = str(page)
+        self.query = query
+        self.specs[&#34;tags&#34;] = self.query
+        self.specs[&#34;limit&#34;] = limit
+        self.specs[&#34;pid&#34;] = page
         self.specs[&#34;json&#34;] = &#34;1&#34;
 
+        raw_data = await request(site=Booru.gelbooru, params_x=self.specs, block=block)
+        self.appended = Gelbooru.append_object(raw_data)
+
         try:
-            self.data = requests.get(Booru.gelbooru, params=self.specs)
-            self.final = self.final = deserialize(self.data.json())
+            return better_object(parse_image(self.appended))
+        except Exception as e:
+            raise Exception(f&#34;Failed to get data: {e}&#34;)
 
-            if &#34;post&#34; not in self.final:
-                raise ValueError(Booru.error_handling_null)
+    async def find_tags(site: str, query: str) -&gt; Union[list, str, None]:
+        &#34;&#34;&#34;Find tags
 
-            self.not_random = parse_image(self.final)
-            shuffle(self.not_random)
-            return better_object(self.not_random)
+        Parameters
+        ----------
+        site : str
+            The site to search for.
+        query : str
+            The tag to search for.
 
-        except:
-            raise ValueError(f&#34;Failed to get data&#34;)</code></pre>
+        Returns
+        -------
+        list
+            The list of tags (as string, you may need booru.resolve())
+        &#34;&#34;&#34;
+        try:
+            data = await request_wildcard(site=Booru.gelbooru_wildcard, query=query)
+            return better_object(data)
+
+        except Exception as e:
+            raise Exception(f&#34;Failed to get data: {e}&#34;)</code></pre>
 </details>
 <h3>Static methods</h3>
 <dl>
-<dt id="booru.client.gelbooru.Gelbooru.append_obj"><code class="name flex">
-<span>def <span class="ident">append_obj</span></span>(<span>raw_object: dict)</span>
+<dt id="booru.client.gelbooru.Gelbooru.append_object"><code class="name flex">
+<span>def <span class="ident">append_object</span></span>(<span>raw_object: dict)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Extends new object to the raw dict</p>
@@ -480,7 +458,7 @@ Gets images, meant just image urls from gelbooru.</p>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-def append_obj(raw_object: dict):
+def append_object(raw_object: dict):
     &#34;&#34;&#34;Extends new object to the raw dict
 
     Parameters
@@ -505,108 +483,65 @@ def append_obj(raw_object: dict):
 </dl>
 <h3>Methods</h3>
 <dl>
-<dt id="booru.client.gelbooru.Gelbooru.get_image"><code class="name flex">
-<span>async def <span class="ident">get_image</span></span>(<span>self, query: str, block: str = '', limit: int = 100, page: int = 1)</span>
+<dt id="booru.client.gelbooru.Gelbooru.find_tags"><code class="name flex">
+<span>async def <span class="ident">find_tags</span></span>(<span>site: str, query: str) ‑> Union[list, str, ForwardRef(None)]</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Gets images, meant just image urls from gelbooru.</p>
+<div class="desc"><p>Find tags</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
+<dt><strong><code>site</code></strong> :&ensp;<code>str</code></dt>
+<dd>The site to search for.</dd>
 <dt><strong><code>query</code></strong> :&ensp;<code>str</code></dt>
-<dd>The query to search for.</dd>
-<dt><strong><code>block</code></strong> :&ensp;<code>str</code></dt>
-<dd>The disgusting query you want to block,
-e.g: you want to search 'erza_scarlet' but dont want to gets furry, fill in 'furry'</dd>
-<dt><strong><code>limit</code></strong> :&ensp;<code>int</code></dt>
-<dd>The limit of images to return.</dd>
-<dt><strong><code>page</code></strong> :&ensp;<code>int</code></dt>
-<dd>The number of desired page</dd>
+<dd>The tag to search for.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
 <dt><code>list</code></dt>
-<dd>The list of image urls.</dd>
+<dd>The list of tags (as string, you may need booru.resolve())</dd>
 </dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def get_image(
-    self, query: str, block: str = &#34;&#34;, limit: int = 100, page: int = 1
-):
-
-    &#34;&#34;&#34;Gets images, meant just image urls from gelbooru.
+<pre><code class="python">async def find_tags(site: str, query: str) -&gt; Union[list, str, None]:
+    &#34;&#34;&#34;Find tags
 
     Parameters
     ----------
+    site : str
+        The site to search for.
     query : str
-        The query to search for.
-
-    block : str
-        The disgusting query you want to block,
-        e.g: you want to search &#39;erza_scarlet&#39; but dont want to gets furry, fill in &#39;furry&#39;
-
-    limit : int
-        The limit of images to return.
-
-    page : int
-        The number of desired page
+        The tag to search for.
 
     Returns
     -------
     list
-        The list of image urls.
-
+        The list of tags (as string, you may need booru.resolve())
     &#34;&#34;&#34;
-
-    if limit &gt; 1000:
-        raise ValueError(Booru.error_handling_limit)
-
-    if block and re.findall(block, query):
-        raise ValueError(Booru.error_handling_sameval)
-
-    if block != &#34;&#34;:
-        self.query = f&#34;{query} -{block}*&#34;
-
-    else:
-        self.query = query
-
-    self.specs[&#34;tags&#34;] = str(self.query)
-    self.specs[&#34;limit&#34;] = str(limit)
-    self.specs[&#34;pid&#34;] = str(page)
-    self.specs[&#34;json&#34;] = &#34;1&#34;
-
     try:
-        self.data = requests.get(Booru.gelbooru, params=self.specs)
-        self.final = self.final = deserialize(self.data.json())
+        data = await request_wildcard(site=Booru.gelbooru_wildcard, query=query)
+        return better_object(data)
 
-        if &#34;post&#34; not in self.final:
-            raise ValueError(Booru.error_handling_null)
-
-        self.not_random = parse_image(self.final)
-        shuffle(self.not_random)
-        return better_object(self.not_random)
-
-    except:
-        raise ValueError(f&#34;Failed to get data&#34;)</code></pre>
+    except Exception as e:
+        raise Exception(f&#34;Failed to get data: {e}&#34;)</code></pre>
 </details>
 </dd>
 <dt id="booru.client.gelbooru.Gelbooru.search"><code class="name flex">
-<span>async def <span class="ident">search</span></span>(<span>self, query: str, block: str = '', limit: int = 100, page: int = 1, random: bool = True, gacha: bool = False)</span>
+<span>async def <span class="ident">search</span></span>(<span>self, query: str, block: str = '', limit: int = 100, page: int = 1, random: bool = True, gacha: bool = False) ‑> Union[list, str, ForwardRef(None)]</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Search and gets images from gelbooru.</p>
+<div class="desc"><p>Search method</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>query</code></strong> :&ensp;<code>str</code></dt>
 <dd>The query to search for.</dd>
 <dt><strong><code>block</code></strong> :&ensp;<code>str</code></dt>
-<dd>The disgusting query you want to block,
-e.g: you want to search 'erza_scarlet' but dont want to gets furry, fill in 'furry'</dd>
+<dd>The tags you want to block, separated by space.</dd>
 <dt><strong><code>limit</code></strong> :&ensp;<code>int</code></dt>
-<dd>The limit of images to return.</dd>
+<dd>Expected number which is from pages</dd>
 <dt><strong><code>page</code></strong> :&ensp;<code>int</code></dt>
-<dd>The number of desired page</dd>
+<dd>Expected number of page.</dd>
 <dt><strong><code>random</code></strong> :&ensp;<code>bool</code></dt>
 <dd>Shuffle the whole dict, default is True.</dd>
 <dt><strong><code>gacha</code></strong> :&ensp;<code>bool</code></dt>
@@ -615,7 +550,7 @@ e.g: you want to search 'erza_scarlet' but dont want to gets furry, fill in 'fur
 <h2 id="returns">Returns</h2>
 <dl>
 <dt><code>dict</code></dt>
-<dd>The json object returned by gelbooru.</dd>
+<dd>The json object (as string, you may need booru.resolve())</dd>
 </dl></div>
 <details class="source">
 <summary>
@@ -629,38 +564,30 @@ e.g: you want to search 'erza_scarlet' but dont want to gets furry, fill in 'fur
     page: int = 1,
     random: bool = True,
     gacha: bool = False,
-):
+) -&gt; Union[list, str, None]:
 
-    &#34;&#34;&#34;Search and gets images from gelbooru.
+    &#34;&#34;&#34;Search method
 
     Parameters
     ----------
     query : str
         The query to search for.
-
     block : str
-        The disgusting query you want to block,
-        e.g: you want to search &#39;erza_scarlet&#39; but dont want to gets furry, fill in &#39;furry&#39;
-
+        The tags you want to block, separated by space.
     limit : int
-        The limit of images to return.
-
+        Expected number which is from pages
     page : int
-        The number of desired page
-
+        Expected number of page.
     random : bool
         Shuffle the whole dict, default is True.
-
     gacha : bool
         Get random single object, limit property will be ignored.
 
     Returns
     -------
     dict
-        The json object returned by gelbooru.
+        The json object (as string, you may need booru.resolve())
     &#34;&#34;&#34;
-    if gacha:
-        limit = 100
 
     if limit &gt; 1000:
         raise ValueError(Booru.error_handling_limit)
@@ -668,38 +595,94 @@ e.g: you want to search 'erza_scarlet' but dont want to gets furry, fill in 'fur
     if block and re.findall(block, query):
         raise ValueError(Booru.error_handling_sameval)
 
-    if block != &#34;&#34;:
-        self.query = f&#34;{query} -{block}*&#34;
-
-    else:
-        self.query = query
-
-    self.specs[&#34;tags&#34;] = str(self.query)
-    self.specs[&#34;limit&#34;] = str(limit)
-    self.specs[&#34;pid&#34;] = str(page)
+    self.query = query
+    self.specs[&#34;tags&#34;] = self.query
+    self.specs[&#34;limit&#34;] = limit
+    self.specs[&#34;pid&#34;] = page
     self.specs[&#34;json&#34;] = &#34;1&#34;
 
-    self.data = requests.get(Booru.gelbooru, params=self.specs)
-    self.final = self.final = deserialize(self.data.json())
-
-    if &#34;post&#34; not in self.final or not self.final:
-        raise ValueError(Booru.error_handling_null)
-
-    self.not_random = Gelbooru.append_obj(self.final[&#34;post&#34;])
-    shuffle(self.not_random)
+    raw_data = await request(site=Booru.gelbooru, params_x=self.specs, block=block)
+    self.appended = Gelbooru.append_object(raw_data)
 
     try:
         if gacha:
-            return better_object(self.not_random[randint(0, len(self.not_random))])
-
+            return better_object(roll(self.appended))
         elif random:
-            return better_object(self.not_random)
-
+            shuffle(self.appended)
+            return better_object(self.appended)
         else:
-            return better_object(Gelbooru.append_obj(self.final[&#34;post&#34;]))
-
+            return better_object(Gelbooru.append_object(self.appended))
     except Exception as e:
-        raise ValueError(f&#34;Failed to get data: {e}&#34;)</code></pre>
+        raise Exception(f&#34;Failed to get data: {e}&#34;)</code></pre>
+</details>
+</dd>
+<dt id="booru.client.gelbooru.Gelbooru.search_image"><code class="name flex">
+<span>async def <span class="ident">search_image</span></span>(<span>self, query: str, block: str = '', limit: int = 100, page: int = 1) ‑> Union[list, str, ForwardRef(None)]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Parses image only</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>query</code></strong> :&ensp;<code>str</code></dt>
+<dd>The query to search for.</dd>
+<dt><strong><code>block</code></strong> :&ensp;<code>str</code></dt>
+<dd>The tags you want to block, separated by space.</dd>
+<dt><strong><code>limit</code></strong> :&ensp;<code>int</code></dt>
+<dd>Expected number which is from pages</dd>
+<dt><strong><code>page</code></strong> :&ensp;<code>int</code></dt>
+<dd>Expected number of page.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>dict</code></dt>
+<dd>The json object (as string, you may need booru.resolve())</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def search_image(
+    self, query: str, block: str = &#34;&#34;, limit: int = 100, page: int = 1
+) -&gt; Union[list, str, None]:
+
+    &#34;&#34;&#34;Parses image only
+
+    Parameters
+    ----------
+    query : str
+        The query to search for.
+    block : str
+        The tags you want to block, separated by space.
+    limit : int
+        Expected number which is from pages
+    page : int
+        Expected number of page.
+
+    Returns
+    -------
+    dict
+        The json object (as string, you may need booru.resolve())
+
+    &#34;&#34;&#34;
+
+    if limit &gt; 1000:
+        raise ValueError(Booru.error_handling_limit)
+    elif block and re.findall(block, query):
+        raise ValueError(Booru.error_handling_sameval)
+
+    self.query = query
+    self.specs[&#34;tags&#34;] = self.query
+    self.specs[&#34;limit&#34;] = limit
+    self.specs[&#34;pid&#34;] = page
+    self.specs[&#34;json&#34;] = &#34;1&#34;
+
+    raw_data = await request(site=Booru.gelbooru, params_x=self.specs, block=block)
+    self.appended = Gelbooru.append_object(raw_data)
+
+    try:
+        return better_object(parse_image(self.appended))
+    except Exception as e:
+        raise Exception(f&#34;Failed to get data: {e}&#34;)</code></pre>
 </details>
 </dd>
 </dl>
@@ -723,9 +706,10 @@ e.g: you want to search 'erza_scarlet' but dont want to gets furry, fill in 'fur
 <li>
 <h4><code><a title="booru.client.gelbooru.Gelbooru" href="#booru.client.gelbooru.Gelbooru">Gelbooru</a></code></h4>
 <ul class="">
-<li><code><a title="booru.client.gelbooru.Gelbooru.append_obj" href="#booru.client.gelbooru.Gelbooru.append_obj">append_obj</a></code></li>
-<li><code><a title="booru.client.gelbooru.Gelbooru.get_image" href="#booru.client.gelbooru.Gelbooru.get_image">get_image</a></code></li>
+<li><code><a title="booru.client.gelbooru.Gelbooru.append_object" href="#booru.client.gelbooru.Gelbooru.append_object">append_object</a></code></li>
+<li><code><a title="booru.client.gelbooru.Gelbooru.find_tags" href="#booru.client.gelbooru.Gelbooru.find_tags">find_tags</a></code></li>
 <li><code><a title="booru.client.gelbooru.Gelbooru.search" href="#booru.client.gelbooru.Gelbooru.search">search</a></code></li>
+<li><code><a title="booru.client.gelbooru.Gelbooru.search_image" href="#booru.client.gelbooru.Gelbooru.search_image">search_image</a></code></li>
 </ul>
 </li>
 </ul>

@@ -26,11 +26,10 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">import requests
-import json
-import re
-from ..utils.parser import Api, better_object, parse_image, get_hostname, deserialize
-from random import shuffle, randint
+<pre><code class="python">from typing import Union
+from ..utils.fetch import request, roll
+from ..utils.constant import Api, better_object, parse_image, get_hostname
+from random import shuffle
 
 Booru = Api()
 
@@ -43,13 +42,13 @@ class E926(object):
     search : function
         Search and gets images from e926.
 
-    get_image : function
-        Gets images, meant just image urls from e926.
+    search_image : function
+        Search and gets images from e926, but only returns image.
 
     &#34;&#34;&#34;
 
     @staticmethod
-    def append_obj(raw_object: dict):
+    def append_object(raw_object: dict):
         &#34;&#34;&#34;Extends new object to the raw dict
 
         Parameters
@@ -76,10 +75,10 @@ class E926(object):
         Parameters
         ----------
         api_key : str
-            Your API Key which is accessible within your account options page
+            Your API Key (If possible)
 
         user_id : str
-            Your user ID, which is accessible on the account options/profile page.
+            Your user ID (If possible)
         &#34;&#34;&#34;
 
         if api_key and user_id == &#34;&#34;:
@@ -94,12 +93,11 @@ class E926(object):
     async def search(
         self,
         query: str,
-        block: str = &#34;&#34;,
         limit: int = 100,
         page: int = 1,
         random: bool = True,
         gacha: bool = False,
-    ):
+    ) -&gt; Union[list, str, None]:
 
         &#34;&#34;&#34;Search and gets images from e926.
 
@@ -107,9 +105,6 @@ class E926(object):
         ----------
         query : str
             The query to search for.
-
-        block : str
-            The disgusting query you want to block
 
         limit : int
             The limit of images to return.
@@ -128,50 +123,32 @@ class E926(object):
         dict
             The json object returned by e926.
         &#34;&#34;&#34;
-        if gacha:
-            limit = 100
 
         if limit &gt; 1000:
             raise ValueError(Booru.error_handling_limit)
 
-        if block and re.findall(block, query):
-            raise ValueError(Booru.error_handling_sameval)
+        self.query = query
+        self.specs[&#34;tags&#34;] = self.query
+        self.specs[&#34;limit&#34;] = limit
+        self.specs[&#34;page&#34;] = page
 
-        if block != &#34;&#34;:
-            self.query = f&#34;{query} -{block}*&#34;
-
-        else:
-            self.query = query
-
-        self.specs[&#34;tags&#34;] = str(self.query)
-        self.specs[&#34;limit&#34;] = str(limit)
-        self.specs[&#34;page&#34;] = str(page)
-
-        self.data = requests.get(Booru.e926, params=self.specs, headers=Booru.headers)
-        self.final = self.final = deserialize(self.data.json())
-
-        if not self.final[&#34;posts&#34;]:
-            raise ValueError(Booru.error_handling_null)
-
-        self.not_random = E926.append_obj(self.final[&#34;posts&#34;])
-        shuffle(self.not_random)
+        raw_data = await request(site=Booru.e926, params_x=self.specs, block=&#34;&#34;)
+        self.appended = E926.append_object(raw_data[&#34;posts&#34;])
 
         try:
             if gacha:
-                return better_object(self.not_random[randint(0, len(self.not_random))])
-
+                return better_object(roll(self.appended))
             elif random:
-                return better_object(self.not_random)
-
+                shuffle(self.appended)
+                return better_object(self.appended)
             else:
-                return better_object(E926.append_obj(self.final[&#34;posts&#34;]))
-
+                return better_object(E926.append_object(self.appended))
         except Exception as e:
-            raise ValueError(f&#34;Failed to get data: {e}&#34;)
+            raise Exception(f&#34;Failed to get data: {e}&#34;)
 
-    async def get_image(
-        self, query: str, block: str = &#34;&#34;, limit: int = 100, page: int = 1
-    ):
+    async def search_image(
+        self, query: str, limit: int = 100, page: int = 1
+    ) -&gt; Union[list, str, None]:
 
         &#34;&#34;&#34;Gets images, meant just image urls from e926.
 
@@ -179,9 +156,6 @@ class E926(object):
         ----------
         query : str
             The query to search for.
-
-        block : str
-            The disgusting query you want to block
 
         limit : int
             The limit of images to return.
@@ -199,32 +173,19 @@ class E926(object):
         if limit &gt; 1000:
             raise ValueError(Booru.error_handling_limit)
 
-        if block and re.findall(block, query):
-            raise ValueError(Booru.error_handling_sameval)
-
-        if block != &#34;&#34;:
-            self.query = f&#34;{query} -{block}*&#34;
-
-        else:
-            self.query = query
-
-        self.specs[&#34;tags&#34;] = str(self.query)
-        self.specs[&#34;limit&#34;] = str(limit)
-        self.specs[&#34;pid&#34;] = str(page)
+        self.query = query
+        self.specs[&#34;tags&#34;] = self.query
+        self.specs[&#34;limit&#34;] = limit
+        self.specs[&#34;pid&#34;] = page
         self.specs[&#34;json&#34;] = &#34;1&#34;
 
+        raw_data = await request(site=Booru.e926, params_x=self.specs, block=&#34;&#34;)
+        self.appended = E926.append_object(raw_data[&#34;posts&#34;])
+
         try:
-            self.data = requests.get(
-                Booru.e926, params=self.specs, headers=Booru.headers
-            )
-            self.final = self.final = deserialize(self.data.json())
-
-            self.not_random = parse_image(self.final[&#34;posts&#34;])
-            shuffle(self.not_random)
-            return better_object(self.not_random)
-
-        except:
-            raise ValueError(f&#34;Failed to get data&#34;)</code></pre>
+            return better_object(parse_image(self.appended))
+        except Exception as e:
+            raise Exception(f&#34;Failed to get data: {e}&#34;)</code></pre>
 </details>
 </section>
 <section>
@@ -245,15 +206,15 @@ class E926(object):
 <h2 id="methods">Methods</h2>
 <p>search : function
 Search and gets images from e926.</p>
-<p>get_image : function
-Gets images, meant just image urls from e926.</p>
+<p>search_image : function
+Search and gets images from e926, but only returns image.</p>
 <p>Initializes e926.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>api_key</code></strong> :&ensp;<code>str</code></dt>
-<dd>Your API Key which is accessible within your account options page</dd>
+<dd>Your API Key (If possible)</dd>
 <dt><strong><code>user_id</code></strong> :&ensp;<code>str</code></dt>
-<dd>Your user ID, which is accessible on the account options/profile page.</dd>
+<dd>Your user ID (If possible)</dd>
 </dl></div>
 <details class="source">
 <summary>
@@ -267,13 +228,13 @@ Gets images, meant just image urls from e926.</p>
     search : function
         Search and gets images from e926.
 
-    get_image : function
-        Gets images, meant just image urls from e926.
+    search_image : function
+        Search and gets images from e926, but only returns image.
 
     &#34;&#34;&#34;
 
     @staticmethod
-    def append_obj(raw_object: dict):
+    def append_object(raw_object: dict):
         &#34;&#34;&#34;Extends new object to the raw dict
 
         Parameters
@@ -300,10 +261,10 @@ Gets images, meant just image urls from e926.</p>
         Parameters
         ----------
         api_key : str
-            Your API Key which is accessible within your account options page
+            Your API Key (If possible)
 
         user_id : str
-            Your user ID, which is accessible on the account options/profile page.
+            Your user ID (If possible)
         &#34;&#34;&#34;
 
         if api_key and user_id == &#34;&#34;:
@@ -318,12 +279,11 @@ Gets images, meant just image urls from e926.</p>
     async def search(
         self,
         query: str,
-        block: str = &#34;&#34;,
         limit: int = 100,
         page: int = 1,
         random: bool = True,
         gacha: bool = False,
-    ):
+    ) -&gt; Union[list, str, None]:
 
         &#34;&#34;&#34;Search and gets images from e926.
 
@@ -331,9 +291,6 @@ Gets images, meant just image urls from e926.</p>
         ----------
         query : str
             The query to search for.
-
-        block : str
-            The disgusting query you want to block
 
         limit : int
             The limit of images to return.
@@ -352,50 +309,32 @@ Gets images, meant just image urls from e926.</p>
         dict
             The json object returned by e926.
         &#34;&#34;&#34;
-        if gacha:
-            limit = 100
 
         if limit &gt; 1000:
             raise ValueError(Booru.error_handling_limit)
 
-        if block and re.findall(block, query):
-            raise ValueError(Booru.error_handling_sameval)
+        self.query = query
+        self.specs[&#34;tags&#34;] = self.query
+        self.specs[&#34;limit&#34;] = limit
+        self.specs[&#34;page&#34;] = page
 
-        if block != &#34;&#34;:
-            self.query = f&#34;{query} -{block}*&#34;
-
-        else:
-            self.query = query
-
-        self.specs[&#34;tags&#34;] = str(self.query)
-        self.specs[&#34;limit&#34;] = str(limit)
-        self.specs[&#34;page&#34;] = str(page)
-
-        self.data = requests.get(Booru.e926, params=self.specs, headers=Booru.headers)
-        self.final = self.final = deserialize(self.data.json())
-
-        if not self.final[&#34;posts&#34;]:
-            raise ValueError(Booru.error_handling_null)
-
-        self.not_random = E926.append_obj(self.final[&#34;posts&#34;])
-        shuffle(self.not_random)
+        raw_data = await request(site=Booru.e926, params_x=self.specs, block=&#34;&#34;)
+        self.appended = E926.append_object(raw_data[&#34;posts&#34;])
 
         try:
             if gacha:
-                return better_object(self.not_random[randint(0, len(self.not_random))])
-
+                return better_object(roll(self.appended))
             elif random:
-                return better_object(self.not_random)
-
+                shuffle(self.appended)
+                return better_object(self.appended)
             else:
-                return better_object(E926.append_obj(self.final[&#34;posts&#34;]))
-
+                return better_object(E926.append_object(self.appended))
         except Exception as e:
-            raise ValueError(f&#34;Failed to get data: {e}&#34;)
+            raise Exception(f&#34;Failed to get data: {e}&#34;)
 
-    async def get_image(
-        self, query: str, block: str = &#34;&#34;, limit: int = 100, page: int = 1
-    ):
+    async def search_image(
+        self, query: str, limit: int = 100, page: int = 1
+    ) -&gt; Union[list, str, None]:
 
         &#34;&#34;&#34;Gets images, meant just image urls from e926.
 
@@ -403,9 +342,6 @@ Gets images, meant just image urls from e926.</p>
         ----------
         query : str
             The query to search for.
-
-        block : str
-            The disgusting query you want to block
 
         limit : int
             The limit of images to return.
@@ -423,37 +359,24 @@ Gets images, meant just image urls from e926.</p>
         if limit &gt; 1000:
             raise ValueError(Booru.error_handling_limit)
 
-        if block and re.findall(block, query):
-            raise ValueError(Booru.error_handling_sameval)
-
-        if block != &#34;&#34;:
-            self.query = f&#34;{query} -{block}*&#34;
-
-        else:
-            self.query = query
-
-        self.specs[&#34;tags&#34;] = str(self.query)
-        self.specs[&#34;limit&#34;] = str(limit)
-        self.specs[&#34;pid&#34;] = str(page)
+        self.query = query
+        self.specs[&#34;tags&#34;] = self.query
+        self.specs[&#34;limit&#34;] = limit
+        self.specs[&#34;pid&#34;] = page
         self.specs[&#34;json&#34;] = &#34;1&#34;
 
+        raw_data = await request(site=Booru.e926, params_x=self.specs, block=&#34;&#34;)
+        self.appended = E926.append_object(raw_data[&#34;posts&#34;])
+
         try:
-            self.data = requests.get(
-                Booru.e926, params=self.specs, headers=Booru.headers
-            )
-            self.final = self.final = deserialize(self.data.json())
-
-            self.not_random = parse_image(self.final[&#34;posts&#34;])
-            shuffle(self.not_random)
-            return better_object(self.not_random)
-
-        except:
-            raise ValueError(f&#34;Failed to get data&#34;)</code></pre>
+            return better_object(parse_image(self.appended))
+        except Exception as e:
+            raise Exception(f&#34;Failed to get data: {e}&#34;)</code></pre>
 </details>
 <h3>Static methods</h3>
 <dl>
-<dt id="booru.client.e926.E926.append_obj"><code class="name flex">
-<span>def <span class="ident">append_obj</span></span>(<span>raw_object: dict)</span>
+<dt id="booru.client.e926.E926.append_object"><code class="name flex">
+<span>def <span class="ident">append_object</span></span>(<span>raw_object: dict)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Extends new object to the raw dict</p>
@@ -472,7 +395,7 @@ Gets images, meant just image urls from e926.</p>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-def append_obj(raw_object: dict):
+def append_object(raw_object: dict):
     &#34;&#34;&#34;Extends new object to the raw dict
 
     Parameters
@@ -497,91 +420,8 @@ def append_obj(raw_object: dict):
 </dl>
 <h3>Methods</h3>
 <dl>
-<dt id="booru.client.e926.E926.get_image"><code class="name flex">
-<span>async def <span class="ident">get_image</span></span>(<span>self, query: str, block: str = '', limit: int = 100, page: int = 1)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Gets images, meant just image urls from e926.</p>
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>query</code></strong> :&ensp;<code>str</code></dt>
-<dd>The query to search for.</dd>
-<dt><strong><code>block</code></strong> :&ensp;<code>str</code></dt>
-<dd>The disgusting query you want to block</dd>
-<dt><strong><code>limit</code></strong> :&ensp;<code>int</code></dt>
-<dd>The limit of images to return.</dd>
-<dt><strong><code>page</code></strong> :&ensp;<code>int</code></dt>
-<dd>The number of desired page</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>list</code></dt>
-<dd>The list of image urls.</dd>
-</dl></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def get_image(
-    self, query: str, block: str = &#34;&#34;, limit: int = 100, page: int = 1
-):
-
-    &#34;&#34;&#34;Gets images, meant just image urls from e926.
-
-    Parameters
-    ----------
-    query : str
-        The query to search for.
-
-    block : str
-        The disgusting query you want to block
-
-    limit : int
-        The limit of images to return.
-
-    page : int
-        The number of desired page
-
-    Returns
-    -------
-    list
-        The list of image urls.
-
-    &#34;&#34;&#34;
-
-    if limit &gt; 1000:
-        raise ValueError(Booru.error_handling_limit)
-
-    if block and re.findall(block, query):
-        raise ValueError(Booru.error_handling_sameval)
-
-    if block != &#34;&#34;:
-        self.query = f&#34;{query} -{block}*&#34;
-
-    else:
-        self.query = query
-
-    self.specs[&#34;tags&#34;] = str(self.query)
-    self.specs[&#34;limit&#34;] = str(limit)
-    self.specs[&#34;pid&#34;] = str(page)
-    self.specs[&#34;json&#34;] = &#34;1&#34;
-
-    try:
-        self.data = requests.get(
-            Booru.e926, params=self.specs, headers=Booru.headers
-        )
-        self.final = self.final = deserialize(self.data.json())
-
-        self.not_random = parse_image(self.final[&#34;posts&#34;])
-        shuffle(self.not_random)
-        return better_object(self.not_random)
-
-    except:
-        raise ValueError(f&#34;Failed to get data&#34;)</code></pre>
-</details>
-</dd>
 <dt id="booru.client.e926.E926.search"><code class="name flex">
-<span>async def <span class="ident">search</span></span>(<span>self, query: str, block: str = '', limit: int = 100, page: int = 1, random: bool = True, gacha: bool = False)</span>
+<span>async def <span class="ident">search</span></span>(<span>self, query: str, limit: int = 100, page: int = 1, random: bool = True, gacha: bool = False) ‑> Union[list, str, ForwardRef(None)]</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Search and gets images from e926.</p>
@@ -589,8 +429,6 @@ def append_obj(raw_object: dict):
 <dl>
 <dt><strong><code>query</code></strong> :&ensp;<code>str</code></dt>
 <dd>The query to search for.</dd>
-<dt><strong><code>block</code></strong> :&ensp;<code>str</code></dt>
-<dd>The disgusting query you want to block</dd>
 <dt><strong><code>limit</code></strong> :&ensp;<code>int</code></dt>
 <dd>The limit of images to return.</dd>
 <dt><strong><code>page</code></strong> :&ensp;<code>int</code></dt>
@@ -612,12 +450,11 @@ def append_obj(raw_object: dict):
 <pre><code class="python">async def search(
     self,
     query: str,
-    block: str = &#34;&#34;,
     limit: int = 100,
     page: int = 1,
     random: bool = True,
     gacha: bool = False,
-):
+) -&gt; Union[list, str, None]:
 
     &#34;&#34;&#34;Search and gets images from e926.
 
@@ -625,9 +462,6 @@ def append_obj(raw_object: dict):
     ----------
     query : str
         The query to search for.
-
-    block : str
-        The disgusting query you want to block
 
     limit : int
         The limit of images to return.
@@ -646,46 +480,93 @@ def append_obj(raw_object: dict):
     dict
         The json object returned by e926.
     &#34;&#34;&#34;
-    if gacha:
-        limit = 100
 
     if limit &gt; 1000:
         raise ValueError(Booru.error_handling_limit)
 
-    if block and re.findall(block, query):
-        raise ValueError(Booru.error_handling_sameval)
+    self.query = query
+    self.specs[&#34;tags&#34;] = self.query
+    self.specs[&#34;limit&#34;] = limit
+    self.specs[&#34;page&#34;] = page
 
-    if block != &#34;&#34;:
-        self.query = f&#34;{query} -{block}*&#34;
-
-    else:
-        self.query = query
-
-    self.specs[&#34;tags&#34;] = str(self.query)
-    self.specs[&#34;limit&#34;] = str(limit)
-    self.specs[&#34;page&#34;] = str(page)
-
-    self.data = requests.get(Booru.e926, params=self.specs, headers=Booru.headers)
-    self.final = self.final = deserialize(self.data.json())
-
-    if not self.final[&#34;posts&#34;]:
-        raise ValueError(Booru.error_handling_null)
-
-    self.not_random = E926.append_obj(self.final[&#34;posts&#34;])
-    shuffle(self.not_random)
+    raw_data = await request(site=Booru.e926, params_x=self.specs, block=&#34;&#34;)
+    self.appended = E926.append_object(raw_data[&#34;posts&#34;])
 
     try:
         if gacha:
-            return better_object(self.not_random[randint(0, len(self.not_random))])
-
+            return better_object(roll(self.appended))
         elif random:
-            return better_object(self.not_random)
-
+            shuffle(self.appended)
+            return better_object(self.appended)
         else:
-            return better_object(E926.append_obj(self.final[&#34;posts&#34;]))
-
+            return better_object(E926.append_object(self.appended))
     except Exception as e:
-        raise ValueError(f&#34;Failed to get data: {e}&#34;)</code></pre>
+        raise Exception(f&#34;Failed to get data: {e}&#34;)</code></pre>
+</details>
+</dd>
+<dt id="booru.client.e926.E926.search_image"><code class="name flex">
+<span>async def <span class="ident">search_image</span></span>(<span>self, query: str, limit: int = 100, page: int = 1) ‑> Union[list, str, ForwardRef(None)]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Gets images, meant just image urls from e926.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>query</code></strong> :&ensp;<code>str</code></dt>
+<dd>The query to search for.</dd>
+<dt><strong><code>limit</code></strong> :&ensp;<code>int</code></dt>
+<dd>The limit of images to return.</dd>
+<dt><strong><code>page</code></strong> :&ensp;<code>int</code></dt>
+<dd>The number of desired page</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list</code></dt>
+<dd>The list of image urls.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def search_image(
+    self, query: str, limit: int = 100, page: int = 1
+) -&gt; Union[list, str, None]:
+
+    &#34;&#34;&#34;Gets images, meant just image urls from e926.
+
+    Parameters
+    ----------
+    query : str
+        The query to search for.
+
+    limit : int
+        The limit of images to return.
+
+    page : int
+        The number of desired page
+
+    Returns
+    -------
+    list
+        The list of image urls.
+
+    &#34;&#34;&#34;
+
+    if limit &gt; 1000:
+        raise ValueError(Booru.error_handling_limit)
+
+    self.query = query
+    self.specs[&#34;tags&#34;] = self.query
+    self.specs[&#34;limit&#34;] = limit
+    self.specs[&#34;pid&#34;] = page
+    self.specs[&#34;json&#34;] = &#34;1&#34;
+
+    raw_data = await request(site=Booru.e926, params_x=self.specs, block=&#34;&#34;)
+    self.appended = E926.append_object(raw_data[&#34;posts&#34;])
+
+    try:
+        return better_object(parse_image(self.appended))
+    except Exception as e:
+        raise Exception(f&#34;Failed to get data: {e}&#34;)</code></pre>
 </details>
 </dd>
 </dl>
@@ -709,9 +590,9 @@ def append_obj(raw_object: dict):
 <li>
 <h4><code><a title="booru.client.e926.E926" href="#booru.client.e926.E926">E926</a></code></h4>
 <ul class="">
-<li><code><a title="booru.client.e926.E926.append_obj" href="#booru.client.e926.E926.append_obj">append_obj</a></code></li>
-<li><code><a title="booru.client.e926.E926.get_image" href="#booru.client.e926.E926.get_image">get_image</a></code></li>
+<li><code><a title="booru.client.e926.E926.append_object" href="#booru.client.e926.E926.append_object">append_object</a></code></li>
 <li><code><a title="booru.client.e926.E926.search" href="#booru.client.e926.E926.search">search</a></code></li>
+<li><code><a title="booru.client.e926.E926.search_image" href="#booru.client.e926.E926.search_image">search_image</a></code></li>
 </ul>
 </li>
 </ul>

@@ -26,10 +26,9 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">import requests
-import json
-import re
-from ..utils.parser import Api, better_object, get_hostname, deserialize
+<pre><code class="python">import aiohttp
+from typing import Union
+from ..utils.constant import Api, better_object, get_hostname
 from random import shuffle, randint
 
 Booru = Api()
@@ -43,13 +42,13 @@ class Furbooru(object):
     search : function
         Search and gets images from furbooru.
 
-    get_image : function
+    search_image : function
         Gets images, image urls only from furbooru.
 
     &#34;&#34;&#34;
 
     @staticmethod
-    def append_obj(raw_object: dict):
+    def append_object(raw_object: dict):
         &#34;&#34;&#34;Extends new object to the raw dict
 
         Parameters
@@ -120,42 +119,42 @@ class Furbooru(object):
         dict
             The json object returned by furbooru.
         &#34;&#34;&#34;
-        if gacha:
-            limit = 100
 
         if limit &gt; 1000:
             raise ValueError(Booru.error_handling_limit)
 
-        else:
-            self.query = query
+        self.query = query
+        self.specs[&#34;q&#34;] = self.query
+        self.specs[&#34;per_page&#34;] = limit
+        self.specs[&#34;page&#34;] = page
 
-        self.specs[&#34;q&#34;] = str(self.query)
-        self.specs[&#34;per_page&#34;] = str(limit)
-        self.specs[&#34;page&#34;] = str(page)
+        async with aiohttp.ClientSession() as session:
+            async with session.get(Booru.furbooru, params=self.specs) as resp:
+                self.data = await resp.json(content_type=None)
+                self.final = self.data
 
-        self.data = requests.get(Booru.furbooru, params=self.specs)
-        self.final = self.final = deserialize(self.data.json())
+                if not self.final[&#34;images&#34;]:
+                    raise ValueError(Booru.error_handling_null)
 
-        if not self.final[&#34;images&#34;]:
-            raise ValueError(Booru.error_handling_null)
+                self.not_random = Furbooru.append_object(self.final[&#34;images&#34;])
+                shuffle(self.not_random)
 
-        self.not_random = Furbooru.append_obj(self.final[&#34;images&#34;])
-        shuffle(self.not_random)
+                try:
+                    if gacha:
+                        return better_object(
+                            self.not_random[randint(0, len(self.not_random))]
+                        )
+                    elif random:
+                        return better_object(self.not_random)
+                    else:
+                        return better_object(
+                            Furbooru.append_object(self.final[&#34;images&#34;])
+                        )
 
-        try:
-            if gacha:
-                return better_object(self.not_random[randint(0, len(self.not_random))])
+                except Exception as e:
+                    raise Exception(f&#34;Failed to get data: {e}&#34;)
 
-            elif random:
-                return better_object(self.not_random)
-
-            else:
-                return better_object(Furbooru.append_obj(self.final[&#34;images&#34;]))
-
-        except Exception as e:
-            raise ValueError(f&#34;Failed to get data: {e}&#34;)
-
-    async def get_image(self, query: str, limit: int = 100, page: int = 1):
+    async def search_image(self, query: str, limit: int = 100, page: int = 1):
 
         &#34;&#34;&#34;Gets images, meant just image urls from furbooru.
 
@@ -180,25 +179,26 @@ class Furbooru(object):
         if limit &gt; 1000:
             raise ValueError(Booru.error_handling_limit)
 
-        else:
-            self.query = query
-
-        self.specs[&#34;q&#34;] = str(self.query)
-        self.specs[&#34;per_page&#34;] = str(limit)
-        self.specs[&#34;page&#34;] = str(page)
+        self.query = query
+        self.specs[&#34;q&#34;] = self.query
+        self.specs[&#34;per_page&#34;] = limit
+        self.specs[&#34;page&#34;] = page
 
         try:
-            self.data = requests.get(Booru.furbooru, params=self.specs)
-            self.final = self.final = deserialize(self.data.json())
 
-            self.not_random = [
-                i[&#34;representations&#34;][&#34;full&#34;] for i in self.final[&#34;images&#34;]
-            ]
-            shuffle(self.not_random)
-            return better_object(self.not_random)
+            async with aiohttp.ClientSession() as session:
+                async with session.get(Booru.furbooru, params=self.specs) as resp:
+                    self.data = await resp.json(content_type=None)
+                    self.final = self.data
 
-        except:
-            raise ValueError(f&#34;Failed to get data&#34;)</code></pre>
+                    self.not_random = [
+                        i[&#34;representations&#34;][&#34;full&#34;] for i in self.final[&#34;images&#34;]
+                    ]
+                    shuffle(self.not_random)
+                    return better_object(self.not_random)
+
+        except Exception as e:
+            raise Exception(f&#34;Failed to get data: {e}&#34;)</code></pre>
 </details>
 </section>
 <section>
@@ -219,7 +219,7 @@ class Furbooru(object):
 <h2 id="methods">Methods</h2>
 <p>search : function
 Search and gets images from furbooru.</p>
-<p>get_image : function
+<p>search_image : function
 Gets images, image urls only from furbooru.</p>
 <p>Initializes furbooru.</p>
 <h2 id="parameters">Parameters</h2>
@@ -239,13 +239,13 @@ Gets images, image urls only from furbooru.</p>
     search : function
         Search and gets images from furbooru.
 
-    get_image : function
+    search_image : function
         Gets images, image urls only from furbooru.
 
     &#34;&#34;&#34;
 
     @staticmethod
-    def append_obj(raw_object: dict):
+    def append_object(raw_object: dict):
         &#34;&#34;&#34;Extends new object to the raw dict
 
         Parameters
@@ -316,42 +316,42 @@ Gets images, image urls only from furbooru.</p>
         dict
             The json object returned by furbooru.
         &#34;&#34;&#34;
-        if gacha:
-            limit = 100
 
         if limit &gt; 1000:
             raise ValueError(Booru.error_handling_limit)
 
-        else:
-            self.query = query
+        self.query = query
+        self.specs[&#34;q&#34;] = self.query
+        self.specs[&#34;per_page&#34;] = limit
+        self.specs[&#34;page&#34;] = page
 
-        self.specs[&#34;q&#34;] = str(self.query)
-        self.specs[&#34;per_page&#34;] = str(limit)
-        self.specs[&#34;page&#34;] = str(page)
+        async with aiohttp.ClientSession() as session:
+            async with session.get(Booru.furbooru, params=self.specs) as resp:
+                self.data = await resp.json(content_type=None)
+                self.final = self.data
 
-        self.data = requests.get(Booru.furbooru, params=self.specs)
-        self.final = self.final = deserialize(self.data.json())
+                if not self.final[&#34;images&#34;]:
+                    raise ValueError(Booru.error_handling_null)
 
-        if not self.final[&#34;images&#34;]:
-            raise ValueError(Booru.error_handling_null)
+                self.not_random = Furbooru.append_object(self.final[&#34;images&#34;])
+                shuffle(self.not_random)
 
-        self.not_random = Furbooru.append_obj(self.final[&#34;images&#34;])
-        shuffle(self.not_random)
+                try:
+                    if gacha:
+                        return better_object(
+                            self.not_random[randint(0, len(self.not_random))]
+                        )
+                    elif random:
+                        return better_object(self.not_random)
+                    else:
+                        return better_object(
+                            Furbooru.append_object(self.final[&#34;images&#34;])
+                        )
 
-        try:
-            if gacha:
-                return better_object(self.not_random[randint(0, len(self.not_random))])
+                except Exception as e:
+                    raise Exception(f&#34;Failed to get data: {e}&#34;)
 
-            elif random:
-                return better_object(self.not_random)
-
-            else:
-                return better_object(Furbooru.append_obj(self.final[&#34;images&#34;]))
-
-        except Exception as e:
-            raise ValueError(f&#34;Failed to get data: {e}&#34;)
-
-    async def get_image(self, query: str, limit: int = 100, page: int = 1):
+    async def search_image(self, query: str, limit: int = 100, page: int = 1):
 
         &#34;&#34;&#34;Gets images, meant just image urls from furbooru.
 
@@ -376,30 +376,31 @@ Gets images, image urls only from furbooru.</p>
         if limit &gt; 1000:
             raise ValueError(Booru.error_handling_limit)
 
-        else:
-            self.query = query
-
-        self.specs[&#34;q&#34;] = str(self.query)
-        self.specs[&#34;per_page&#34;] = str(limit)
-        self.specs[&#34;page&#34;] = str(page)
+        self.query = query
+        self.specs[&#34;q&#34;] = self.query
+        self.specs[&#34;per_page&#34;] = limit
+        self.specs[&#34;page&#34;] = page
 
         try:
-            self.data = requests.get(Booru.furbooru, params=self.specs)
-            self.final = self.final = deserialize(self.data.json())
 
-            self.not_random = [
-                i[&#34;representations&#34;][&#34;full&#34;] for i in self.final[&#34;images&#34;]
-            ]
-            shuffle(self.not_random)
-            return better_object(self.not_random)
+            async with aiohttp.ClientSession() as session:
+                async with session.get(Booru.furbooru, params=self.specs) as resp:
+                    self.data = await resp.json(content_type=None)
+                    self.final = self.data
 
-        except:
-            raise ValueError(f&#34;Failed to get data&#34;)</code></pre>
+                    self.not_random = [
+                        i[&#34;representations&#34;][&#34;full&#34;] for i in self.final[&#34;images&#34;]
+                    ]
+                    shuffle(self.not_random)
+                    return better_object(self.not_random)
+
+        except Exception as e:
+            raise Exception(f&#34;Failed to get data: {e}&#34;)</code></pre>
 </details>
 <h3>Static methods</h3>
 <dl>
-<dt id="booru.client.furbooru.Furbooru.append_obj"><code class="name flex">
-<span>def <span class="ident">append_obj</span></span>(<span>raw_object: dict)</span>
+<dt id="booru.client.furbooru.Furbooru.append_object"><code class="name flex">
+<span>def <span class="ident">append_object</span></span>(<span>raw_object: dict)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Extends new object to the raw dict</p>
@@ -418,7 +419,7 @@ Gets images, image urls only from furbooru.</p>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-def append_obj(raw_object: dict):
+def append_object(raw_object: dict):
     &#34;&#34;&#34;Extends new object to the raw dict
 
     Parameters
@@ -443,75 +444,6 @@ def append_obj(raw_object: dict):
 </dl>
 <h3>Methods</h3>
 <dl>
-<dt id="booru.client.furbooru.Furbooru.get_image"><code class="name flex">
-<span>async def <span class="ident">get_image</span></span>(<span>self, query: str, limit: int = 100, page: int = 1)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Gets images, meant just image urls from furbooru.</p>
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>query</code></strong> :&ensp;<code>str</code></dt>
-<dd>The query to search for.</dd>
-<dt><strong><code>limit</code></strong> :&ensp;<code>int</code></dt>
-<dd>The limit of images to return.</dd>
-<dt><strong><code>page</code></strong> :&ensp;<code>int</code></dt>
-<dd>The number of desired page</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>dict</code></dt>
-<dd>The json object returned by furbooru.</dd>
-</dl></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def get_image(self, query: str, limit: int = 100, page: int = 1):
-
-    &#34;&#34;&#34;Gets images, meant just image urls from furbooru.
-
-    Parameters
-    ----------
-    query : str
-        The query to search for.
-
-    limit : int
-        The limit of images to return.
-
-    page : int
-        The number of desired page
-
-    Returns
-    -------
-    dict
-        The json object returned by furbooru.
-
-    &#34;&#34;&#34;
-
-    if limit &gt; 1000:
-        raise ValueError(Booru.error_handling_limit)
-
-    else:
-        self.query = query
-
-    self.specs[&#34;q&#34;] = str(self.query)
-    self.specs[&#34;per_page&#34;] = str(limit)
-    self.specs[&#34;page&#34;] = str(page)
-
-    try:
-        self.data = requests.get(Booru.furbooru, params=self.specs)
-        self.final = self.final = deserialize(self.data.json())
-
-        self.not_random = [
-            i[&#34;representations&#34;][&#34;full&#34;] for i in self.final[&#34;images&#34;]
-        ]
-        shuffle(self.not_random)
-        return better_object(self.not_random)
-
-    except:
-        raise ValueError(f&#34;Failed to get data&#34;)</code></pre>
-</details>
-</dd>
 <dt id="booru.client.furbooru.Furbooru.search"><code class="name flex">
 <span>async def <span class="ident">search</span></span>(<span>self, query: str, limit: int = 100, page: int = 1, random: bool = True, gacha: bool = False)</span>
 </code></dt>
@@ -573,40 +505,110 @@ def append_obj(raw_object: dict):
     dict
         The json object returned by furbooru.
     &#34;&#34;&#34;
-    if gacha:
-        limit = 100
 
     if limit &gt; 1000:
         raise ValueError(Booru.error_handling_limit)
 
-    else:
-        self.query = query
+    self.query = query
+    self.specs[&#34;q&#34;] = self.query
+    self.specs[&#34;per_page&#34;] = limit
+    self.specs[&#34;page&#34;] = page
 
-    self.specs[&#34;q&#34;] = str(self.query)
-    self.specs[&#34;per_page&#34;] = str(limit)
-    self.specs[&#34;page&#34;] = str(page)
+    async with aiohttp.ClientSession() as session:
+        async with session.get(Booru.furbooru, params=self.specs) as resp:
+            self.data = await resp.json(content_type=None)
+            self.final = self.data
 
-    self.data = requests.get(Booru.furbooru, params=self.specs)
-    self.final = self.final = deserialize(self.data.json())
+            if not self.final[&#34;images&#34;]:
+                raise ValueError(Booru.error_handling_null)
 
-    if not self.final[&#34;images&#34;]:
-        raise ValueError(Booru.error_handling_null)
+            self.not_random = Furbooru.append_object(self.final[&#34;images&#34;])
+            shuffle(self.not_random)
 
-    self.not_random = Furbooru.append_obj(self.final[&#34;images&#34;])
-    shuffle(self.not_random)
+            try:
+                if gacha:
+                    return better_object(
+                        self.not_random[randint(0, len(self.not_random))]
+                    )
+                elif random:
+                    return better_object(self.not_random)
+                else:
+                    return better_object(
+                        Furbooru.append_object(self.final[&#34;images&#34;])
+                    )
+
+            except Exception as e:
+                raise Exception(f&#34;Failed to get data: {e}&#34;)</code></pre>
+</details>
+</dd>
+<dt id="booru.client.furbooru.Furbooru.search_image"><code class="name flex">
+<span>async def <span class="ident">search_image</span></span>(<span>self, query: str, limit: int = 100, page: int = 1)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Gets images, meant just image urls from furbooru.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>query</code></strong> :&ensp;<code>str</code></dt>
+<dd>The query to search for.</dd>
+<dt><strong><code>limit</code></strong> :&ensp;<code>int</code></dt>
+<dd>The limit of images to return.</dd>
+<dt><strong><code>page</code></strong> :&ensp;<code>int</code></dt>
+<dd>The number of desired page</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>dict</code></dt>
+<dd>The json object returned by furbooru.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def search_image(self, query: str, limit: int = 100, page: int = 1):
+
+    &#34;&#34;&#34;Gets images, meant just image urls from furbooru.
+
+    Parameters
+    ----------
+    query : str
+        The query to search for.
+
+    limit : int
+        The limit of images to return.
+
+    page : int
+        The number of desired page
+
+    Returns
+    -------
+    dict
+        The json object returned by furbooru.
+
+    &#34;&#34;&#34;
+
+    if limit &gt; 1000:
+        raise ValueError(Booru.error_handling_limit)
+
+    self.query = query
+    self.specs[&#34;q&#34;] = self.query
+    self.specs[&#34;per_page&#34;] = limit
+    self.specs[&#34;page&#34;] = page
 
     try:
-        if gacha:
-            return better_object(self.not_random[randint(0, len(self.not_random))])
 
-        elif random:
-            return better_object(self.not_random)
+        async with aiohttp.ClientSession() as session:
+            async with session.get(Booru.furbooru, params=self.specs) as resp:
+                self.data = await resp.json(content_type=None)
+                self.final = self.data
 
-        else:
-            return better_object(Furbooru.append_obj(self.final[&#34;images&#34;]))
+                self.not_random = [
+                    i[&#34;representations&#34;][&#34;full&#34;] for i in self.final[&#34;images&#34;]
+                ]
+                shuffle(self.not_random)
+                return better_object(self.not_random)
 
     except Exception as e:
-        raise ValueError(f&#34;Failed to get data: {e}&#34;)</code></pre>
+        raise Exception(f&#34;Failed to get data: {e}&#34;)</code></pre>
 </details>
 </dd>
 </dl>
@@ -630,9 +632,9 @@ def append_obj(raw_object: dict):
 <li>
 <h4><code><a title="booru.client.furbooru.Furbooru" href="#booru.client.furbooru.Furbooru">Furbooru</a></code></h4>
 <ul class="">
-<li><code><a title="booru.client.furbooru.Furbooru.append_obj" href="#booru.client.furbooru.Furbooru.append_obj">append_obj</a></code></li>
-<li><code><a title="booru.client.furbooru.Furbooru.get_image" href="#booru.client.furbooru.Furbooru.get_image">get_image</a></code></li>
+<li><code><a title="booru.client.furbooru.Furbooru.append_object" href="#booru.client.furbooru.Furbooru.append_object">append_object</a></code></li>
 <li><code><a title="booru.client.furbooru.Furbooru.search" href="#booru.client.furbooru.Furbooru.search">search</a></code></li>
+<li><code><a title="booru.client.furbooru.Furbooru.search_image" href="#booru.client.furbooru.Furbooru.search_image">search_image</a></code></li>
 </ul>
 </li>
 </ul>

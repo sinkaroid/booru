@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
-<title>booru.utils.parser API documentation</title>
+<title>booru.utils.constant API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
@@ -19,7 +19,7 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>booru.utils.parser</code></h1>
+<h1 class="title">Module <code>booru.utils.constant</code></h1>
 </header>
 <section id="section-intro">
 <details class="source">
@@ -28,10 +28,7 @@
 </summary>
 <pre><code class="python">import json
 import re
-from random import sample
 from booru import __version__
-from xmltodict import parse
-from requests import get
 
 
 class Api:
@@ -64,18 +61,40 @@ class Api:
         e_handling_cantparse (str): The error message for the parsing.
         e_handling_null (str): The error message for the null.
         e_handling_invalid_auth (str): The error message for the invalid auth.
+        headers (dict): The headers request.
+        bypass_headers (dict): The bypass headers request.
+
+        base_gelbooru_sorting_tags (str): Pattern for gelbooru sorting tags. 
+        base_danbooru_sorting_tags (str): Pattern for danbooru sorting tags.
+        base_yande_sorting_tags (str): Pattern for yande sorting tags.
+
+        gelbooru_wildcard (str): The base wildcard url for gelbooru search.
+        hypnohub_wildcard (str): The base wildcard url for hypnohub search.
+        rule34_wildcard (str): The base wildcard url for rule34 search.
+        realbooru_wildcard (str): The base wildcard url for realbooru search.
+        safebooru_wildcard (str): The base wildcard url for safebooru search.
+        tbib_wildcard (str): The base wildcard url for tbib search.
+        xbooru_wildcard (str): The base wildcard url for xbooru search.
+
+        danbooru_wildcard (str): The base wildcard url for danbooru search.
+        atfbooru_wildcard (str): The base wildcard url for atfbooru search.
+
+        yandere_wildcard (str): The base wildcard url for yandere search.
+        lolibooru_wildcard (str): The base wildcard url for lolibooru search.
+        kona_wildcard (str): The base wildcard url for konachan search.
+        konachan_net_wildcard (str): The base wildcard url for konachan.net search.
     &#34;&#34;&#34;
 
     def __init__(
         self,
         BASE_headers={
             &#34;User-Agent&#34;: f&#34;booru/v{__version__} (https://pypi.org/project/booru);&#34;,
-            &#34;From&#34;: &#34;anakmancasan@gmail.com&#34;,
+            &#34;From&#34;: &#34;hey@sinkaroid.org&#34;,
         },
         BYPASS_headers={
             &#34;User-Agent&#34;: &#34;Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1)&#34;,
             &#34;Referer&#34;: &#34;http://behoimi.org/data/ff/f3/&#34;,
-            &#34;From&#34;: &#34;anakmancasan@gmail.com&#34;,
+            &#34;From&#34;: &#34;hey@sinkaroid.org&#34;,
         },
     ):
 
@@ -106,7 +125,26 @@ class Api:
         self.headers = BASE_headers
         self.behoimi_bypass = BYPASS_headers
 
+        self.base_gelbooru_sorting_tags = &#34;&amp;sort=desc&amp;order_by=index_count&#34;
+        self.base_danbooru_sorting_tags = &#34;&amp;search%5Border%5D=count&#34;
+        self.base_yandere_sorting_tags = &#34;&amp;type=&amp;order=count&#34;
 
+        self.gelbooru_wildcard = &#34;https://gelbooru.com/index.php?page=tags&amp;s=list&amp;tags=&#34;
+        self.hypnohub_wildcard = &#34;https://hypnohub.net/index.php?page=tags&amp;s=list&amp;tags=&#34;
+        self.rule34_wildcard = &#34;https://rule34.xxx/index.php?page=tags&amp;s=list&amp;tags=&#34;
+        self.realbooru_wildcard = &#34;https://realbooru.com/index.php?page=tags&amp;s=list&amp;tags=&#34;
+        self.safebooru_wildcard = &#34;https://safebooru.org/index.php?page=tags&amp;s=list&amp;tags=&#34;
+        self.tbib_wildcard = &#34;https://tbib.org/index.php?page=tags&amp;s=list&amp;tags=&#34;
+        self.xbooru_wildcard = &#34;https://xbooru.com/index.php?page=tags&amp;s=list&amp;tags=&#34;
+
+        self.danbooru_wildcard = &#34;https://danbooru.donmai.us/tags?commit=Search&amp;search%5Bhide_empty%5D=yes&amp;search%5Bname_or_alias_matches%5D=&#34;
+        self.atfbooru_wildcard = &#34;https://booru.allthefallen.moe/tags?commit=Search&amp;search%5Bhide_empty%5D=yes&amp;search%5Bname_or_alias_matches%5D=&#34;
+
+        self.yandere_wildcard = &#34;https://yande.re/tag?name=&#34;
+        self.konachan_wildcard = &#34;https://konachan.com/tag?name=&#34;
+        self.konachan_net_wildcard = &#34;https://konachan.net/tag?name=&#34;
+        self.lolibooru_wildcard = &#34;https://lolibooru.moe/tag?name=&#34;
+        
 BASE_URL = Api()
 
 
@@ -157,30 +195,13 @@ def better_object(parser: dict):
     &#34;&#34;&#34;
     return json.dumps(parser, sort_keys=True, indent=4, ensure_ascii=False)
 
-def deserialize(data: list):
-    &#34;&#34;&#34;Deserialize instance containing a JSON document
-
-    Parameters
-    ----------
-    data : list
-        The raw data after fetch request
-
-    Returns
-    -------
-    str
-        The deserialized with better object
-    &#34;&#34;&#34;
-    return json.loads(better_object(data))
-
 
 def parse_image(raw_object: dict):
     &#34;&#34;&#34;Extracts the image url from the json object.
-
     Parameters
     ----------
     obj : dict
         The object to be parsed.
-
     Returns
     -------
     list
@@ -198,6 +219,7 @@ def parse_image(raw_object: dict):
     except:
         images = [i[&#34;file&#34;][&#34;url&#34;] for i in data]  # furry stuff sigh
 
+    images = list(dict.fromkeys(images))
     return images
 
 
@@ -215,8 +237,9 @@ def get_hostname(url: str):
     &#34;&#34;&#34;
     return re.sub(r&#34;(.*://)?([^/?]+).*&#34;, &#34;\g&lt;1&gt;\g&lt;2&gt;&#34;, url)
 
+
 def resolve(b_object: dict) -&gt; dict:
-    &#34;&#34;&#34;Resolves the json object meant data with bad formatting, arbitary indent, arbitary sort keys but it is resolved and ready to extends
+    &#34;&#34;&#34;Resolves the json object.
 
     Parameters
     ----------
@@ -227,7 +250,58 @@ def resolve(b_object: dict) -&gt; dict:
     dict
         raw json object
     &#34;&#34;&#34;
-    return json.loads(b_object)</code></pre>
+    return json.loads(b_object)
+
+
+def parse_image_danbooru(raw_object: dict) -&gt; list:
+    &#34;&#34;&#34;Smh, it&#39;s danbooru though
+
+    Parameters
+    ----------
+    raw_object : dict
+        The object to be parsed.
+
+    Returns
+    -------
+    list
+        The list of image urls.
+    &#34;&#34;&#34;
+
+    image = []
+
+    try:
+        for i in raw_object:
+            image.append(i[&#34;file_url&#34;])
+        return image
+    except KeyError:
+        for i in raw_object:
+            try:
+                image.append(i[&#34;file_url&#34;])
+            except KeyError:
+                pass
+        return list(set(image))
+
+def ascii_to_str(data: list):
+    &#34;&#34;&#34;ASCII to string 
+
+    Parameters
+    ----------
+    data : list
+        The data to be replaced
+
+    Returns
+    -------
+    list
+        The replaced data
+    &#34;&#34;&#34;
+
+    bad_char = [&#34;%28&#34;, &#34;%29&#34;, &#34;%2A&#34;, &#34;%2F&#34;, &#34;%3D&#34;, &#34;%3A&#34;, &#34;%27&#34;]
+    excpected_char = [&#34;(&#34;, &#34;)&#34;, &#34;*&#34;, &#34;/&#34;, &#34;=&#34;, &#34;:&#34;, &#34;&#39;&#34;]
+    for i in range(len(data)):
+        for j in range(len(bad_char)):
+            data[i] = data[i].replace(bad_char[j], excpected_char[j])
+
+    return data</code></pre>
 </details>
 </section>
 <section>
@@ -237,7 +311,49 @@ def resolve(b_object: dict) -&gt; dict:
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="booru.utils.parser.better_object"><code class="name flex">
+<dt id="booru.utils.constant.ascii_to_str"><code class="name flex">
+<span>def <span class="ident">ascii_to_str</span></span>(<span>data: list)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>ASCII to string </p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>data</code></strong> :&ensp;<code>list</code></dt>
+<dd>The data to be replaced</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list</code></dt>
+<dd>The replaced data</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def ascii_to_str(data: list):
+    &#34;&#34;&#34;ASCII to string 
+
+    Parameters
+    ----------
+    data : list
+        The data to be replaced
+
+    Returns
+    -------
+    list
+        The replaced data
+    &#34;&#34;&#34;
+
+    bad_char = [&#34;%28&#34;, &#34;%29&#34;, &#34;%2A&#34;, &#34;%2F&#34;, &#34;%3D&#34;, &#34;%3A&#34;, &#34;%27&#34;]
+    excpected_char = [&#34;(&#34;, &#34;)&#34;, &#34;*&#34;, &#34;/&#34;, &#34;=&#34;, &#34;:&#34;, &#34;&#39;&#34;]
+    for i in range(len(data)):
+        for j in range(len(bad_char)):
+            data[i] = data[i].replace(bad_char[j], excpected_char[j])
+
+    return data</code></pre>
+</details>
+</dd>
+<dt id="booru.utils.constant.better_object"><code class="name flex">
 <span>def <span class="ident">better_object</span></span>(<span>parser: dict)</span>
 </code></dt>
 <dd>
@@ -272,42 +388,7 @@ def resolve(b_object: dict) -&gt; dict:
     return json.dumps(parser, sort_keys=True, indent=4, ensure_ascii=False)</code></pre>
 </details>
 </dd>
-<dt id="booru.utils.parser.deserialize"><code class="name flex">
-<span>def <span class="ident">deserialize</span></span>(<span>data: list)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Deserialize instance containing a JSON document</p>
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>data</code></strong> :&ensp;<code>list</code></dt>
-<dd>The raw data after fetch request</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>str</code></dt>
-<dd>The deserialized with better object</dd>
-</dl></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def deserialize(data: list):
-    &#34;&#34;&#34;Deserialize instance containing a JSON document
-
-    Parameters
-    ----------
-    data : list
-        The raw data after fetch request
-
-    Returns
-    -------
-    str
-        The deserialized with better object
-    &#34;&#34;&#34;
-    return json.loads(better_object(data))</code></pre>
-</details>
-</dd>
-<dt id="booru.utils.parser.get_hostname"><code class="name flex">
+<dt id="booru.utils.constant.get_hostname"><code class="name flex">
 <span>def <span class="ident">get_hostname</span></span>(<span>url: str)</span>
 </code></dt>
 <dd>
@@ -341,7 +422,7 @@ def resolve(b_object: dict) -&gt; dict:
     return re.sub(r&#34;(.*://)?([^/?]+).*&#34;, &#34;\g&lt;1&gt;\g&lt;2&gt;&#34;, url)</code></pre>
 </details>
 </dd>
-<dt id="booru.utils.parser.list_api"><code class="name flex">
+<dt id="booru.utils.constant.list_api"><code class="name flex">
 <span>def <span class="ident">list_api</span></span>(<span>)</span>
 </code></dt>
 <dd>
@@ -387,12 +468,13 @@ def resolve(b_object: dict) -&gt; dict:
     return api_list</code></pre>
 </details>
 </dd>
-<dt id="booru.utils.parser.parse_image"><code class="name flex">
+<dt id="booru.utils.constant.parse_image"><code class="name flex">
 <span>def <span class="ident">parse_image</span></span>(<span>raw_object: dict)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Extracts the image url from the json object.</p>
-<h2 id="parameters">Parameters</h2>
+<div class="desc"><p>Extracts the image url from the json object.
+Parameters</p>
+<hr>
 <dl>
 <dt><strong><code>obj</code></strong> :&ensp;<code>dict</code></dt>
 <dd>The object to be parsed.</dd>
@@ -408,12 +490,10 @@ def resolve(b_object: dict) -&gt; dict:
 </summary>
 <pre><code class="python">def parse_image(raw_object: dict):
     &#34;&#34;&#34;Extracts the image url from the json object.
-
     Parameters
     ----------
     obj : dict
         The object to be parsed.
-
     Returns
     -------
     list
@@ -431,14 +511,63 @@ def resolve(b_object: dict) -&gt; dict:
     except:
         images = [i[&#34;file&#34;][&#34;url&#34;] for i in data]  # furry stuff sigh
 
+    images = list(dict.fromkeys(images))
     return images</code></pre>
 </details>
 </dd>
-<dt id="booru.utils.parser.resolve"><code class="name flex">
+<dt id="booru.utils.constant.parse_image_danbooru"><code class="name flex">
+<span>def <span class="ident">parse_image_danbooru</span></span>(<span>raw_object: dict) ‑> list</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Smh, it's danbooru though</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>raw_object</code></strong> :&ensp;<code>dict</code></dt>
+<dd>The object to be parsed.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list</code></dt>
+<dd>The list of image urls.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def parse_image_danbooru(raw_object: dict) -&gt; list:
+    &#34;&#34;&#34;Smh, it&#39;s danbooru though
+
+    Parameters
+    ----------
+    raw_object : dict
+        The object to be parsed.
+
+    Returns
+    -------
+    list
+        The list of image urls.
+    &#34;&#34;&#34;
+
+    image = []
+
+    try:
+        for i in raw_object:
+            image.append(i[&#34;file_url&#34;])
+        return image
+    except KeyError:
+        for i in raw_object:
+            try:
+                image.append(i[&#34;file_url&#34;])
+            except KeyError:
+                pass
+        return list(set(image))</code></pre>
+</details>
+</dd>
+<dt id="booru.utils.constant.resolve"><code class="name flex">
 <span>def <span class="ident">resolve</span></span>(<span>b_object: dict) ‑> dict</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Resolves the json object meant data with bad formatting, arbitary indent, arbitary sort keys but it is resolved and ready to extends</p>
+<div class="desc"><p>Resolves the json object.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>b_object</code></strong> :&ensp;<code>dict</code></dt>
@@ -454,7 +583,7 @@ def resolve(b_object: dict) -&gt; dict:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def resolve(b_object: dict) -&gt; dict:
-    &#34;&#34;&#34;Resolves the json object meant data with bad formatting, arbitary indent, arbitary sort keys but it is resolved and ready to extends
+    &#34;&#34;&#34;Resolves the json object.
 
     Parameters
     ----------
@@ -473,9 +602,9 @@ def resolve(b_object: dict) -&gt; dict:
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="booru.utils.parser.Api"><code class="flex name class">
+<dt id="booru.utils.constant.Api"><code class="flex name class">
 <span>class <span class="ident">Api</span></span>
-<span>(</span><span>BASE_headers={'User-Agent': 'booru/v1.0.15 (https://pypi.org/project/booru);', 'From': 'anakmancasan@gmail.com'}, BYPASS_headers={'User-Agent': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1)', 'Referer': 'http://behoimi.org/data/ff/f3/', 'From': 'anakmancasan@gmail.com'})</span>
+<span>(</span><span>BASE_headers={'User-Agent': 'booru/v1.0.17 (https://pypi.org/project/booru);', 'From': 'hey@sinkaroid.org'}, BYPASS_headers={'User-Agent': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1)', 'Referer': 'http://behoimi.org/data/ff/f3/', 'From': 'hey@sinkaroid.org'})</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Api class</p>
@@ -530,6 +659,42 @@ def resolve(b_object: dict) -&gt; dict:
 <dd>The error message for the null.</dd>
 <dt><strong><code>e_handling_invalid_auth</code></strong> :&ensp;<code>str</code></dt>
 <dd>The error message for the invalid auth.</dd>
+<dt><strong><code>headers</code></strong> :&ensp;<code>dict</code></dt>
+<dd>The headers request.</dd>
+<dt><strong><code>bypass_headers</code></strong> :&ensp;<code>dict</code></dt>
+<dd>The bypass headers request.</dd>
+<dt><strong><code>base_gelbooru_sorting_tags</code></strong> :&ensp;<code>str</code></dt>
+<dd>Pattern for gelbooru sorting tags. </dd>
+<dt><strong><code>base_danbooru_sorting_tags</code></strong> :&ensp;<code>str</code></dt>
+<dd>Pattern for danbooru sorting tags.</dd>
+<dt><strong><code>base_yande_sorting_tags</code></strong> :&ensp;<code>str</code></dt>
+<dd>Pattern for yande sorting tags.</dd>
+<dt><strong><code>gelbooru_wildcard</code></strong> :&ensp;<code>str</code></dt>
+<dd>The base wildcard url for gelbooru search.</dd>
+<dt><strong><code>hypnohub_wildcard</code></strong> :&ensp;<code>str</code></dt>
+<dd>The base wildcard url for hypnohub search.</dd>
+<dt><strong><code>rule34_wildcard</code></strong> :&ensp;<code>str</code></dt>
+<dd>The base wildcard url for rule34 search.</dd>
+<dt><strong><code>realbooru_wildcard</code></strong> :&ensp;<code>str</code></dt>
+<dd>The base wildcard url for realbooru search.</dd>
+<dt><strong><code>safebooru_wildcard</code></strong> :&ensp;<code>str</code></dt>
+<dd>The base wildcard url for safebooru search.</dd>
+<dt><strong><code>tbib_wildcard</code></strong> :&ensp;<code>str</code></dt>
+<dd>The base wildcard url for tbib search.</dd>
+<dt><strong><code>xbooru_wildcard</code></strong> :&ensp;<code>str</code></dt>
+<dd>The base wildcard url for xbooru search.</dd>
+<dt><strong><code>danbooru_wildcard</code></strong> :&ensp;<code>str</code></dt>
+<dd>The base wildcard url for danbooru search.</dd>
+<dt><strong><code>atfbooru_wildcard</code></strong> :&ensp;<code>str</code></dt>
+<dd>The base wildcard url for atfbooru search.</dd>
+<dt><strong><code>yandere_wildcard</code></strong> :&ensp;<code>str</code></dt>
+<dd>The base wildcard url for yandere search.</dd>
+<dt><strong><code>lolibooru_wildcard</code></strong> :&ensp;<code>str</code></dt>
+<dd>The base wildcard url for lolibooru search.</dd>
+<dt><strong><code>kona_wildcard</code></strong> :&ensp;<code>str</code></dt>
+<dd>The base wildcard url for konachan search.</dd>
+<dt><strong><code>konachan_net_wildcard</code></strong> :&ensp;<code>str</code></dt>
+<dd>The base wildcard url for konachan.net search.</dd>
 </dl></div>
 <details class="source">
 <summary>
@@ -565,18 +730,40 @@ def resolve(b_object: dict) -&gt; dict:
         e_handling_cantparse (str): The error message for the parsing.
         e_handling_null (str): The error message for the null.
         e_handling_invalid_auth (str): The error message for the invalid auth.
+        headers (dict): The headers request.
+        bypass_headers (dict): The bypass headers request.
+
+        base_gelbooru_sorting_tags (str): Pattern for gelbooru sorting tags. 
+        base_danbooru_sorting_tags (str): Pattern for danbooru sorting tags.
+        base_yande_sorting_tags (str): Pattern for yande sorting tags.
+
+        gelbooru_wildcard (str): The base wildcard url for gelbooru search.
+        hypnohub_wildcard (str): The base wildcard url for hypnohub search.
+        rule34_wildcard (str): The base wildcard url for rule34 search.
+        realbooru_wildcard (str): The base wildcard url for realbooru search.
+        safebooru_wildcard (str): The base wildcard url for safebooru search.
+        tbib_wildcard (str): The base wildcard url for tbib search.
+        xbooru_wildcard (str): The base wildcard url for xbooru search.
+
+        danbooru_wildcard (str): The base wildcard url for danbooru search.
+        atfbooru_wildcard (str): The base wildcard url for atfbooru search.
+
+        yandere_wildcard (str): The base wildcard url for yandere search.
+        lolibooru_wildcard (str): The base wildcard url for lolibooru search.
+        kona_wildcard (str): The base wildcard url for konachan search.
+        konachan_net_wildcard (str): The base wildcard url for konachan.net search.
     &#34;&#34;&#34;
 
     def __init__(
         self,
         BASE_headers={
             &#34;User-Agent&#34;: f&#34;booru/v{__version__} (https://pypi.org/project/booru);&#34;,
-            &#34;From&#34;: &#34;anakmancasan@gmail.com&#34;,
+            &#34;From&#34;: &#34;hey@sinkaroid.org&#34;,
         },
         BYPASS_headers={
             &#34;User-Agent&#34;: &#34;Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1)&#34;,
             &#34;Referer&#34;: &#34;http://behoimi.org/data/ff/f3/&#34;,
-            &#34;From&#34;: &#34;anakmancasan@gmail.com&#34;,
+            &#34;From&#34;: &#34;hey@sinkaroid.org&#34;,
         },
     ):
 
@@ -605,7 +792,27 @@ def resolve(b_object: dict) -&gt; dict:
         self.error_handling_null = &#34;no results, make sure you spelled everything right&#34;
         self.error_handling_invalid_auth = &#34;invalid api key or login&#34;
         self.headers = BASE_headers
-        self.behoimi_bypass = BYPASS_headers</code></pre>
+        self.behoimi_bypass = BYPASS_headers
+
+        self.base_gelbooru_sorting_tags = &#34;&amp;sort=desc&amp;order_by=index_count&#34;
+        self.base_danbooru_sorting_tags = &#34;&amp;search%5Border%5D=count&#34;
+        self.base_yandere_sorting_tags = &#34;&amp;type=&amp;order=count&#34;
+
+        self.gelbooru_wildcard = &#34;https://gelbooru.com/index.php?page=tags&amp;s=list&amp;tags=&#34;
+        self.hypnohub_wildcard = &#34;https://hypnohub.net/index.php?page=tags&amp;s=list&amp;tags=&#34;
+        self.rule34_wildcard = &#34;https://rule34.xxx/index.php?page=tags&amp;s=list&amp;tags=&#34;
+        self.realbooru_wildcard = &#34;https://realbooru.com/index.php?page=tags&amp;s=list&amp;tags=&#34;
+        self.safebooru_wildcard = &#34;https://safebooru.org/index.php?page=tags&amp;s=list&amp;tags=&#34;
+        self.tbib_wildcard = &#34;https://tbib.org/index.php?page=tags&amp;s=list&amp;tags=&#34;
+        self.xbooru_wildcard = &#34;https://xbooru.com/index.php?page=tags&amp;s=list&amp;tags=&#34;
+
+        self.danbooru_wildcard = &#34;https://danbooru.donmai.us/tags?commit=Search&amp;search%5Bhide_empty%5D=yes&amp;search%5Bname_or_alias_matches%5D=&#34;
+        self.atfbooru_wildcard = &#34;https://booru.allthefallen.moe/tags?commit=Search&amp;search%5Bhide_empty%5D=yes&amp;search%5Bname_or_alias_matches%5D=&#34;
+
+        self.yandere_wildcard = &#34;https://yande.re/tag?name=&#34;
+        self.konachan_wildcard = &#34;https://konachan.com/tag?name=&#34;
+        self.konachan_net_wildcard = &#34;https://konachan.net/tag?name=&#34;
+        self.lolibooru_wildcard = &#34;https://lolibooru.moe/tag?name=&#34;</code></pre>
 </details>
 </dd>
 </dl>
@@ -623,19 +830,20 @@ def resolve(b_object: dict) -&gt; dict:
 </ul>
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
-<ul class="two-column">
-<li><code><a title="booru.utils.parser.better_object" href="#booru.utils.parser.better_object">better_object</a></code></li>
-<li><code><a title="booru.utils.parser.deserialize" href="#booru.utils.parser.deserialize">deserialize</a></code></li>
-<li><code><a title="booru.utils.parser.get_hostname" href="#booru.utils.parser.get_hostname">get_hostname</a></code></li>
-<li><code><a title="booru.utils.parser.list_api" href="#booru.utils.parser.list_api">list_api</a></code></li>
-<li><code><a title="booru.utils.parser.parse_image" href="#booru.utils.parser.parse_image">parse_image</a></code></li>
-<li><code><a title="booru.utils.parser.resolve" href="#booru.utils.parser.resolve">resolve</a></code></li>
+<ul class="">
+<li><code><a title="booru.utils.constant.ascii_to_str" href="#booru.utils.constant.ascii_to_str">ascii_to_str</a></code></li>
+<li><code><a title="booru.utils.constant.better_object" href="#booru.utils.constant.better_object">better_object</a></code></li>
+<li><code><a title="booru.utils.constant.get_hostname" href="#booru.utils.constant.get_hostname">get_hostname</a></code></li>
+<li><code><a title="booru.utils.constant.list_api" href="#booru.utils.constant.list_api">list_api</a></code></li>
+<li><code><a title="booru.utils.constant.parse_image" href="#booru.utils.constant.parse_image">parse_image</a></code></li>
+<li><code><a title="booru.utils.constant.parse_image_danbooru" href="#booru.utils.constant.parse_image_danbooru">parse_image_danbooru</a></code></li>
+<li><code><a title="booru.utils.constant.resolve" href="#booru.utils.constant.resolve">resolve</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
-<h4><code><a title="booru.utils.parser.Api" href="#booru.utils.parser.Api">Api</a></code></h4>
+<h4><code><a title="booru.utils.constant.Api" href="#booru.utils.constant.Api">Api</a></code></h4>
 </li>
 </ul>
 </li>
