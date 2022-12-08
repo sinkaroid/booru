@@ -1,8 +1,8 @@
-import requests
-import json
 import re
-from random import shuffle, randint
-from ..utils.parser import Api, better_object, parse_image, get_hostname, deserialize
+from typing import Union
+from random import shuffle
+from ..utils.fetch import request, request_wildcard, roll
+from ..utils.constant import Api, better_object, parse_image, get_hostname
 
 Booru = Api()
 
@@ -15,13 +15,16 @@ class Realbooru(object):
     search : function
         Search and gets images from realbooru.
 
-    get_image : function
-        Gets images, image urls only from realbooru.
+    search_image : function
+        Search and gets images from realbooru, but only returns image.
+
+    find_tags : function
+        Get the proper tags from realbooru.
 
     """
 
     @staticmethod
-    def append_obj(raw_object: dict):
+    def append_object(raw_object: dict):
         """Extends new object to the raw dict
 
         Parameters
@@ -43,7 +46,6 @@ class Realbooru(object):
                     "post_url"
                 ] = f"{get_hostname(Booru.realbooru)}/index.php?page=post&s=view&id={raw_object[i]['id']}"
 
-        
             elif not raw_object[i]["directory"]:
                 raw_object[i][
                     "file_url"
@@ -51,7 +53,7 @@ class Realbooru(object):
                 raw_object[i][
                     "post_url"
                 ] = f"{get_hostname(Booru.realbooru)}/index.php?page=post&s=view&id={raw_object[i]['id']}"
-                
+
                 raw_object[i][
                     "directory"
                 ] = f"{raw_object[i]['image'][0:2]}/{raw_object[i]['image'][2:4]}"
@@ -70,10 +72,10 @@ class Realbooru(object):
         Parameters
         ----------
         api_key : str
-            Your API Key which is accessible within your account options page
+            Your API Key (If possible)
 
         user_id : str
-            Your user ID, which is accessible on the account options/profile page.
+            Your user ID (If possible)
         """
 
         if api_key and user_id == "":
@@ -93,135 +95,117 @@ class Realbooru(object):
         page: int = 1,
         random: bool = True,
         gacha: bool = False,
-    ):
+    ) -> Union[list, str, None]:
 
-        """Search and gets images with raw data from realbooru.
+        """Search method
 
         Parameters
         ----------
         query : str
             The query to search for.
-
         block : str
-            The disgusting query you want to block,
-            e.g: you want to search 'erza_scarlet' but dont want to gets furry, fill in 'furry'
-
+            The tags you want to block, separated by space.
         limit : int
-            The limit of images to return.
-
+            Expected number which is from pages
         page : int
-            The number of desired page
-
+            Expected number of page.
         random : bool
-            Shuffle the whole dict, default is True.
-
+            Shuffle the whole dict, default is False.
         gacha : bool
             Get random single object, limit property will be ignored.
 
         Returns
         -------
         dict
-            The json object returned by realbooru.
-
+            The json object (as string, you may need booru.resolve())
         """
-        if gacha:
-            limit = 100
 
         if limit > 1000:
             raise ValueError(Booru.error_handling_limit)
-
-        if block and re.findall(block, query):
+        elif block and re.findall(block, query):
             raise ValueError(Booru.error_handling_sameval)
 
-        if block != "":
-            self.query = f"{query} -{block}*"
-
-        else:
-            self.query = query
-
-        self.specs["tags"] = str(self.query)
-        self.specs["limit"] = str(limit)
-        self.specs["pid"] = str(page)
+        self.query = query
+        self.specs["tags"] = self.query
+        self.specs["limit"] = limit
+        self.specs["pid"] = page
         self.specs["json"] = "1"
 
-        self.data = requests.get(Booru.realbooru, params=self.specs)
-
-        if not self.data.text:
-            raise ValueError(Booru.error_handling_null)
-
-        self.final = self.final = deserialize(self.data.json())
-
-        self.not_random = Realbooru.append_obj(self.final)
-        shuffle(self.not_random)
+        raw_data = await request(site=Booru.realbooru, params_x=self.specs, block=block)
+        self.appended = Realbooru.append_object(raw_data)
 
         try:
             if gacha:
-                return better_object(self.not_random[randint(0, len(self.not_random))])
-
+                return better_object(roll(self.appended))
             elif random:
-                return better_object(self.not_random)
-
+                shuffle(self.appended)
+                return better_object(self.appended)
             else:
-                return better_object(Realbooru.append_obj(self.final))
-
+                return better_object(Realbooru.append_object(self.appended))
         except Exception as e:
-            raise ValueError(f"Failed to get data: {e}")
+            raise Exception(f"Failed to get data: {e}")
 
-    async def get_image(
+    async def search_image(
         self, query: str, block: str = "", limit: int = 100, page: int = 1
-    ):
+    ) -> Union[list, str, None]:
 
-        """Gets images, meant just image urls from realbooru.
+        """Parses image only
 
         Parameters
         ----------
         query : str
             The query to search for.
-
         block : str
-            The disgusting query you want to block,
-            e.g: you want to search 'erza_scarlet' but dont want to gets furry, fill in 'furry'
-
+            The tags you want to block, separated by space.
         limit : int
-            The limit of images to return.
-
+            Expected number which is from pages
         page : int
-            The number of desired page
+            Expected number of page.
 
         Returns
         -------
-        list
-            The list of image urls.
+        dict
+            The json object (as string, you may need booru.resolve())
 
         """
 
         if limit > 1000:
             raise ValueError(Booru.error_handling_limit)
-
         if block and re.findall(block, query):
             raise ValueError(Booru.error_handling_sameval)
 
-        if block != "":
-            self.query = f"{query} -{block}*"
-
-        else:
-            self.query = query
-
-        self.specs["tags"] = str(self.query)
-        self.specs["limit"] = str(limit)
-        self.specs["pid"] = str(page)
+        self.query = query
+        self.specs["tags"] = self.query
+        self.specs["limit"] = limit
+        self.specs["pid"] = page
         self.specs["json"] = "1"
 
-        try:
-            self.data = requests.get(Booru.realbooru, params=self.specs)
-            self.final = self.final = deserialize(self.data.json())
+        raw_data = await request(site=Booru.realbooru, params_x=self.specs, block=block)
+        self.appended = Realbooru.append_object(raw_data)
 
-            self.not_random = parse_image(Realbooru.append_obj(self.final))
-            self.bad_array = [
-                x for x in self.not_random if x != Booru.error_handling_cantparse
-            ]
-            shuffle(self.bad_array)
-            return better_object(self.bad_array)
+        try:
+            return better_object(parse_image(self.appended))
+        except Exception as e:
+            raise Exception(f"Failed to get data: {e}")
+
+    async def find_tags(site: str, query: str) -> Union[list, str, None]:
+        """Find tags
+
+        Parameters
+        ----------
+        site : str
+            The site to search for.
+        query : str
+            The tag to search for.
+
+        Returns
+        -------
+        list
+            The list of tags.
+        """
+        try:
+            data = await request_wildcard(site=Booru.realbooru_wildcard, query=query)
+            return better_object(data)
 
         except Exception as e:
-            raise ValueError(f"Failed to get data: {e}")
+            raise Exception(f"Failed to get data: {e}")

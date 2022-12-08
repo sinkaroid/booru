@@ -1,4 +1,4 @@
-__version__ = "1.0.15"
+__version__ = "1.0.17"
 from .client.gelbooru import Gelbooru
 from .client.rule34 import Rule34
 from .client.tbib import Tbib
@@ -18,4 +18,4 @@ from .client.derpibooru import Derpibooru
 from .client.furbooru import Furbooru
 from .client.behoimi import Behoimi
 from .client.paheal import Paheal
-from .utils.parser import resolve
+from .utils.constant import resolve

@@ -1,4 +1,4 @@
-name: Safebooru tests
+name: Safebooru
 on:
   push:
     branches:
@@ -11,14 +11,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Install Python 3
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v4
         with:
           python-version: 3.8
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-      - name: Quick fetch
+      - name: Safebooru tests
         run: python tests.py -safe hololive

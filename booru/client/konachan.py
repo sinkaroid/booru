@@ -1,27 +1,30 @@
-import requests
-import json
 import re
-from ..utils.parser import Api, better_object, parse_image, get_hostname, deserialize
-from random import shuffle, randint
+from typing import Union
+from ..utils.fetch import request, request_wildcard, roll
+from ..utils.constant import Api, better_object, parse_image, get_hostname
+from random import shuffle
 
 Booru = Api()
 
 
 class Konachan(object):
-    """Konachan wrapper
+    """Konachan Client
 
     Methods
     -------
     search : function
         Search and gets images from konachan.
 
-    get_image : function
-        Gets images, image urls only from konachan.
+    search_image : function
+        Search and gets images from konachan, but only returns image.
+
+    find_tags : function
+        Get the proper tags from konachan.
 
     """
 
     @staticmethod
-    def append_obj(raw_object: dict):
+    def append_object(raw_object: dict):
         """Extends new object to the raw dict
 
         Parameters
@@ -48,110 +51,120 @@ class Konachan(object):
     async def search(
         self,
         query: str,
+        block: str = "",
         limit: int = 100,
         page: int = 1,
         random: bool = True,
         gacha: bool = False,
-    ):
+    ) -> Union[list, str, None]:
 
-        """Search and gets images from konachan.
+        """Search method
 
         Parameters
         ----------
         query : str
             The query to search for.
-
+        block : str
+            The tags you want to block, separated by space.
         limit : int
-            The limit of images to return.
-
+            Expected number which is from pages
         page : int
-            The number of desired page
-
+            Expected number of page.
         random : bool
             Shuffle the whole dict, default is True.
-
         gacha : bool
             Get random single object, limit property will be ignored.
 
         Returns
         -------
         dict
-            The json object returned by konachan.
+            The json object (as string, you may need booru.resolve())
         """
-        if gacha:
-            limit = 100
-
         if limit > 1000:
             raise ValueError(Booru.error_handling_limit)
 
-        else:
-            self.query = query
+        elif block and re.findall(block, query):
+            raise ValueError(Booru.error_handling_sameval)
 
-        self.specs["tags"] = str(self.query)
-        self.specs["limit"] = str(limit)
-        self.specs["page"] = str(page)
+        self.query = query
+        self.specs["tags"] = self.query
+        self.specs["limit"] = limit
+        self.specs["page"] = page
 
-        self.data = requests.get(Booru.konachan, params=self.specs)
-        self.final = self.final = deserialize(self.data.json())
-
-        if not self.final:
-            raise ValueError(Booru.error_handling_null)
-
-        self.not_random = Konachan.append_obj(self.final)
-        shuffle(self.not_random)
+        raw_data = await request(site=Booru.konachan, params_x=self.specs, block=block)
+        self.appended = Konachan.append_object(raw_data)
 
         try:
             if gacha:
-                return better_object(self.not_random[randint(0, len(self.not_random))])
-
+                return better_object(roll(self.appended))
             elif random:
-                return better_object(self.not_random)
-
+                shuffle(self.appended)
+                return better_object(self.appended)
             else:
-                return better_object(Konachan.append_obj(self.final))
-
+                return better_object(Konachan.append_object(self.appended))
         except Exception as e:
-            raise ValueError(f"Failed to get data: {e}")
+            raise Exception(f"Failed to get data: {e}")
 
-    async def get_image(self, query: str, limit: int = 100, page: int = 1):
+    async def search_image(
+        self, query: str, block: str = "", limit: int = 100, page: int = 1
+    ) -> Union[list, str, None]:
 
-        """Gets images, meant just image urls from konachan.
+        """Parses image only
 
         Parameters
         ----------
         query : str
             The query to search for.
-
+        block : str
+            The tags you want to block, separated by space.
         limit : int
-            The limit of images to return.
-
+            Expected number which is from pages
         page : int
-            The number of desired page
+            Expected number of page.
 
         Returns
         -------
         dict
-            The json object returned by konachan.
+            The json object (as string, you may need booru.resolve())
 
         """
-
         if limit > 1000:
             raise ValueError(Booru.error_handling_limit)
 
-        else:
-            self.query = query
+        elif block and re.findall(block, query):
+            raise ValueError(Booru.error_handling_sameval)
 
-        self.specs["tags"] = str(self.query)
-        self.specs["limit"] = str(limit)
-        self.specs["page"] = str(page)
+        self.query = query
+        self.specs["tags"] = self.query
+        self.specs["limit"] = limit
+        self.specs["page"] = page
+
+        raw_data = await request(site=Booru.konachan, params_x=self.specs, block=block)
+        self.appended = Konachan.append_object(raw_data)
 
         try:
-            self.data = requests.get(Booru.konachan, params=self.specs)
-            self.final = self.final = deserialize(self.data.json())
+            return better_object(parse_image(self.appended))
+        except Exception as e:
+            raise Exception(f"Failed to get data: {e}")
 
-            self.not_random = parse_image(self.final)
-            shuffle(self.not_random)
-            return better_object(self.not_random)
+    async def find_tags(site: str, query: str) -> Union[list, str, None]:
+        """Find tags
 
-        except:
-            raise ValueError(f"Failed to get data")
+        Parameters
+        ----------
+        site : str
+            The site to search for.
+        query : str
+            The tag to search for.
+
+        Returns
+        -------
+        list
+            The list of tags.
+        """
+        try:
+            data = await request_wildcard(site=Booru.konachan_wildcard, query=query)
+            return better_object(data)
+
+        except Exception as e:
+            raise Exception(f"Failed to get data: {e}")
