@@ -1,7 +1,7 @@
 # Booru
 Python bindings for Booru imageboards
 
-<a href="http://sinkaroid.github.io/booru"><img align="right" src="https://cdn.discordapp.com/attachments/952117487166705747/961124440400351232/mataa.png" width="390"></a>
+<a href="http://sinkaroid.github.io/booru"><img align="right" src="https://cdn.discordapp.com/attachments/952117487166705747/961124440400351232/mataa.png" width="400"></a>
 
 - [Booru](#booru)
   - [Features](#features)
@@ -40,7 +40,7 @@ It is takes a much more functionalities to interacts with ease, and featureful. 
 
 ## Features
 - Plenty of imageboards
-- Search random & gacha object
+- Search random & gacha returns
 - Tags block, resolved safety tags concerns
 - Tags finder, tags & query completion
 - Parses and returns the image only
@@ -111,7 +111,7 @@ some_booru = Rule34()
 ```
 
 ### **search_image()**
-Takes parameter `search_image(query: str, block: str = "", limit: int = 100, page: int = 1)`
+Takes parameter `(query: str, block: str = "", limit: int = 100, page: int = 1)`
 ```py
 import asyncio
 from booru import Rule34
@@ -126,29 +126,30 @@ asyncio.run(main())
 - This will parses image url only, instead object
 
 ### **find_tags()**
+You want to wildcard or query completion like the browser do?  
+<center>
+<table>
+  <tr>
+    <td align="center"><img src="https://cdn.discordapp.com/attachments/1046495201176334467/1050354442966413352/rounded_corners_3.png" width="340px;" alt=""/><br />What browser looks like</td>
+    <td align="center"><img src="https://cdn.discordapp.com/attachments/1046495201176334467/1050354442651836506/rounded_corners_4.png" width="340px;" alt=""/><br />This library also</td>
+
+  </tr>
+</table>
+</center><br>
+
 ```py
 import asyncio
-from booru import Danbooru
+from booru import Danbooru, resolve
 
 async def main():
     dan = Danbooru()
     find_tags = await dan.find_tags("jeanne") ## arbitrary tags
-    print(find_tags)
+    wildcard = resolve(find_tags)
+    print(wildcard)
 
 asyncio.run(main())
 ```
-Returns
-```js
-[   
-    "jeanne_d'arc_alter_(fate)",
-    "jeanne_d'arc_(fate)",
-    "jeanne_d'arc_(fate)+ai:jeanne_d'arc_(fate)%2C0%25",
-    "jeanne_d'arc_alter_(avenger)_(fate)",
-    "jeanne_d'arc_(ruler)_(fate)"
-]
-```
-- No more sussy tags, use this for validating query in related imageboards. 
-- Get the `get_proper_tags[0]` for the best predicts.
+- Get the `wildcard[0]` for the best match.
 
 ## booru.resolve()
 You will need this for every object, this library designed to be neat and clean returns, although it must be reparsed to the string first, that's why `booru.resolve()` exist.
@@ -159,3 +160,4 @@ The documentation can be found https://sinkaroid.github.io/booru
 ## Legal
 This tool can be freely copied, modified, altered, distributed without any attribution whatsoever. However, if you feel
 like this tool deserves an attribution, mention it. It won't hurt anybody
+> Licence: WTF.

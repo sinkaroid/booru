@@ -165,15 +165,13 @@ class Danbooru(object):
         except Exception as e:
             raise Exception(f"Failed to get data: {e}")
 
-    async def find_tags(site: str, query: str) -> Union[list, str, None]:
-        """Find tags
+    async def find_tags(self, query: str) -> Union[list, str, None]:
+        """Find tags like a wildcard
 
         Parameters
         ----------
-        site : str
-            The site to search for.
         query : str
-            The tag to search for.
+            The tag want to search for.
 
         Returns
         -------
