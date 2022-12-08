@@ -132,7 +132,6 @@ async def request_wildcard(site: str, query: str) -> Union[list, None]:
 
     async with aiohttp.ClientSession() as session:
         async with session.get(f"{site}{query}*{sorting}") as resp:
-            print(resp.url)
             soup = BeautifulSoup(await resp.text(), "html.parser")
             get_all = soup.find_all("a")
             all_tags = [tag["href"] for tag in get_all]
