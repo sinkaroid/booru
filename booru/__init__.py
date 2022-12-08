@@ -1,4 +1,4 @@
-__version__ = "1.0.19"
+__version__ = "1.0.20"
 from .client.gelbooru import Gelbooru
 from .client.rule34 import Rule34
 from .client.tbib import Tbib
