@@ -1,8 +1,6 @@
-import aiohttp
 import json
 import re
 from booru import __version__
-from random import shuffle, randint
 
 
 class Api:
@@ -37,6 +35,26 @@ class Api:
         e_handling_invalid_auth (str): The error message for the invalid auth.
         headers (dict): The headers request.
         bypass_headers (dict): The bypass headers request.
+
+        base_gelbooru_sorting_tags (str): Pattern for gelbooru sorting tags. 
+        base_danbooru_sorting_tags (str): Pattern for danbooru sorting tags.
+        base_yande_sorting_tags (str): Pattern for yande sorting tags.
+
+        gelbooru_wildcard (str): The base wildcard url for gelbooru search.
+        hypnohub_wildcard (str): The base wildcard url for hypnohub search.
+        rule34_wildcard (str): The base wildcard url for rule34 search.
+        realbooru_wildcard (str): The base wildcard url for realbooru search.
+        safebooru_wildcard (str): The base wildcard url for safebooru search.
+        tbib_wildcard (str): The base wildcard url for tbib search.
+        xbooru_wildcard (str): The base wildcard url for xbooru search.
+
+        danbooru_wildcard (str): The base wildcard url for danbooru search.
+        atfbooru_wildcard (str): The base wildcard url for atfbooru search.
+
+        yandere_wildcard (str): The base wildcard url for yandere search.
+        lolibooru_wildcard (str): The base wildcard url for lolibooru search.
+        kona_wildcard (str): The base wildcard url for konachan search.
+        konachan_net_wildcard (str): The base wildcard url for konachan.net search.
     """
 
     def __init__(
@@ -79,7 +97,26 @@ class Api:
         self.headers = BASE_headers
         self.behoimi_bypass = BYPASS_headers
 
+        self.base_gelbooru_sorting_tags = "&sort=desc&order_by=index_count"
+        self.base_danbooru_sorting_tags = "&search%5Border%5D=count"
+        self.base_yandere_sorting_tags = "&type=&order=count"
 
+        self.gelbooru_wildcard = "https://gelbooru.com/index.php?page=tags&s=list&tags="
+        self.hypnohub_wildcard = "https://hypnohub.net/index.php?page=tags&s=list&tags="
+        self.rule34_wildcard = "https://rule34.xxx/index.php?page=tags&s=list&tags="
+        self.realbooru_wildcard = "https://realbooru.com/index.php?page=tags&s=list&tags="
+        self.safebooru_wildcard = "https://safebooru.org/index.php?page=tags&s=list&tags="
+        self.tbib_wildcard = "https://tbib.org/index.php?page=tags&s=list&tags="
+        self.xbooru_wildcard = "https://xbooru.com/index.php?page=tags&s=list&tags="
+
+        self.danbooru_wildcard = "https://danbooru.donmai.us/tags?commit=Search&search%5Bhide_empty%5D=yes&search%5Bname_or_alias_matches%5D="
+        self.atfbooru_wildcard = "https://booru.allthefallen.moe/tags?commit=Search&search%5Bhide_empty%5D=yes&search%5Bname_or_alias_matches%5D="
+
+        self.yandere_wildcard = "https://yande.re/tag?name="
+        self.konachan_wildcard = "https://konachan.com/tag?name="
+        self.konachan_net_wildcard = "https://konachan.net/tag?name="
+        self.lolibooru_wildcard = "https://lolibooru.moe/tag?name="
+        
 BASE_URL = Api()
 
 
@@ -215,4 +252,26 @@ def parse_image_danbooru(raw_object: dict) -> list:
             except KeyError:
                 pass
         return list(set(image))
+
+def ascii_to_str(data: list):
+    """ASCII to string 
+
+    Parameters
+    ----------
+    data : list
+        The data to be replaced
+
+    Returns
+    -------
+    list
+        The replaced data
+    """
+
+    bad_char = ["%28", "%29", "%2A", "%2F", "%3D", "%3A", "%27"]
+    excpected_char = ["(", ")", "*", "/", "=", ":", "'"]
+    for i in range(len(data)):
+        for j in range(len(bad_char)):
+            data[i] = data[i].replace(bad_char[j], excpected_char[j])
+
+    return data
 
