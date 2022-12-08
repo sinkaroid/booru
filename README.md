@@ -118,7 +118,7 @@ from booru import Rule34
 
 async def main():
     r34 = Rule34()
-    img = await r34.search(query="cat_girl", block="futanari")
+    img = await r34.search_image(query="cat_girl", block="futanari")
     print(img)
 
 asyncio.run(main())
