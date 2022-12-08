@@ -199,13 +199,11 @@ class Tbib(object):
         except Exception as e:
             raise Exception(f&#34;Failed to get data: {e}&#34;)
 
-    async def find_tags(site: str, query: str) -&gt; Union[list, str, None]:
-        &#34;&#34;&#34;Find tags
+    async def find_tags(self, query: str) -&gt; Union[list, str, None]:
+        &#34;&#34;&#34;Find tags like a wildcard
 
         Parameters
         ----------
-        site : str
-            The site to search for.
         query : str
             The tag to search for.
 
@@ -419,13 +417,11 @@ Get the proper tags from tbib.</p>
         except Exception as e:
             raise Exception(f&#34;Failed to get data: {e}&#34;)
 
-    async def find_tags(site: str, query: str) -&gt; Union[list, str, None]:
-        &#34;&#34;&#34;Find tags
+    async def find_tags(self, query: str) -&gt; Union[list, str, None]:
+        &#34;&#34;&#34;Find tags like a wildcard
 
         Parameters
         ----------
-        site : str
-            The site to search for.
         query : str
             The tag to search for.
 
@@ -492,14 +488,12 @@ def append_object(raw_object: dict):
 <h3>Methods</h3>
 <dl>
 <dt id="booru.client.tbib.Tbib.find_tags"><code class="name flex">
-<span>async def <span class="ident">find_tags</span></span>(<span>site: str, query: str) ‑> Union[list, str, ForwardRef(None)]</span>
+<span>async def <span class="ident">find_tags</span></span>(<span>self, query: str) ‑> Union[list, str, ForwardRef(None)]</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Find tags</p>
+<div class="desc"><p>Find tags like a wildcard</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
-<dt><strong><code>site</code></strong> :&ensp;<code>str</code></dt>
-<dd>The site to search for.</dd>
 <dt><strong><code>query</code></strong> :&ensp;<code>str</code></dt>
 <dd>The tag to search for.</dd>
 </dl>
@@ -512,13 +506,11 @@ def append_object(raw_object: dict):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def find_tags(site: str, query: str) -&gt; Union[list, str, None]:
-    &#34;&#34;&#34;Find tags
+<pre><code class="python">async def find_tags(self, query: str) -&gt; Union[list, str, None]:
+    &#34;&#34;&#34;Find tags like a wildcard
 
     Parameters
     ----------
-    site : str
-        The site to search for.
     query : str
         The tag to search for.
 
