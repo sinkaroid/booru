@@ -1,6 +1,6 @@
 import re
 from typing import Union
-from ..utils.fetch import request, roll
+from ..utils.fetch import request, request_wildcard, roll
 from ..utils.constant import Api, better_object, parse_image_danbooru, get_hostname
 from random import shuffle
 
@@ -17,6 +17,9 @@ class Danbooru(object):
 
     search_image : function
         Search and gets images from danbooru, but only returns image.
+
+    find_tags : function
+        Get the proper tags from danbooru.
 
     """
 
@@ -161,3 +164,26 @@ class Danbooru(object):
             return better_object(parse_image_danbooru(self.appended))
         except Exception as e:
             raise Exception(f"Failed to get data: {e}")
+
+    async def find_tags(site: str, query: str) -> Union[list, str, None]:
+        """Find tags
+
+        Parameters
+        ----------
+        site : str
+            The site to search for.
+        query : str
+            The tag to search for.
+
+        Returns
+        -------
+        list
+            The list of tags.
+        """
+        try:
+            data = await request_wildcard(site=Booru.danbooru_wildcard, query=query)
+            return better_object(data)
+
+        except Exception as e:
+            raise Exception(f"Failed to get data: {e}")
+
