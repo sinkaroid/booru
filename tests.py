@@ -55,6 +55,11 @@ class Wrapper(object):
         gacha = await imgboard.search(query=search, gacha=True)
         print("Gacha", gacha)
 
+    async def tags_completion(imgboard: str, search: str, base: str):
+
+        tags = await imgboard.find_tags(query=search)
+        print(base, tags)
+
 
 Base = Wrapper()
 Internal = booru.utils.constant.Api()
@@ -83,6 +88,8 @@ parse.add_argument("-furbooru", action="store", type=str)
 parse.add_argument("-behoimi", action="store", type=str)
 parse.add_argument("-paheal", action="store", type=str)
 parse.add_argument("-changelog", action="store_true")
+
+parse.add_argument("-wildcard", action="store", type=str)
 
 args = parse.parse_args()
 
@@ -126,6 +133,13 @@ async def main():
         await Wrapper.fetch(Base.behoimi, args.behoimi)
     elif args.paheal:
         await Wrapper.fetch(Base.paheal, args.paheal)
+
+    elif args.wildcard:
+        await Wrapper.tags_completion(Base.danbooru, args.wildcard, Base.danbooru)
+        await Wrapper.tags_completion(Base.gelbooru, args.wildcard, Base.gelbooru)
+        await Wrapper.tags_completion(Base.rule34, args.wildcard, Base.rule34)
+        await Wrapper.tags_completion(Base.yandere, args.wildcard, Base.yandere)
+
     elif args.build:
         print(booru.__version__)
 
