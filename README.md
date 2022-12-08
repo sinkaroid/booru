@@ -11,7 +11,7 @@ Python bindings for Booru imageboards
     - [Installation](#installation)
     - [Example](#example)
       - [search](#search)
-      - [get_image](#get-image)
+      - [search_image](#search_image)
       - [find_tags](#find_tags)
   - [booru.resolve()](#booruresolve)
   - [Import specific booru client](#search)
@@ -25,7 +25,6 @@ Python bindings for Booru imageboards
 
 <div align="center">
 
-<a href="https://sinkaroid.github.io/booru"><img src="https://github.com/sinkaroid/booru/actions/workflows/docs.yml/badge.svg"></a>
 <a href="https://github.com/sinkaroid/booru/actions/workflows/find_tags.yml"><img src="https://github.com/sinkaroid/booru/workflows/Tags completion/badge.svg"></a>
 <a href="https://codeclimate.com/github/sinkaroid/booru/maintainability"><img src="https://api.codeclimate.com/v1/badges/c334d91994d1d84b8d7d/maintainability" /></a>
 
