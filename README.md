@@ -1,7 +1,7 @@
 # Booru
 Python bindings for Booru imageboards
 
-<a href="http://sinkaroid.github.io/booru"><img align="right" src="https://cdn.discordapp.com/attachments/952117487166705747/961124440400351232/mataa.png" width="400"></a>
+<a href="http://sinkaroid.github.io/booru"><img align="right" src="https://raw.githubusercontent.com/sinkaroid/booru/refs/heads/master/resources/project/images/mataa.png" width="400"></a>
 
 - [Booru](#booru)
   - [Features](#features)
@@ -130,8 +130,8 @@ You want to wildcard or query completion like the browser do?
 <center>
 <table>
   <tr>
-    <td align="center"><img src="https://cdn.discordapp.com/attachments/1046495201176334467/1050354442966413352/rounded_corners_3.png" width="340px;" alt=""/><br />What browser looks like</td>
-    <td align="center"><img src="https://cdn.discordapp.com/attachments/1046495201176334467/1050354442651836506/rounded_corners_4.png" width="340px;" alt=""/><br />This library also</td>
+    <td align="center"><img src="https://raw.githubusercontent.com/sinkaroid/booru/refs/heads/master/resources/project/images/rounded_corners_3.png" width="340px;" alt=""/><br />What browser looks like</td>
+    <td align="center"><img src="https://raw.githubusercontent.com/sinkaroid/booru/refs/heads/master/resources/project/images/rounded_corners_4.png" width="340px;" alt=""/><br />This library also</td>
 
   </tr>
 </table>
