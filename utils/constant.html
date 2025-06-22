@@ -2,18 +2,32 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.10.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
 <title>booru.utils.constant API documentation</title>
-<meta name="description" content="" />
-<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
-<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
-<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
-<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
-<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
 <style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
-<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
 </head>
 <body>
 <main>
@@ -22,287 +36,6 @@
 <h1 class="title">Module <code>booru.utils.constant</code></h1>
 </header>
 <section id="section-intro">
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">import json
-import re
-from booru import __version__
-
-
-class Api:
-    &#34;&#34;&#34;Api class
-
-    This class is used to parse the data from the api.
-
-    Attributes:
-        gelbooru (str): The base url for gelbooru.
-        rule34 (str): The base url for rule34.
-        tbib (str): The base url for tbib.
-        safebooru (str): The base url for safebooru.
-        xbooru (str): The base url for xbooru.
-        realbooru (str): The base url for realbooru.
-        hypnohub (str): The base url for hypnohub.
-        danbooru (str): The base url for danbooru.
-        atfbooru (str): The base url for atfbooru.
-        yandere (str): The base url for yandere.
-        konachan (str): The base url for konachan.
-        konachan_net (str): The base url for konachan.net.
-        lolibooru (str): The base url for lolibooru.
-        e621 (str): The base url for e621.
-        e926 (str): The base url for e926.
-        derpibooru (str): The base url for derpibooru.
-        furbooru (str): The base url for furbooru.
-        behoimi (str): The base url for behoimi.
-        paheal (str): The base url for paheal.
-        e_handling_limit (str): The error message for the limit.
-        e_handling_sameval (str): The error message for the same values.
-        e_handling_cantparse (str): The error message for the parsing.
-        e_handling_null (str): The error message for the null.
-        e_handling_invalid_auth (str): The error message for the invalid auth.
-        headers (dict): The headers request.
-        bypass_headers (dict): The bypass headers request.
-
-        base_gelbooru_sorting_tags (str): Pattern for gelbooru sorting tags. 
-        base_danbooru_sorting_tags (str): Pattern for danbooru sorting tags.
-        base_yande_sorting_tags (str): Pattern for yande sorting tags.
-
-        gelbooru_wildcard (str): The base wildcard url for gelbooru search.
-        hypnohub_wildcard (str): The base wildcard url for hypnohub search.
-        rule34_wildcard (str): The base wildcard url for rule34 search.
-        realbooru_wildcard (str): The base wildcard url for realbooru search.
-        safebooru_wildcard (str): The base wildcard url for safebooru search.
-        tbib_wildcard (str): The base wildcard url for tbib search.
-        xbooru_wildcard (str): The base wildcard url for xbooru search.
-
-        danbooru_wildcard (str): The base wildcard url for danbooru search.
-        atfbooru_wildcard (str): The base wildcard url for atfbooru search.
-
-        yandere_wildcard (str): The base wildcard url for yandere search.
-        lolibooru_wildcard (str): The base wildcard url for lolibooru search.
-        kona_wildcard (str): The base wildcard url for konachan search.
-        konachan_net_wildcard (str): The base wildcard url for konachan.net search.
-    &#34;&#34;&#34;
-
-    def __init__(
-        self,
-        BASE_headers={
-            &#34;User-Agent&#34;: f&#34;booru/v{__version__} (https://pypi.org/project/booru);&#34;,
-            &#34;From&#34;: &#34;hey@sinkaroid.org&#34;,
-        },
-        BYPASS_headers={
-            &#34;User-Agent&#34;: &#34;Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1)&#34;,
-            &#34;Referer&#34;: &#34;http://behoimi.org/data/ff/f3/&#34;,
-            &#34;From&#34;: &#34;hey@sinkaroid.org&#34;,
-        },
-    ):
-
-        self.gelbooru = &#34;https://gelbooru.com/index.php?page=dapi&amp;s=post&amp;q=index&#34;
-        self.rule34 = &#34;https://rule34.xxx/index.php?page=dapi&amp;s=post&amp;q=index&#34;
-        self.tbib = &#34;https://tbib.org/index.php?page=dapi&amp;s=post&amp;q=index&#34;
-        self.safebooru = &#34;https://safebooru.org/index.php?page=dapi&amp;s=post&amp;q=index&#34;
-        self.xbooru = &#34;https://xbooru.com/index.php?page=dapi&amp;s=post&amp;q=index&#34;
-        self.realbooru = &#34;https://realbooru.com/index.php?page=dapi&amp;s=post&amp;q=index&#34;
-        self.hypnohub = &#34;https://hypnohub.net/index.php?page=dapi&amp;s=post&amp;q=index&#34;
-        self.danbooru = &#34;https://danbooru.donmai.us/posts.json&#34;
-        self.atfbooru = &#34;https://booru.allthefallen.moe/posts.json&#34;
-        self.yandere = &#34;https://yande.re/post.json&#34;
-        self.konachan = &#34;https://konachan.com/post.json&#34;
-        self.konachan_net = &#34;https://konachan.net/post.json&#34;
-        self.lolibooru = &#34;https://lolibooru.moe/post.json&#34;
-        self.e621 = &#34;https://e621.net/posts.json&#34;
-        self.e926 = &#34;https://e926.net/posts.json&#34;
-        self.derpibooru = &#34;https://derpibooru.org/api/v1/json/search/images&#34;
-        self.furbooru = &#34;https://furbooru.com/api/v1/json/search/images&#34;
-        self.behoimi = &#34;http://behoimi.org/post/index.json&#34;
-        self.paheal = &#34;https://rule34.paheal.net/api/danbooru/find_posts/index.xml&#34;
-        self.error_handling_limit = &#34;there is a hard limit of 1000 posts per request.&#34;
-        self.error_handling_sameval = &#34;block values should not be hit to the query&#34;
-        self.error_handling_cantparse = &#34;failed to get data, the api is misleading&#34;
-        self.error_handling_null = &#34;no results, make sure you spelled everything right&#34;
-        self.error_handling_invalid_auth = &#34;invalid api key or login&#34;
-        self.headers = BASE_headers
-        self.behoimi_bypass = BYPASS_headers
-
-        self.base_gelbooru_sorting_tags = &#34;&amp;sort=desc&amp;order_by=index_count&#34;
-        self.base_danbooru_sorting_tags = &#34;&amp;search%5Border%5D=count&#34;
-        self.base_yandere_sorting_tags = &#34;&amp;type=&amp;order=count&#34;
-
-        self.gelbooru_wildcard = &#34;https://gelbooru.com/index.php?page=tags&amp;s=list&amp;tags=&#34;
-        self.hypnohub_wildcard = &#34;https://hypnohub.net/index.php?page=tags&amp;s=list&amp;tags=&#34;
-        self.rule34_wildcard = &#34;https://rule34.xxx/index.php?page=tags&amp;s=list&amp;tags=&#34;
-        self.realbooru_wildcard = &#34;https://realbooru.com/index.php?page=tags&amp;s=list&amp;tags=&#34;
-        self.safebooru_wildcard = &#34;https://safebooru.org/index.php?page=tags&amp;s=list&amp;tags=&#34;
-        self.tbib_wildcard = &#34;https://tbib.org/index.php?page=tags&amp;s=list&amp;tags=&#34;
-        self.xbooru_wildcard = &#34;https://xbooru.com/index.php?page=tags&amp;s=list&amp;tags=&#34;
-
-        self.danbooru_wildcard = &#34;https://danbooru.donmai.us/tags?commit=Search&amp;search%5Bhide_empty%5D=yes&amp;search%5Bname_or_alias_matches%5D=&#34;
-        self.atfbooru_wildcard = &#34;https://booru.allthefallen.moe/tags?commit=Search&amp;search%5Bhide_empty%5D=yes&amp;search%5Bname_or_alias_matches%5D=&#34;
-
-        self.yandere_wildcard = &#34;https://yande.re/tag?name=&#34;
-        self.konachan_wildcard = &#34;https://konachan.com/tag?name=&#34;
-        self.konachan_net_wildcard = &#34;https://konachan.net/tag?name=&#34;
-        self.lolibooru_wildcard = &#34;https://lolibooru.moe/tag?name=&#34;
-        
-BASE_URL = Api()
-
-
-def list_api():
-    &#34;&#34;&#34;Returns the api url.
-
-    Returns
-    -------
-    list
-    &#34;&#34;&#34;
-    # create this list for mocking
-    api_list = [
-        BASE_URL.gelbooru,
-        BASE_URL.rule34,
-        BASE_URL.tbib,
-        BASE_URL.safebooru,
-        BASE_URL.xbooru,
-        BASE_URL.realbooru,
-        BASE_URL.hypnohub,
-        BASE_URL.danbooru,
-        BASE_URL.atfbooru,
-        BASE_URL.yandere,
-        BASE_URL.konachan,
-        BASE_URL.konachan_net,
-        BASE_URL.lolibooru,
-        BASE_URL.e621,
-        BASE_URL.e926,
-        BASE_URL.derpibooru,
-        BASE_URL.furbooru,
-        BASE_URL.behoimi,
-        BASE_URL.paheal,
-    ]
-    return api_list
-
-
-def better_object(parser: dict):
-    &#34;&#34;&#34;Converts the json object to a more readable object.
-
-    Parameters
-    ----------
-    parser : dict
-
-    Returns
-    -------
-    str
-        The new dictionaries with neat keys.
-
-    &#34;&#34;&#34;
-    return json.dumps(parser, sort_keys=True, indent=4, ensure_ascii=False)
-
-
-def parse_image(raw_object: dict):
-    &#34;&#34;&#34;Extracts the image url from the json object.
-    Parameters
-    ----------
-    obj : dict
-        The object to be parsed.
-    Returns
-    -------
-    list
-        The list of image urls.
-    &#34;&#34;&#34;
-    if &#34;post&#34; not in raw_object:
-        data = raw_object
-
-    elif &#34;post&#34; in raw_object:
-        data = raw_object[&#34;post&#34;]
-
-    try:
-        images = [i[&#34;file_url&#34;] for i in data]
-
-    except:
-        images = [i[&#34;file&#34;][&#34;url&#34;] for i in data]  # furry stuff sigh
-
-    images = list(dict.fromkeys(images))
-    return images
-
-
-def get_hostname(url: str):
-    &#34;&#34;&#34;Extract single hostname from the nested url
-
-    Parameters
-    ----------
-    url : str
-
-    Returns
-    -------
-    str
-        The site contains protocol and hostname
-    &#34;&#34;&#34;
-    return re.sub(r&#34;(.*://)?([^/?]+).*&#34;, &#34;\g&lt;1&gt;\g&lt;2&gt;&#34;, url)
-
-
-def resolve(b_object: dict) -&gt; dict:
-    &#34;&#34;&#34;Resolves the json object.
-
-    Parameters
-    ----------
-    b_object : dict
-
-    Returns
-    -------
-    dict
-        raw json object
-    &#34;&#34;&#34;
-    return json.loads(b_object)
-
-
-def parse_image_danbooru(raw_object: dict) -&gt; list:
-    &#34;&#34;&#34;Smh, it&#39;s danbooru though
-
-    Parameters
-    ----------
-    raw_object : dict
-        The object to be parsed.
-
-    Returns
-    -------
-    list
-        The list of image urls.
-    &#34;&#34;&#34;
-
-    image = []
-
-    try:
-        for i in raw_object:
-            image.append(i[&#34;file_url&#34;])
-        return image
-    except KeyError:
-        for i in raw_object:
-            try:
-                image.append(i[&#34;file_url&#34;])
-            except KeyError:
-                pass
-        return list(set(image))
-
-def ascii_to_str(data: list):
-    &#34;&#34;&#34;ASCII to string 
-
-    Parameters
-    ----------
-    data : list
-        The data to be replaced
-
-    Returns
-    -------
-    list
-        The replaced data
-    &#34;&#34;&#34;
-
-    bad_char = [&#34;%28&#34;, &#34;%29&#34;, &#34;%2A&#34;, &#34;%2F&#34;, &#34;%3D&#34;, &#34;%3A&#34;, &#34;%27&#34;]
-    excpected_char = [&#34;(&#34;, &#34;)&#34;, &#34;*&#34;, &#34;/&#34;, &#34;=&#34;, &#34;:&#34;, &#34;&#39;&#34;]
-    for i in range(len(data)):
-        for j in range(len(bad_char)):
-            data[i] = data[i].replace(bad_char[j], excpected_char[j])
-
-    return data</code></pre>
-</details>
 </section>
 <section>
 </section>
@@ -315,17 +48,6 @@ def ascii_to_str(data: list):
 <span>def <span class="ident">ascii_to_str</span></span>(<span>data: list)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>ASCII to string </p>
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>data</code></strong> :&ensp;<code>list</code></dt>
-<dd>The data to be replaced</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>list</code></dt>
-<dd>The replaced data</dd>
-</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -352,22 +74,22 @@ def ascii_to_str(data: list):
 
     return data</code></pre>
 </details>
+<div class="desc"><p>ASCII to string </p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>data</code></strong> :&ensp;<code>list</code></dt>
+<dd>The data to be replaced</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list</code></dt>
+<dd>The replaced data</dd>
+</dl></div>
 </dd>
 <dt id="booru.utils.constant.better_object"><code class="name flex">
 <span>def <span class="ident">better_object</span></span>(<span>parser: dict)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Converts the json object to a more readable object.</p>
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>parser</code></strong> :&ensp;<code>dict</code></dt>
-<dd>&nbsp;</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>str</code></dt>
-<dd>The new dictionaries with neat keys.</dd>
-</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -387,22 +109,22 @@ def ascii_to_str(data: list):
     &#34;&#34;&#34;
     return json.dumps(parser, sort_keys=True, indent=4, ensure_ascii=False)</code></pre>
 </details>
-</dd>
-<dt id="booru.utils.constant.get_hostname"><code class="name flex">
-<span>def <span class="ident">get_hostname</span></span>(<span>url: str)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Extract single hostname from the nested url</p>
+<div class="desc"><p>Converts the json object to a more readable object.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
-<dt><strong><code>url</code></strong> :&ensp;<code>str</code></dt>
+<dt><strong><code>parser</code></strong> :&ensp;<code>dict</code></dt>
 <dd>&nbsp;</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
 <dt><code>str</code></dt>
-<dd>The site contains protocol and hostname</dd>
+<dd>The new dictionaries with neat keys.</dd>
 </dl></div>
+</dd>
+<dt id="booru.utils.constant.get_hostname"><code class="name flex">
+<span>def <span class="ident">get_hostname</span></span>(<span>url: str)</span>
+</code></dt>
+<dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -421,17 +143,22 @@ def ascii_to_str(data: list):
     &#34;&#34;&#34;
     return re.sub(r&#34;(.*://)?([^/?]+).*&#34;, &#34;\g&lt;1&gt;\g&lt;2&gt;&#34;, url)</code></pre>
 </details>
+<div class="desc"><p>Extract single hostname from the nested url</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>url</code></strong> :&ensp;<code>str</code></dt>
+<dd>&nbsp;</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>str</code></dt>
+<dd>The site contains protocol and hostname</dd>
+</dl></div>
 </dd>
 <dt id="booru.utils.constant.list_api"><code class="name flex">
 <span>def <span class="ident">list_api</span></span>(<span>)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Returns the api url.</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>list</code></dt>
-<dd>&nbsp;</dd>
-</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -467,23 +194,17 @@ def ascii_to_str(data: list):
     ]
     return api_list</code></pre>
 </details>
+<div class="desc"><p>Returns the api url.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
 </dd>
 <dt id="booru.utils.constant.parse_image"><code class="name flex">
 <span>def <span class="ident">parse_image</span></span>(<span>raw_object: dict)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Extracts the image url from the json object.
-Parameters</p>
-<hr>
-<dl>
-<dt><strong><code>obj</code></strong> :&ensp;<code>dict</code></dt>
-<dd>The object to be parsed.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>list</code></dt>
-<dd>The list of image urls.</dd>
-</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -514,15 +235,11 @@ Parameters</p>
     images = list(dict.fromkeys(images))
     return images</code></pre>
 </details>
-</dd>
-<dt id="booru.utils.constant.parse_image_danbooru"><code class="name flex">
-<span>def <span class="ident">parse_image_danbooru</span></span>(<span>raw_object: dict) ‑> list</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Smh, it's danbooru though</p>
-<h2 id="parameters">Parameters</h2>
+<div class="desc"><p>Extracts the image url from the json object.
+Parameters</p>
+<hr>
 <dl>
-<dt><strong><code>raw_object</code></strong> :&ensp;<code>dict</code></dt>
+<dt><strong><code>obj</code></strong> :&ensp;<code>dict</code></dt>
 <dd>The object to be parsed.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
@@ -530,6 +247,11 @@ Parameters</p>
 <dt><code>list</code></dt>
 <dd>The list of image urls.</dd>
 </dl></div>
+</dd>
+<dt id="booru.utils.constant.parse_image_danbooru"><code class="name flex">
+<span>def <span class="ident">parse_image_danbooru</span></span>(<span>raw_object: dict) ‑> list</span>
+</code></dt>
+<dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -562,22 +284,22 @@ Parameters</p>
                 pass
         return list(set(image))</code></pre>
 </details>
+<div class="desc"><p>Smh, it's danbooru though</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>raw_object</code></strong> :&ensp;<code>dict</code></dt>
+<dd>The object to be parsed.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list</code></dt>
+<dd>The list of image urls.</dd>
+</dl></div>
 </dd>
 <dt id="booru.utils.constant.resolve"><code class="name flex">
 <span>def <span class="ident">resolve</span></span>(<span>b_object: dict) ‑> dict</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Resolves the json object.</p>
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>b_object</code></strong> :&ensp;<code>dict</code></dt>
-<dd>&nbsp;</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>dict</code></dt>
-<dd>raw json object</dd>
-</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -596,6 +318,17 @@ Parameters</p>
     &#34;&#34;&#34;
     return json.loads(b_object)</code></pre>
 </details>
+<div class="desc"><p>Resolves the json object.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>b_object</code></strong> :&ensp;<code>dict</code></dt>
+<dd>&nbsp;</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>dict</code></dt>
+<dd>raw json object</dd>
+</dl></div>
 </dd>
 </dl>
 </section>
@@ -604,98 +337,9 @@ Parameters</p>
 <dl>
 <dt id="booru.utils.constant.Api"><code class="flex name class">
 <span>class <span class="ident">Api</span></span>
-<span>(</span><span>BASE_headers={'User-Agent': 'booru/v1.0.21 (https://pypi.org/project/booru);', 'From': 'hey@sinkaroid.org'}, BYPASS_headers={'User-Agent': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1)', 'Referer': 'http://behoimi.org/data/ff/f3/', 'From': 'hey@sinkaroid.org'})</span>
+<span>(</span><span>BASE_headers={'User-Agent': 'booru/v1.2.1 (https://pypi.org/project/booru);', 'From': 'hey@sinkaroid.org'},<br>BYPASS_headers={'User-Agent': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1)', 'Referer': 'http://behoimi.org/data/ff/f3/', 'From': 'hey@sinkaroid.org'})</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Api class</p>
-<p>This class is used to parse the data from the api.</p>
-<h2 id="attributes">Attributes</h2>
-<dl>
-<dt><strong><code>gelbooru</code></strong> :&ensp;<code>str</code></dt>
-<dd>The base url for gelbooru.</dd>
-<dt><strong><code>rule34</code></strong> :&ensp;<code>str</code></dt>
-<dd>The base url for rule34.</dd>
-<dt><strong><code>tbib</code></strong> :&ensp;<code>str</code></dt>
-<dd>The base url for tbib.</dd>
-<dt><strong><code>safebooru</code></strong> :&ensp;<code>str</code></dt>
-<dd>The base url for safebooru.</dd>
-<dt><strong><code>xbooru</code></strong> :&ensp;<code>str</code></dt>
-<dd>The base url for xbooru.</dd>
-<dt><strong><code>realbooru</code></strong> :&ensp;<code>str</code></dt>
-<dd>The base url for realbooru.</dd>
-<dt><strong><code>hypnohub</code></strong> :&ensp;<code>str</code></dt>
-<dd>The base url for hypnohub.</dd>
-<dt><strong><code>danbooru</code></strong> :&ensp;<code>str</code></dt>
-<dd>The base url for danbooru.</dd>
-<dt><strong><code>atfbooru</code></strong> :&ensp;<code>str</code></dt>
-<dd>The base url for atfbooru.</dd>
-<dt><strong><code>yandere</code></strong> :&ensp;<code>str</code></dt>
-<dd>The base url for yandere.</dd>
-<dt><strong><code>konachan</code></strong> :&ensp;<code>str</code></dt>
-<dd>The base url for konachan.</dd>
-<dt><strong><code>konachan_net</code></strong> :&ensp;<code>str</code></dt>
-<dd>The base url for konachan.net.</dd>
-<dt><strong><code>lolibooru</code></strong> :&ensp;<code>str</code></dt>
-<dd>The base url for lolibooru.</dd>
-<dt><strong><code>e621</code></strong> :&ensp;<code>str</code></dt>
-<dd>The base url for e621.</dd>
-<dt><strong><code>e926</code></strong> :&ensp;<code>str</code></dt>
-<dd>The base url for e926.</dd>
-<dt><strong><code>derpibooru</code></strong> :&ensp;<code>str</code></dt>
-<dd>The base url for derpibooru.</dd>
-<dt><strong><code>furbooru</code></strong> :&ensp;<code>str</code></dt>
-<dd>The base url for furbooru.</dd>
-<dt><strong><code>behoimi</code></strong> :&ensp;<code>str</code></dt>
-<dd>The base url for behoimi.</dd>
-<dt><strong><code>paheal</code></strong> :&ensp;<code>str</code></dt>
-<dd>The base url for paheal.</dd>
-<dt><strong><code>e_handling_limit</code></strong> :&ensp;<code>str</code></dt>
-<dd>The error message for the limit.</dd>
-<dt><strong><code>e_handling_sameval</code></strong> :&ensp;<code>str</code></dt>
-<dd>The error message for the same values.</dd>
-<dt><strong><code>e_handling_cantparse</code></strong> :&ensp;<code>str</code></dt>
-<dd>The error message for the parsing.</dd>
-<dt><strong><code>e_handling_null</code></strong> :&ensp;<code>str</code></dt>
-<dd>The error message for the null.</dd>
-<dt><strong><code>e_handling_invalid_auth</code></strong> :&ensp;<code>str</code></dt>
-<dd>The error message for the invalid auth.</dd>
-<dt><strong><code>headers</code></strong> :&ensp;<code>dict</code></dt>
-<dd>The headers request.</dd>
-<dt><strong><code>bypass_headers</code></strong> :&ensp;<code>dict</code></dt>
-<dd>The bypass headers request.</dd>
-<dt><strong><code>base_gelbooru_sorting_tags</code></strong> :&ensp;<code>str</code></dt>
-<dd>Pattern for gelbooru sorting tags. </dd>
-<dt><strong><code>base_danbooru_sorting_tags</code></strong> :&ensp;<code>str</code></dt>
-<dd>Pattern for danbooru sorting tags.</dd>
-<dt><strong><code>base_yande_sorting_tags</code></strong> :&ensp;<code>str</code></dt>
-<dd>Pattern for yande sorting tags.</dd>
-<dt><strong><code>gelbooru_wildcard</code></strong> :&ensp;<code>str</code></dt>
-<dd>The base wildcard url for gelbooru search.</dd>
-<dt><strong><code>hypnohub_wildcard</code></strong> :&ensp;<code>str</code></dt>
-<dd>The base wildcard url for hypnohub search.</dd>
-<dt><strong><code>rule34_wildcard</code></strong> :&ensp;<code>str</code></dt>
-<dd>The base wildcard url for rule34 search.</dd>
-<dt><strong><code>realbooru_wildcard</code></strong> :&ensp;<code>str</code></dt>
-<dd>The base wildcard url for realbooru search.</dd>
-<dt><strong><code>safebooru_wildcard</code></strong> :&ensp;<code>str</code></dt>
-<dd>The base wildcard url for safebooru search.</dd>
-<dt><strong><code>tbib_wildcard</code></strong> :&ensp;<code>str</code></dt>
-<dd>The base wildcard url for tbib search.</dd>
-<dt><strong><code>xbooru_wildcard</code></strong> :&ensp;<code>str</code></dt>
-<dd>The base wildcard url for xbooru search.</dd>
-<dt><strong><code>danbooru_wildcard</code></strong> :&ensp;<code>str</code></dt>
-<dd>The base wildcard url for danbooru search.</dd>
-<dt><strong><code>atfbooru_wildcard</code></strong> :&ensp;<code>str</code></dt>
-<dd>The base wildcard url for atfbooru search.</dd>
-<dt><strong><code>yandere_wildcard</code></strong> :&ensp;<code>str</code></dt>
-<dd>The base wildcard url for yandere search.</dd>
-<dt><strong><code>lolibooru_wildcard</code></strong> :&ensp;<code>str</code></dt>
-<dd>The base wildcard url for lolibooru search.</dd>
-<dt><strong><code>kona_wildcard</code></strong> :&ensp;<code>str</code></dt>
-<dd>The base wildcard url for konachan search.</dd>
-<dt><strong><code>konachan_net_wildcard</code></strong> :&ensp;<code>str</code></dt>
-<dd>The base wildcard url for konachan.net search.</dd>
-</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -814,12 +458,100 @@ Parameters</p>
         self.konachan_net_wildcard = &#34;https://konachan.net/tag?name=&#34;
         self.lolibooru_wildcard = &#34;https://lolibooru.moe/tag?name=&#34;</code></pre>
 </details>
+<div class="desc"><p>Api class</p>
+<p>This class is used to parse the data from the api.</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>gelbooru</code></strong> :&ensp;<code>str</code></dt>
+<dd>The base url for gelbooru.</dd>
+<dt><strong><code>rule34</code></strong> :&ensp;<code>str</code></dt>
+<dd>The base url for rule34.</dd>
+<dt><strong><code>tbib</code></strong> :&ensp;<code>str</code></dt>
+<dd>The base url for tbib.</dd>
+<dt><strong><code>safebooru</code></strong> :&ensp;<code>str</code></dt>
+<dd>The base url for safebooru.</dd>
+<dt><strong><code>xbooru</code></strong> :&ensp;<code>str</code></dt>
+<dd>The base url for xbooru.</dd>
+<dt><strong><code>realbooru</code></strong> :&ensp;<code>str</code></dt>
+<dd>The base url for realbooru.</dd>
+<dt><strong><code>hypnohub</code></strong> :&ensp;<code>str</code></dt>
+<dd>The base url for hypnohub.</dd>
+<dt><strong><code>danbooru</code></strong> :&ensp;<code>str</code></dt>
+<dd>The base url for danbooru.</dd>
+<dt><strong><code>atfbooru</code></strong> :&ensp;<code>str</code></dt>
+<dd>The base url for atfbooru.</dd>
+<dt><strong><code>yandere</code></strong> :&ensp;<code>str</code></dt>
+<dd>The base url for yandere.</dd>
+<dt><strong><code>konachan</code></strong> :&ensp;<code>str</code></dt>
+<dd>The base url for konachan.</dd>
+<dt><strong><code>konachan_net</code></strong> :&ensp;<code>str</code></dt>
+<dd>The base url for konachan.net.</dd>
+<dt><strong><code>lolibooru</code></strong> :&ensp;<code>str</code></dt>
+<dd>The base url for lolibooru.</dd>
+<dt><strong><code>e621</code></strong> :&ensp;<code>str</code></dt>
+<dd>The base url for e621.</dd>
+<dt><strong><code>e926</code></strong> :&ensp;<code>str</code></dt>
+<dd>The base url for e926.</dd>
+<dt><strong><code>derpibooru</code></strong> :&ensp;<code>str</code></dt>
+<dd>The base url for derpibooru.</dd>
+<dt><strong><code>furbooru</code></strong> :&ensp;<code>str</code></dt>
+<dd>The base url for furbooru.</dd>
+<dt><strong><code>behoimi</code></strong> :&ensp;<code>str</code></dt>
+<dd>The base url for behoimi.</dd>
+<dt><strong><code>paheal</code></strong> :&ensp;<code>str</code></dt>
+<dd>The base url for paheal.</dd>
+<dt><strong><code>e_handling_limit</code></strong> :&ensp;<code>str</code></dt>
+<dd>The error message for the limit.</dd>
+<dt><strong><code>e_handling_sameval</code></strong> :&ensp;<code>str</code></dt>
+<dd>The error message for the same values.</dd>
+<dt><strong><code>e_handling_cantparse</code></strong> :&ensp;<code>str</code></dt>
+<dd>The error message for the parsing.</dd>
+<dt><strong><code>e_handling_null</code></strong> :&ensp;<code>str</code></dt>
+<dd>The error message for the null.</dd>
+<dt><strong><code>e_handling_invalid_auth</code></strong> :&ensp;<code>str</code></dt>
+<dd>The error message for the invalid auth.</dd>
+<dt><strong><code>headers</code></strong> :&ensp;<code>dict</code></dt>
+<dd>The headers request.</dd>
+<dt><strong><code>bypass_headers</code></strong> :&ensp;<code>dict</code></dt>
+<dd>The bypass headers request.</dd>
+<dt><strong><code>base_gelbooru_sorting_tags</code></strong> :&ensp;<code>str</code></dt>
+<dd>Pattern for gelbooru sorting tags. </dd>
+<dt><strong><code>base_danbooru_sorting_tags</code></strong> :&ensp;<code>str</code></dt>
+<dd>Pattern for danbooru sorting tags.</dd>
+<dt><strong><code>base_yande_sorting_tags</code></strong> :&ensp;<code>str</code></dt>
+<dd>Pattern for yande sorting tags.</dd>
+<dt><strong><code>gelbooru_wildcard</code></strong> :&ensp;<code>str</code></dt>
+<dd>The base wildcard url for gelbooru search.</dd>
+<dt><strong><code>hypnohub_wildcard</code></strong> :&ensp;<code>str</code></dt>
+<dd>The base wildcard url for hypnohub search.</dd>
+<dt><strong><code>rule34_wildcard</code></strong> :&ensp;<code>str</code></dt>
+<dd>The base wildcard url for rule34 search.</dd>
+<dt><strong><code>realbooru_wildcard</code></strong> :&ensp;<code>str</code></dt>
+<dd>The base wildcard url for realbooru search.</dd>
+<dt><strong><code>safebooru_wildcard</code></strong> :&ensp;<code>str</code></dt>
+<dd>The base wildcard url for safebooru search.</dd>
+<dt><strong><code>tbib_wildcard</code></strong> :&ensp;<code>str</code></dt>
+<dd>The base wildcard url for tbib search.</dd>
+<dt><strong><code>xbooru_wildcard</code></strong> :&ensp;<code>str</code></dt>
+<dd>The base wildcard url for xbooru search.</dd>
+<dt><strong><code>danbooru_wildcard</code></strong> :&ensp;<code>str</code></dt>
+<dd>The base wildcard url for danbooru search.</dd>
+<dt><strong><code>atfbooru_wildcard</code></strong> :&ensp;<code>str</code></dt>
+<dd>The base wildcard url for atfbooru search.</dd>
+<dt><strong><code>yandere_wildcard</code></strong> :&ensp;<code>str</code></dt>
+<dd>The base wildcard url for yandere search.</dd>
+<dt><strong><code>lolibooru_wildcard</code></strong> :&ensp;<code>str</code></dt>
+<dd>The base wildcard url for lolibooru search.</dd>
+<dt><strong><code>kona_wildcard</code></strong> :&ensp;<code>str</code></dt>
+<dd>The base wildcard url for konachan search.</dd>
+<dt><strong><code>konachan_net_wildcard</code></strong> :&ensp;<code>str</code></dt>
+<dd>The base wildcard url for konachan.net search.</dd>
+</dl></div>
 </dd>
 </dl>
 </section>
 </article>
 <nav id="sidebar">
-<h1>Index</h1>
 <div class="toc">
 <ul></ul>
 </div>
@@ -851,7 +583,7 @@ Parameters</p>
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
 </footer>
 </body>
 </html>
